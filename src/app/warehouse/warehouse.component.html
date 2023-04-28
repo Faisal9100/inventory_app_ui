@@ -1,0 +1,75 @@
+<h1 class="fs-2">All Warehouses</h1>
+
+<div class="add-categories">
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      class="form-control w-25"
+      placeholder="Search Warehouses"
+    />
+    <button class="btn btn-primary">
+      <i class="bi bi-search"></i>
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-primary mx-2"
+      (click)="addProduct()"
+    >
+      <i class="bi bi-plus-circle"></i> Add new
+    </button>
+    <button class=" btn btn-outline-danger" (click)="generatePDF()"><i class="bi bi-arrow-down-circle"></i> PDF</button>
+  </div>
+</div>
+
+<div class="top-sellling">
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="table-head">
+      <tr>
+        <th>S.N</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products | paginate: { itemsPerPage: pageSize, currentPage: currentPage, totalItems: products.length }">
+        <td>{{ product.id }}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.address }}</td>
+        <td>
+          <button
+            class="btn btn-outline-success"
+            *ngIf="product.status === '1'"
+          >
+            Enabled
+          </button>
+          <button
+            class="btn btn-outline-warning"
+            *ngIf="product.status === '0'"
+          >
+            Disabled
+          </button>
+        </td>
+
+        <td>
+          <button
+            class="btn btn-outline-primary mx-2"
+            (click)="openUpdateModal(product)"
+          >
+            <i class="bi bi-pencil-square"></i>
+          </button>
+          <button
+            class="btn btn-outline-danger"
+            (click)="deleteProduct(product.id)"
+          >
+            <i class="bi bi-trash3-fill"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p>Page {{ currentPage }} of {{ totalPages }}</p>
+<pagination-controls previousLabel="Previous" nextLabel="Next" (pageChange)="currentPage = $event"></pagination-controls>
+

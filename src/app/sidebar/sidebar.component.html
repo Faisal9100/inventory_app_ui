@@ -1,0 +1,364 @@
+<mat-toolbar color="primary">
+  <mat-toolbar-row>
+    <i class="bi bi-hdd-stack-fill text-white" (click)="sidenav.toggle()"></i>
+    <h1 class="mt-2">Inventary App</h1>
+    <div
+      class="input-group col-sm-6 w-25 justify-content-center align-item-center m-auto"
+    >
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search"
+        aria-label="Recipient's username"
+        aria-describedby="button-addon2"
+      />
+    </div>
+    <div class="profile">
+      <i class="bi bi-person-circle"></i><img src="" alt="" />
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav #sidenav opened="true" mode="side">
+    <mat-nav-list class="mat-sidebar" style="width: 245px">
+      <ul class="sidenav-nav">
+        <li class="sidenav-nav-item" routerLink="dashboard">
+          <i class="bi bi-house-gear-fill"></i>
+          <span class="sidenav-nav-link-text">Dashboard</span>
+        </li>
+        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
+          <i class="bi bi-file-ppt-fill"></i>
+          <span class="sidenav-nav-link-text">Manage Product</span>
+          <i
+            class="bi bi-chevron-down float-end"
+            style="
+              font-size: 12px;
+              font-weight: bold;
+              text-align: center;
+              margin: auto;
+              margin-top: 5px;
+            "
+          ></i>
+          <div *ngIf="showSubMenu">
+            <li routerLink="categories">
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Categories</span
+              >
+            </li>
+            <li routerLink="brands">
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Brands</span
+              >
+            </li>
+            <li routerLink="units">
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Units</span
+              >
+            </li>
+            <li routerLink="products">
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Products</span
+              >
+            </li>
+          </div>
+        </li>
+        <li class="sidenav-nav-item" routerLink="warehouse">
+          <i class="bi bi-house-check-fill"></i>
+          <span class="sidenav-nav-link-text">Warehouse</span>
+        </li>
+        <li class="sidenav-nav-item" routerLink="staff">
+          <i class="bi bi-person-fill"></i>
+          <span class="sidenav-nav-link-text">Staff</span>
+        </li>
+        <li class="sidenav-nav-item" routerLink="customer">
+          <i class="bi bi-people"></i>
+          <span class="sidenav-nav-link-text">Customer</span>
+        </li>
+        <li class="sidenav-nav-item" routerLink="supplier">
+          <i class="bi bi-receipt-cutoff"></i>
+          <span class="sidenav-nav-link-text">Supplier</span>
+        </li>
+        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
+          <i class="bi bi-bag-heart"></i>
+          <span class="sidenav-nav-link-text">Purchase</span>
+          <i
+            class="bi bi-chevron-down float-end"
+            style="
+              font-size: 12px;
+              font-weight: bold;
+              text-align: center;
+              margin: auto;
+              margin-top: 5px;
+            "
+          ></i>
+          <div *ngIf="showSubMenu">
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i> All
+                Purchase</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Purchase Return</span
+              >
+            </li>
+          </div>
+        </li>
+        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
+          <i class="bi bi-cart-plus"></i>
+          <span class="sidenav-nav-link-text">Sale</span>
+          <i
+            class="bi bi-chevron-down float-end"
+            style="
+              font-size: 12px;
+              font-weight: bold;
+              text-align: center;
+              margin: auto;
+              margin-top: 5px;
+            "
+          ></i>
+          <div *ngIf="showSubMenu">
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i> All
+                Sales</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i> Sale
+                Return</span
+              >
+            </li>
+          </div>
+        </li>
+        <li class="sidenav-nav-item">
+          <i class="bi bi-diagram-3-fill"></i>
+          <span class="sidenav-nav-link-text">Adjustment</span>
+        </li>
+        <li class="sidenav-nav-item">
+          <i class="bi bi-cart-check-fill"></i>
+          <span class="sidenav-nav-link-text">Transfer</span>
+        </li>
+        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
+          <i class="bi bi-cash-coin"></i>
+          <span class="sidenav-nav-link-text">Expense</span>
+          <i
+            class="bi bi-chevron-down float-end"
+            style="
+              font-size: 12px;
+              font-weight: bold;
+              text-align: center;
+              margin: auto;
+              margin-top: 5px;
+            "
+          ></i>
+          <div *ngIf="showSubMenu">
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Type</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i> All
+                Expenses</span
+              >
+            </li>
+          </div>
+        </li>
+        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
+          <i class="bi bi-cart-check-fill"></i>
+          <span class="sidenav-nav-link-text">Payment Report</span>
+          <i
+            class="bi bi-chevron-down float-end"
+            style="
+              font-size: 12px;
+              font-weight: bold;
+              text-align: center;
+              margin: auto;
+              margin-top: 5px;
+            "
+          ></i>
+          <div *ngIf="showSubMenu">
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Supplier Payments</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Customer Payments</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i> Stock
+                Report</span
+              >
+            </li>
+          </div>
+        </li>
+        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
+          <i class="bi bi-cart-check-fill"></i>
+          <span class="sidenav-nav-link-text">Data Entry Report</span>
+          <i
+            class="bi bi-chevron-down float-end"
+            style="
+              font-size: 12px;
+              font-weight: bold;
+              text-align: center;
+              margin: auto;
+              margin-top: 5px;
+            "
+          ></i>
+          <div *ngIf="showSubMenu">
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                product</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Customer</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Supplier</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Purchase</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Purchase Return</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Sale</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i> Sale
+                Return</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Adjustments</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Transfer</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Expense</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Supplier Payments</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Customer Payment</span
+              >
+            </li>
+          </div>
+        </li>
+        <li class="sidenav-nav-item">
+          <i class="bi bi-gear-wide-connected"></i>
+          <span class="sidenav-nav-link-text">General Setting</span>
+        </li>
+        <li class="sidenav-nav-item">
+          <i class="bi bi-gear"></i>
+          <span class="sidenav-nav-link-text">System Configuration</span>
+        </li>
+        <li class="sidenav-nav-item">
+          <i class="bi bi-image-alt"></i>
+          <span class="sidenav-nav-link-text">Logo & Favicon</span>
+        </li>
+
+        <li class="sidenav-nav-item">
+          <i class="bi bi-bell-fill"></i>
+          <span class="sidenav-nav-link-text">Notification Setting</span>
+        </li>
+        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
+          <i class="bi bi-menu-button-wide-fill"></i>
+          <span class="sidenav-nav-link-text">System</span>
+          <i
+            class="bi bi-chevron-down float-end"
+            style="
+              font-size: 12px;
+              font-weight: bold;
+              text-align: center;
+              margin: auto;
+              margin-top: 5px;
+            "
+          ></i>
+          <div *ngIf="showSubMenu">
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Application</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Server</span
+              >
+            </li>
+            <li>
+              <span class="mat-list-item"
+                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
+                Cache</span
+              >
+            </li>
+          </div>
+        </li>
+        <li class="sidenav-nav-item">
+          <i class="bi bi-bug"></i>
+          <span class="sidenav-nav-link-text">Report & Request</span>
+        </li>
+      </ul>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <div class="p-4" style="height: 88vh">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

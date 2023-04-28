@@ -1,0 +1,9 @@
+.table-head {
+  background-color: rgb(37, 108, 240);
+  color: white;
+}
+.fs-2 {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+}

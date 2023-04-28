@@ -1,0 +1,19 @@
+.table-head {
+    background-color: rgb(37, 108, 240);
+    color: white;
+  }
+  /* Style the pagination container */
+nav#pagination {
+  cursor: pointer;
+}
+.page-item{
+  border-radius: 20px;
+  
+}
+.page-link{
+  
+  border-radius: 20px;
+  margin: 10px;
+}
+
+
