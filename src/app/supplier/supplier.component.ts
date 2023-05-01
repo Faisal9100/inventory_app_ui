@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
 
 export interface Supplier {
   id: number;
-  name: string;
+  title: string;
   address: string;
-  company: string;
-  mobile: number;
+  balance: number;
+  status: string;
+  contact: number;
   email: string;
 }
 @Component({
@@ -17,24 +19,26 @@ export interface Supplier {
   styleUrls: ['./supplier.component.css'],
 })
 export class SupplierComponent {
-  supplierToEdit : any;
+  ip_address = "192.168.1.9:8000";
+  supplierToEdit: any;
   pageSize = 10;
   currentPage = 1;
-  totalPages !: number;
-  pages : number[] = [];
+  totalPages!: number;
+  pages: number[] = [];
   id = 'pagination';
-  closeResult : any;
-  
-  public url = 'http://127.0.0.1:8000/inventory/Suppliers/';
-  totalItems : any;
-  itemsPerPage : any;
-  suppliers : any[] = [];
-  supplier : Supplier = {
+  closeResult: any;
+
+  public url = "http://" + this.ip_address + "/inventory/Suppliers/";
+  totalItems: any;
+  itemsPerPage: any;
+  suppliers: any[] = [];
+  supplier: Supplier = {
     id: 0,
-    name: '',
+    title: '',
     address: '',
-    company: '',
-    mobile: 0,
+    status: '',
+    balance: 0,
+    contact: 0,
     email: '',
   };
   constructor(private modalService: NgbModal, public http: HttpClient) {
@@ -44,22 +48,38 @@ export class SupplierComponent {
     this.fetchsupplier();
   }
 
-  newsupplier = { name: '', address: '', company: '', mobile: '', email: '' };
+  newsupplier = {
+    title: '',
+    address: '',
+    balance: '',
+    status: '',
+    contact: '',
+    email: '',
+  };
   addSupplier() {
     Swal.fire({
       title: 'Add Supplier',
       html: `
-          <label>Name:</label>
-          <input type="text" id="supplierName" class="swal2-input" placeholder="Supplier Name">
-          <br><label>Address:</label>
+         <label>title:</label>
+          <input type="text" id="supplierTitle" class="swal2-input" placeholder="Supplier Title">
+         
+          <label>Address:</label>
           <input type="text" id="supplierAddress" class="swal2-input" placeholder="Supplier Address ">
-          <label>Company:</label>
-          <input type="text" id="supplierCompany" class="swal2-input" placeholder="Supplier Company">
+        
+          <label>Balance:</label>
+          <input type="text" id="supplierBalance" class="swal2-input" placeholder="Supplier Balance">
+          
+          <label>Status:</label>
+          
+          <select id="supplierStatus" class="swal2-select">
+        <option value="true">Enabled</option>
+        <option value="false">Disabled</option>
+      </select>
          
-          <label>Mobile:</label>
-          <input type="text" id="supplierMobile" class="swal2-input" placeholder="Supplier Mobile">
+          <br><label>Contact:</label>
+          <input type="text" id="supplierContact" class="swal2-input" placeholder="Supplier Contact">
          
-          <label>Email:</label>
+          <br><label>Email:</label>
           <input type="text" id="supplierEmail" class="swal2-input" placeholder="Supplier Email">
          
         
@@ -67,38 +87,43 @@ export class SupplierComponent {
       showCancelButton: true,
       confirmButtonText: 'Add',
       preConfirm: () => {
-        const supplierName = (<HTMLInputElement>(
-          document.getElementById('supplierName')
+        const supplierTitle = (<HTMLInputElement>(
+          document.getElementById('supplierTitle')
         )).value;
         const supplierAddress = (<HTMLInputElement>(
           document.getElementById('supplierAddress')
         )).value;
-        const supplierMobile = (<HTMLSelectElement>(
-          document.getElementById('supplierMobile')
+        const supplierBalance = (<HTMLInputElement>(
+          document.getElementById('supplierBalance')
         )).value;
-        const supplierEmail = (<HTMLSelectElement>(
+        const supplierStatus = (<HTMLSelectElement>(
+          document.getElementById('supplierStatus')
+        )).value;
+        const supplierContact = (<HTMLInputElement>(
+          document.getElementById('supplierContact')
+        )).value;
+        const supplierEmail = (<HTMLInputElement>(
           document.getElementById('supplierEmail')
         )).value;
-        const supplierCompany = (<HTMLSelectElement>(
-          document.getElementById('supplierCompany')
-        )).value;
 
-        if (!supplierName) {
-          Swal.showValidationMessage('Supplier name is required');
+        if (!supplierTitle) {
+          Swal.showValidationMessage('Supplier title is required');
         } else {
           const newsupplier = {
-            name: supplierName,
+            title: supplierTitle,
             address: supplierAddress,
-            mobile: supplierMobile,
+            status: supplierStatus,
+            balance: supplierBalance,
             email: supplierEmail,
-            company: supplierCompany,
+            contact: supplierContact,
           };
           this.http.post<Supplier>(this.url, newsupplier).subscribe(() => {
             this.newsupplier = {
-              name: '',
+              title: '',
               address: '',
-              company: '',
-              mobile: '',
+              balance: '',
+              status: '',
+              contact: '',
               email: '',
             };
             this.fetchsupplier();
@@ -157,49 +182,80 @@ export class SupplierComponent {
     Swal.fire({
       title: 'Update Supplier Detail',
       html: `
-        <label>Name:</label>
-        <input type="text" id="supplierName" class="swal2-input swal1" placeholder="Supplier Name"  value="${supplier.name}">
+        <label>Title:</label>
+        <input type="text" id="supplierTitle" class="swal2-input swal1" placeholder="Supplier Name"  value="${
+          supplier.title
+        }">
+        
         <br><label>Address:</label>
-        <input type="text" id="supplierAddress" class="swal2-input swal2" placeholder="Supplier Address"  value="${supplier.address}">
-        <br><label>Company:</label>
-        <input type="text" id="supplierCompany" class="swal2-input swal3" placeholder="Supplier Mobile"  value="${supplier.mobile}">
+        <input type="text" id="supplierAddress" class="swal2-input swal2" placeholder="Supplier Address"  value="${
+          supplier.address
+        }">
+        
+        <br><label>Balance:</label>
+        <input type="text" id="supplierBalance" class="swal2-input swal3" placeholder="Supplier Balance"  value="${
+          supplier.balance
+        }">
+        
+        <label>Status:</label> 
+        <select id="supplierStatus" class="swal2-select">
+          <option value="true" ${
+            supplier.status ? 'selected' : ''
+          }>Enabled</option>
+          <option value="false" ${
+            !supplier.status ? 'selected' : ''
+          }>Disabled</option>
+        </select>
+        
+        <br><label>Contact:</label>
+        <input type="text" id="supplierContact" class="swal2-input swal5" placeholder="Supplier Contact"  value="${
+          supplier.contact
+        }">
+        
         <br><label>Email:</label>
-        <input type="text" id="supplierEmail" class="swal2-input swal4" placeholder="Supplier Email"  value="${supplier.email}">
+        <input type="text" id="supplierEmail" class="swal2-input swal4" placeholder="Supplier Email"  value="${
+          supplier.email
+        }">
       
-        <br><label>Mobile:</label>
-        <input type="text" id="supplierMobile" class="swal2-input swal5" placeholder="Supplier Email"  value="${supplier.email}">
-      
-  
       `,
       showCancelButton: true,
       confirmButtonText: 'Update',
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        const updatedName = (<HTMLInputElement>document.querySelector('.swal1'))
-          .value;
+        const updatedTitle = (<HTMLInputElement>(
+          document.querySelector('.swal1')
+        )).value;
         const updatedAddress = (<HTMLInputElement>(
           document.querySelector('.swal2')
         )).value;
-        const updatedMobile = (<HTMLInputElement>(
-          document.querySelector('.swal3')
+        const updatedBalance = parseInt(
+          (<HTMLInputElement>document.querySelector('.swal3')).value
+        );
+
+        const updatedContact = (<HTMLInputElement>(
+          document.querySelector('.swal5')
         )).value;
         const updatedEmail = (<HTMLInputElement>(
           document.querySelector('.swal4')
         )).value;
-        const updatedCompany = (<HTMLInputElement>(
-          document.querySelector('.swal4')
-        )).value;
+        const updatedStatus =
+          (<HTMLSelectElement>document.querySelector('.swal2-select')).value ===
+          'true';
+
         this.http
           .put(`${this.url}${supplier.id}/`, {
-            name: updatedName,
+            title: updatedTitle,
             address: updatedAddress,
-            mobile: updatedMobile,
+            contact: updatedContact,
             email: updatedEmail,
-            company: updatedCompany,
+            balance: updatedBalance,
+            status: updatedStatus,
           })
           .subscribe(() => {
-            console.log(`supplier with ID ${supplier.id} updated successfully!`);
+            console.log(
+              `supplier with ID ${supplier.id} updated successfully!`
+            );
             this.fetchsupplier();
             Swal.fire(
               'Updated!',
@@ -209,5 +265,41 @@ export class SupplierComponent {
           });
       }
     });
+  }
+  generatePDF() {
+    const columns2 = { title: 'All Suppliers list' };
+
+    const columns = [
+      { title: 'S.N', dataKey: 'sn' },
+      { title: 'Title', dataKey: 'title' },
+      { title: 'Address', dataKey: 'address' },
+      { title: 'Balance', dataKey: 'balance' },
+      { title: 'status', dataKey: 'status' },
+      { title: 'Contact', dataKey: 'contact' },
+      { title: 'Email', dataKey: 'email' },
+    ];
+
+    const data = this.suppliers.map((supplier, index) => ({
+      sn: index + 1,
+      title: supplier.title,
+      address: supplier.address,
+      balance: supplier.balance,
+      status: supplier.status,
+      contact: supplier.contact,
+      email: supplier.email,
+    }));
+
+    const doc = new jsPDF();
+    doc.text(columns2.title, 86, 8);
+
+    doc.setFontSize(22);
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(16);
+
+    (doc as any).autoTable({
+      columns: columns,
+      body: data,
+    });
+    doc.save('all_suppliers.pdf');
   }
 }

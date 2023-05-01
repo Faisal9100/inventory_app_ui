@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import 'jspdf-autotable';
-import jsPDF from  'jspdf';
+import jsPDF from 'jspdf';
 export interface Product {
   id: number;
   name: string;
@@ -17,6 +17,7 @@ export interface Product {
   styleUrls: ['./warehouse.component.css'],
 })
 export class WarehouseComponent {
+  ip_address = "192.168.1.9:8000";
   taskToEdit: any;
   currentPage = 1;
   pageSize = 10;
@@ -25,8 +26,9 @@ export class WarehouseComponent {
   products: any[] = [];
   product: Product = { id: 0, name: '', address: '', status: '' };
   closeResult: any;
+  
+public  url = "http://" + this.ip_address + "/inventory/warehouses/"
 
-  public url = 'http://127.0.0.1:8000/inventory/warehouses/';
   constructor(private modalService: NgbModal, public http: HttpClient) {
     this.fetchwarehouse();
   }
@@ -43,7 +45,7 @@ export class WarehouseComponent {
       <input type="text" id="productName" class="swal2-input" placeholder="Warehouse Name">
       <br><label>Address:</label>
       <input type="text" id="productAddress" class="swal2-input" placeholder="Warehouse Address">
-      <label>Status:</label>
+      <label>Warehouse Status:</label>
       <select id="productStatus" class="swal2-select">
         <option value="1">Enabled</option>
         <option value="0">Disabled</option>
@@ -64,7 +66,7 @@ export class WarehouseComponent {
         )).value;
 
         if (!productName) {
-          Swal.showValidationMessage('Product name is required');
+          Swal.showValidationMessage('Warehouse name is required');
         } else {
           const newProduct = {
             name: productName,
@@ -74,7 +76,7 @@ export class WarehouseComponent {
           this.http.post<Product>(this.url, newProduct).subscribe(() => {
             this.newProduct = { name: '', address: '', status: '' };
             this.fetchwarehouse();
-            Swal.fire('Added!', 'Your product has been added.', 'success');
+            Swal.fire('Added!', 'Your Warehouse has been added.', 'success');
           });
         }
       },
@@ -192,7 +194,7 @@ export class WarehouseComponent {
     });
   }
   generatePDF() {
-    // Define the columns for the table
+    const columns2 = { title: 'All Warehouse List' };
     const columns = [
       { title: 'S.N', dataKey: 'sn' },
       { title: 'Name', dataKey: 'name' },
@@ -200,29 +202,23 @@ export class WarehouseComponent {
       { title: 'Status', dataKey: 'status' },
     ];
 
-    // Map the data to an array of objects
     const data = this.products.map((product, index) => ({
       sn: index + 1,
-      name: product.name,
+      name: product.name, 
       address: product.address,
       status: product.status === '1' ? 'Enabled' : 'Disabled',
     }));
 
-    // Create a new instance of jsPDF
-    const doc = new jsPDF(); // Add .default.jsPDF()
-
-    // Add the title to the PDF
+    const doc = new jsPDF();
+    doc.text(columns2.title, 86, 8);
     doc.setFontSize(22);
     doc.text('All Warehouses', 14, 22);
 
-    // Add the table to the PDF
     (doc as any).autoTable({
-      // Declare doc as any
       columns: columns,
       body: data,
     });
 
-    // Save the PDF
     doc.save('all_warehouses.pdf');
   }
 }

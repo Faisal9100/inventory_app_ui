@@ -4,11 +4,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 
-export interface Product {
+export interface Supplier {
   id: number;
-  name: string;
+  title: string;
   address: string;
-  mobile: string;
+  balance: number;
+  status: string;
+  contact: number;
   email: string;
 }
 
@@ -18,87 +20,129 @@ export interface Product {
   styleUrls: ['./customer.component.css'],
 })
 export class CustomerComponent {
-  taskToEdit: any;
-  currentPage = 1;
+  public ip_address="192.168.1.9:8000";
+  supplierToEdit: any;
   pageSize = 10;
-  id = 'pagination';
+  currentPage = 1;
   totalPages!: number;
   pages: number[] = [];
-
-  products: any[] = [];
-  product: Product = { id: 0, name: '', address: '', mobile: '', email: '' };
+  id = 'pagination';
   closeResult: any;
 
-  public url = 'http://127.0.0.1:8000/inventory/customers/';
+  public url = "http://" + this.ip_address + "/inventory/customers/";
   totalItems: any;
   itemsPerPage: any;
+  suppliers: any[] = [];
+  supplier: Supplier = {
+    id: 0,
+    title: '',
+    address: '',
+    status: '',
+    balance: 0,
+    contact: 0,
+    email: '',
+  };
   constructor(private modalService: NgbModal, public http: HttpClient) {
-    this.fetchwarehouse();
+    this.fetchsupplier();
   }
   ngOnInit(): void {
-    this.fetchwarehouse();
+    this.fetchsupplier();
   }
 
-  newProduct = { name: '', address: '', mobile: '', email: '' };
-  addProduct() {
+  newsupplier = {
+    title: '',
+    address: '',
+    balance: '',
+    status: '',
+    contact: '',
+    email: '',
+  };
+  addSupplier() {
     Swal.fire({
       title: 'Add Customer',
       html: `
-        <label>Name:</label>
-        <input type="text" id="productName" class="swal2-input" placeholder="Customer Name">
-        <br><label>Address:</label>
-        <input type="text" id="productAddress" class="swal2-input" placeholder="Customer Address ">
-        <label>Mobile:</label>
-        <input type="text" id="productMobile" class="swal2-input" placeholder="Customer Mobile">
-       
-        <label>Email:</label>
-        <input type="text" id="productEmail" class="swal2-input" placeholder="Customer Email">
-       
-      
-        `,
+         <label>title:</label>
+          <input type="text" id="supplierTitle" class="swal2-input" placeholder="Customer Title">
+         
+          <label>Address:</label>
+          <input type="text" id="supplierAddress" class="swal2-input" placeholder="Customer Address ">
+        
+          <label>Balance:</label>
+          <input type="number" id="supplierBalance" class="swal2-input" placeholder="Customer Balance">
+          
+          <label>Status:</label>
+          
+          <select id="supplierStatus" class="swal2-select">
+        <option value="true">Enabled</option>
+        <option value="false">Disabled</option>
+      </select>
+         
+          <br><label>Contact:</label>
+          <input type="number" id="supplierContact" class="swal2-input" placeholder="Customer Contact">
+         
+          <br><label>Email:</label>
+          <input type="text" id="supplierEmail" class="swal2-input" placeholder="Customer Email">
+         
+        
+          `,
       showCancelButton: true,
       confirmButtonText: 'Add',
       preConfirm: () => {
-        const productName = (<HTMLInputElement>(
-          document.getElementById('productName')
+        const supplierTitle = (<HTMLInputElement>(
+          document.getElementById('supplierTitle')
         )).value;
-        const productAddress = (<HTMLInputElement>(
-          document.getElementById('productAddress')
+        const supplierAddress = (<HTMLInputElement>(
+          document.getElementById('supplierAddress')
         )).value;
-        const productMobile = (<HTMLSelectElement>(
-          document.getElementById('productMobile')
+        const supplierBalance = (<HTMLInputElement>(
+          document.getElementById('supplierBalance')
         )).value;
-        const productEmail = (<HTMLSelectElement>(
-          document.getElementById('productEmail')
+        const supplierStatus = (<HTMLSelectElement>(
+          document.getElementById('supplierStatus')
+        )).value;
+        const supplierContact = (<HTMLInputElement>(
+          document.getElementById('supplierContact')
+        )).value;
+        const supplierEmail = (<HTMLInputElement>(
+          document.getElementById('supplierEmail')
         )).value;
 
-        if (!productName) {
-          Swal.showValidationMessage('Customer name is required');
+        if (!supplierTitle) {
+          Swal.showValidationMessage('Customer title is required');
         } else {
-          const newProduct = {
-            name: productName,
-            address: productAddress,
-            mobile: productMobile,
-            email: productEmail,
+          const newsupplier = {
+            title: supplierTitle,
+            address: supplierAddress,
+            status: supplierStatus,
+            balance: supplierBalance,
+            email: supplierEmail,
+            contact: supplierContact,
           };
-          this.http.post<Product>(this.url, newProduct).subscribe(() => {
-            this.newProduct = { name: '', address: '', mobile: '', email: '' };
-            this.fetchwarehouse();
-            Swal.fire('Added!', 'Your customer has been added.', 'success');
+          this.http.post<Supplier>(this.url, newsupplier).subscribe(() => {
+            this.newsupplier = {
+              title: '',
+              address: '',
+              balance: '',
+              status: '',
+              contact: '',
+              email: '',
+            };
+            this.fetchsupplier();
+            Swal.fire('Added!', 'Your Customer has been added.', 'success');
           });
         }
       },
     });
   }
 
-  fetchwarehouse() {
+  fetchsupplier() {
     let skip = (this.currentPage - 1) * this.pageSize;
 
     let limit = 20;
     let url = `${this.url}?skip=${skip}&limit=${limit}`;
 
     this.http.get<any>(url).subscribe((response) => {
-      this.products = <any>response.results;
+      this.suppliers = <any>response.results;
       this.totalPages = Math.ceil(response.count / this.pageSize);
       this.totalItems = response.count;
 
@@ -108,12 +152,12 @@ export class CustomerComponent {
 
   onPageChange(event: any) {
     this.currentPage = event;
-    this.fetchwarehouse();
+    this.fetchsupplier();
   }
-  deleteProduct(id: number) {
+  deleteSupplier(id: number) {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'You will not be able to recover this product!',
+      text: 'You will not be able to recover this Customer!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
@@ -122,60 +166,98 @@ export class CustomerComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.http.delete(`${this.url}${id}`).subscribe(() => {
-          console.log(`Product with ID ${id} deleted successfully!`);
-          this.fetchwarehouse();
-          Swal.fire('Deleted!', 'Your customer has been deleted.', 'success');
+          console.log(`Customer with ID ${id} deleted successfully!`);
+          this.fetchsupplier();
+          Swal.fire('Deleted!', 'Your Customer has been deleted.', 'success');
         });
       } else if (result.isDenied) {
-        Swal.fire('Cancelled', 'Your customer is safe :)', 'info');
+        Swal.fire('Cancelled', 'Your Customer is safe :)', 'info');
       }
     });
   }
-  openmodel(allcontent: any, newProduct: any) {
+  openmodel(allcontent: any, newsupplier: any) {
     this.modalService.open(allcontent);
-    this.taskToEdit = newProduct;
+    this.supplierToEdit = newsupplier;
   }
-  openUpdateModal(product: Product) {
+  openUpdateModal(supplier: Supplier) {
     Swal.fire({
-      title: 'Update Customer Detail',
+      title: 'Update Supplier Detail',
       html: `
-      <label>Name:</label>
-      <input type="text" id="productName" class="swal2-input swal1" placeholder="Customer Name"  value="${product.name}">
-      <br><label>Address:</label>
-      <input type="text" id="productAddress" class="swal2-input swal2" placeholder="Customer Address"  value="${product.address}">
-      <br><label>Address:</label>
-      <input type="text" id="productMobile" class="swal2-input swal3" placeholder="Customer Mobile"  value="${product.mobile}">
-      <br><label>Address:</label>
-      <input type="text" id="productEmail" class="swal2-input swal4" placeholder="Customer Email"  value="${product.email}">
-    
-
-    `,
+        <label>Title:</label>
+        <input type="text" id="customerTitle" class="swal2-input swal1" placeholder="Customer Name"  value="${
+          supplier.title
+        }">
+        
+        <br><label>Address:</label>
+        <input type="text" id="customerAddress" class="swal2-input swal2" placeholder="Customer Address"  value="${
+          supplier.address
+        }">
+        
+        <br><label>Balance:</label>
+        <input type="number" id="customerBalance" class="swal2-input swal3" placeholder="Customer Balance"  value="${
+          supplier.balance
+        }">
+        
+        <label>Status:</label> 
+        <select id="customerStatus" class="swal2-select">
+          <option value="true" ${
+            supplier.status ? 'selected' : ''
+          }>Enabled</option>
+          <option value="false" ${
+            !supplier.status ? 'selected' : ''
+          }>Disabled</option>
+        </select>
+        
+        <br><label>Contact:</label>
+        <input type="number" id="customerContact" class="swal2-input swal5" placeholder="Customer Contact"  value="${
+          supplier.contact
+        }">
+        
+        <br><label>Email:</label>
+        <input type="text" id="customerEmail" class="swal2-input swal4" placeholder="Customer Email"  value="${
+          supplier.email
+        }">
+      
+      `,
       showCancelButton: true,
       confirmButtonText: 'Update',
       cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
-        const updatedName = (<HTMLInputElement>document.querySelector('.swal1'))
-          .value;
+        const updatedTitle = (<HTMLInputElement>(
+          document.querySelector('.swal1')
+        )).value;
         const updatedAddress = (<HTMLInputElement>(
           document.querySelector('.swal2')
         )).value;
-        const updatedMobile = (<HTMLInputElement>(
-          document.querySelector('.swal3')
+        const updatedBalance = parseInt(
+          (<HTMLInputElement>document.querySelector('.swal3')).value
+        );
+
+        const updatedContact = (<HTMLInputElement>(
+          document.querySelector('.swal5')
         )).value;
         const updatedEmail = (<HTMLInputElement>(
           document.querySelector('.swal4')
         )).value;
+        const updatedStatus =
+          (<HTMLSelectElement>document.querySelector('.swal2-select')).value ===
+          'true';
+
         this.http
-          .put(`${this.url}${product.id}/`, {
-            name: updatedName,
+          .put(`${this.url}${supplier.id}/`, {
+            title: updatedTitle,
             address: updatedAddress,
-            mobile: updatedMobile,
+            contact: updatedContact,
             email: updatedEmail,
+            balance: updatedBalance,
+            status: updatedStatus,
           })
           .subscribe(() => {
-            console.log(`Product with ID ${product.id} updated successfully!`);
-            this.fetchwarehouse();
+            console.log(
+              `Customer with ID ${supplier.id} updated successfully!`
+            );
+            this.fetchsupplier();
             Swal.fire(
               'Updated!',
               'Your Customer list has been updated.',
@@ -219,32 +301,33 @@ export class CustomerComponent {
   //   doc.save('all_customers.pdf');
   // }
   generatePDF() {
-    const columns2 = { title: 'All Customer' };
+    const columns2 = { title: 'All Customer List' };
+    
     const columns = [
       { title: 'S.N', dataKey: 'sn' },
-      { title: 'Name', dataKey: 'name' },
+      { title: 'Title', dataKey: 'title' },
       { title: 'Address', dataKey: 'address' },
-      { title: 'Mobile', dataKey: 'mobile' },
+      { title: 'Balance', dataKey: 'balance' },
+      { title: 'status', dataKey: 'status' },
+      { title: 'Contact', dataKey: 'contact' },
       { title: 'Email', dataKey: 'email' },
-      { title: 'Recievable', dataKey: 'recievable' },
-      { title: 'Payable', dataKey: 'payable' },
     ];
 
-    const data = this.products.map((product, index) => ({
+    const data = this.suppliers.map((supplier, index) => ({
       sn: index + 1,
-      name: product.name,
-      address: product.address,
-      mobile: product.mobile,
-      email: product.email,
-      reciavable: product.reciavable,
-      payable: product.payable,
+      title: supplier.title,
+      address: supplier.address,
+      balance: supplier.balance,
+      status: supplier.status,
+      contact: supplier.contact,
+      email: supplier.email,
     }));
-
+    
     const doc = new jsPDF();
-
+    
+    doc.text(columns2.title, 86, 8);
     doc.setFontSize(22);
-    doc.setTextColor(0, 0, 0);
-    doc.text('All Customers', 50, 42);
+    // doc.setTextColor('red');
     doc.setFontSize(16);
 
     (doc as any).autoTable({

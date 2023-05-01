@@ -20,7 +20,7 @@ export interface Product {
 })
 export class CategoriesComponent {
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
-
+  public ip_address="192.168.1.9:8000";
   categories: any[] = [];
   newCategory: any = {};
   modalService: any;
@@ -146,7 +146,7 @@ export class CategoriesComponent {
   }
   taskToEdit: any;
 
-  public url = 'http://127.0.0.1:8000/inventory/categories/';
+  public url = "http://" + this.ip_address +"/inventory/categories/";
 
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);

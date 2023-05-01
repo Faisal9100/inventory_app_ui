@@ -5,10 +5,11 @@ import { HttpClient, HttpHeaders} from '@angular/common/http';
   providedIn: 'root'
 })
 export class WarehouseServiceService {
+public ip_address = "192.168.1.9:8000";
 
   constructor(private httpService: HttpClient) { }
   getData() {
     return this.httpService.get
-    ("http://127.0.0.1:8000/inventory/warehouses/");
+    ("http://" + this.ip_address + "/inventory/warehouses/");
    }
 }

@@ -6,23 +6,20 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ProductService {
+  // public ip_address = ' 192.168.1.9:8000 ';
 
   constructor(public http: HttpClient) {}
-  public url = 'http://127.0.0.1:8000/inventory/products/';
 
+  public url = 'http://192.168.1.9:8000/inventory/products/';
 
   getProducts(): Observable<any> {
     return this.http.get<any>(this.url);
   }
-  addProduct(formData:FormData): Observable<any> {
-    return this.http.post<any>(this.url, FormData);
+  addProduct(formData: FormData): Observable<any> {
+    return this.http.post(this.url, formData);
   }
-  
-  // addProduct(formData: FormData) {
-  //   const url = 'http://127.0.0.1:8000/inventory/products/'; // replace with your API endpoint
-   
-  //   return this.http.post(url, formData);
-  // }
-  
-    
+  deleteProduct(id: number): Observable<void> {
+    const url = `${this.url}${id}`;
+    return this.http.delete<void>(this.url);
+  }
 }

@@ -6,9 +6,9 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class BrandService {
-
-  private url2 = 'http://127.0.0.1:8000/inventory/brands/${id}';
-  public url = 'http://127.0.0.1:8000/inventory/brands/';
+public ip_address="192.168.1.9:8000"
+  private url2 = "http://" + this.ip_address +"/inventory/brands/${id}";
+  public url = "http://" + this.ip_address +"/inventory/brands/";
 
   constructor(private http: HttpClient) {}
   //  code for brand
@@ -34,7 +34,7 @@ export class BrandService {
     return this.http.put<any>(url, category);
   }
   // brand code ended
-  public url3 = 'http://127.0.0.1:8000/inventory/products/';
+  public url3 = 'http://192.168.1.9:8000/inventory/products/';
 
 
   getProducts(): Observable<any> {

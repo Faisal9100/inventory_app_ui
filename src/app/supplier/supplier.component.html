@@ -17,19 +17,23 @@
     >
       <i class="bi bi-plus-circle"></i> Add new
     </button>
+    <button class="btn btn-outline-danger" (click)="generatePDF()">
+      <i class="bi bi-arrow-down-circle"></i> PDF
+    </button>
   </div>
 </div>
 
 <div class="top-sellling">
-  <table class="table table-striped table-bordered table-hover">
+  <table class="table table-striped text-center table-bordered table-hover">
     <thead class="table-head">
       <tr>
         <th>S.N</th>
-        <th>Name</th>
+        <th>Title</th>
         <th>Address</th>
-        <th>Company</th>
+        <th>Balance</th>
+        <th>Status</th>
         <th>Email</th>
-        <th>Mobile</th>
+        <th>Contact</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -41,11 +45,25 @@
         "
       >
         <td>{{ supplier.id }}</td>
-        <td>{{ supplier.name }}</td>
+        <td>{{ supplier.title }}</td>
         <td>{{ supplier.address }}</td>
-        <td>{{ supplier.company }}</td>
-        <td>{{ supplier.mobile }}</td>
+        <td>{{ supplier.balance }}</td>
+        <td>
+          <button
+            class="btn btn-outline-success"
+            *ngIf="supplier.status === true"
+          >
+            Enabled
+          </button>
+          <button
+            class="btn btn-outline-warning"
+            *ngIf="supplier.status === false"
+          >
+            Disabled
+          </button>
+        </td>
         <td>{{ supplier.email }}</td>
+        <td>{{ supplier.contact }}</td>
         <td>
           <button
             class="btn btn-outline-primary mx-2"

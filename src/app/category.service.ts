@@ -15,9 +15,10 @@ export class CategoryService {
   unshift(newCategory: { name: any }) {
     throw new Error('Method not implemented.');
   }
+  public ip_address= "192.168.1.9:8000";
 
-  private url2 = 'http://127.0.0.1:8000/inventory/categories/${id}';
-  public url = 'http://127.0.0.1:8000/inventory/categories/';
+  private url2 = "http://"+ this.ip_address +"/inventory/categories/${id}";
+  public url = "http://"+ this.ip_address +"/inventory/categories/";
  
   constructor(private http: HttpClient) {}
   //  code for categories
@@ -43,7 +44,7 @@ export class CategoryService {
     return this.http.put<any>(url, category);
   }
   // categories code ended
-  public url3 = 'http://127.0.0.1:8000/inventory/products/';
+  public url3 = 'http://192.168.1.9:8000/inventory/products/';
 
 
   getProducts(): Observable<any> {
