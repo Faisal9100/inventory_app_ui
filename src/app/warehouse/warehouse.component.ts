@@ -83,19 +83,6 @@ public  url = "http://" + this.ip_address + "/inventory/warehouses/"
     });
   }
 
-  // fetchwarehouse() {
-  //   let skip = (this.currentPage - 1) * this.pageSize;
-  //   let limit = this.pageSize;
-  //   let url = `${this.url}?skip=${skip}&limit=${limit}`;
-
-  //   this.http.get<any>(url).subscribe((response) => {
-  //     this.products = <any>response.results;
-  //     this.totalPages = Math.ceil(response.count / this.pageSize);
-
-  //     // Update the pages array based on the total number of pages
-  //     this.pages = Array.from({ length: this.totalPages }, (_, i) => i + 1);
-  //   });
-  // }
   fetchwarehouse() {
     let skip = (this.currentPage - 1) * this.pageSize;
     let limit = this.pageSize;

@@ -21,6 +21,7 @@ import { TransferComponent } from './transfer/transfer.component';
 import { TypeComponent } from './type/type.component';
 import { UnitsComponent } from './units/units.component';
 import { WarehouseComponent } from './warehouse/warehouse.component';
+import { AccountlayerComponent } from './accountlayer/accountlayer.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
@@ -42,11 +43,10 @@ const routes: Routes = [
   { path: 'cache', component: CacheComponent },
   { path: 'email-setting', component: EmailSettingComponent },
   { path: 'type', component: TypeComponent },
-  {path:'units',component:UnitsComponent},
-  {path:'customer',component:CustomerComponent},
-  {path:'supplier',component:SupplierComponent}
-  
-  
+  { path: 'units', component: UnitsComponent },
+  { path: 'customer', component: CustomerComponent },
+  { path: 'supplier', component: SupplierComponent },
+  { path: 'accounts', component: AccountlayerComponent },
 ];
 
 @NgModule({

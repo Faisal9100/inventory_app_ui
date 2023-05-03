@@ -53,6 +53,7 @@ import { ProductService } from './product.service';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { UnitService } from './unit.service';
 import { BrandService } from './brand.service';
+import { AccountlayerComponent } from './accountlayer/accountlayer.component';
 
 
 @NgModule({
@@ -92,6 +93,7 @@ import { BrandService } from './brand.service';
     SidebarComponent,
     SupplierComponent,
     PaginationComponent,
+    AccountlayerComponent,
   ],
   imports: [
     BrowserAnimationsModule,

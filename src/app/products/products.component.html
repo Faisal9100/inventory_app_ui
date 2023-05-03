@@ -5,7 +5,7 @@
     <input
       type="text"
       class="form-control w-25"
-      placeholder="Search Warehouses"
+      placeholder="Search Products"
     />
     <button class="btn btn-primary">
       <i class="bi bi-search"></i>
@@ -17,7 +17,47 @@
     >
       <i class="bi bi-plus-circle"></i> Add new
     </button>
+    <button class="btn btn-outline-danger" (click)="generatePDF()">
+      <i class="bi bi-arrow-down-circle"></i> PDF
+    </button>
   </div>
+</div>
+<div class="top-sellling">
+  <table class="table table-striped text-center table-bordered table-hover">
+    <thead class="table-head">
+      <tr>
+        <th>Image</th>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Quantity</th>
+        <th>Note</th>
+        <th>Unit</th>
+        <th>Brand</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of productData1">
+        <td>
+          <img width="50px" height="50px" src="{{ product.image }}" alt="" />
+        </td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.category_name }}</td>
+        <td>{{ product.quantity }}</td>
+        <td>{{ product.note }}</td>
+        <td>{{ product.unit_name }}</td>
+        <td>{{ product.brand_name }}</td>
+        <td>
+          <button class="btn btn-outline-primary mx-2" (click)="openUpdateModal(product)">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+          <button class="btn btn-outline-danger" (click)="deleteProduct(product.id)">
+            <i class="bi bi-trash3-fill"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
 
 <!-- <ng-template #content let-c="close" let-d="dismiss">
@@ -90,12 +130,10 @@
     class="modal-header"
     style="background-color: var(--bs-primary-bg-subtle)"
   >
-    <h4 class="modal-title text-white fs-3" id="modal-basic-title">
-      Add Products
-    </h4>
+    <h4 class="modal-title mt-3 fs-3" id="modal-basic-title">Add Products</h4>
     <button
       type="button"
-      class="btn-close text-white"
+      class="btn-close"
       aria-label="Close"
       (click)="d('Cross click')"
     ></button>
@@ -147,7 +185,7 @@
             required
           >
             <option *ngFor="let brand of brands" [value]="brand.id">
-              {{ brand.id }}
+              {{ brand.name }}
             </option>
           </select>
         </div>
@@ -160,7 +198,7 @@
             required
           >
             <option *ngFor="let unit of units" [value]="unit.id">
-              {{ unit.id }}
+              {{ unit.name }}
             </option>
           </select>
         </div>
@@ -173,7 +211,7 @@
             required
           >
             <option *ngFor="let category of categories" [value]="category.id">
-              {{ category.id }}
+              {{ category.name }}
             </option>
           </select>
         </div>
@@ -201,40 +239,3 @@
   </div>
 </ng-template>
 
-<div class="top-sellling">
-  <table class="table table-striped text-center table-bordered table-hover">
-    <thead class="table-head">
-      <tr>
-        <th>Image</th>
-        <th>Name</th>
-        <th>Category</th>
-        <th>Quantity</th>
-        <th>Note</th>
-        <th>Unit</th>
-        <th>Brand</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let product of productData1">
-        <td>
-          <img width="50px" height="50px" src="{{ product.image }}" alt="" />
-        </td>
-        <td>{{ product.name }}</td>
-        <td>{{ product.category }}</td>
-        <td>{{ product.quantity }}</td>
-        <td>{{ product.note }}</td>
-        <td>{{ product.unit }}</td>
-        <td>{{ product.brand }}</td>
-        <td>
-          <button class="btn btn-outline-primary mx-2">
-            <i class="bi bi-pencil-square"></i>
-          </button>
-          <button class="btn btn-outline-danger" (click)="deleteProduct(id)">
-            <i class="bi bi-trash3-fill"></i>
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>

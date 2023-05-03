@@ -18,8 +18,14 @@ export class ProductService {
   addProduct(formData: FormData): Observable<any> {
     return this.http.post(this.url, formData);
   }
-  deleteProduct(id: number): Observable<void> {
-    const url = `${this.url}${id}`;
-    return this.http.delete<void>(this.url);
+ 
+  deleteProduct(id: number): Observable<any> {
+    const deleteUrl = `${this.url}${id}`;
+    return this.http.delete<any>(deleteUrl);
   }
+  updateProduct(id: any, formData: any): Observable<any> {
+    const url = `${this.url}${id}`;
+    return this.http.put(url, formData);
+  }
+
 }

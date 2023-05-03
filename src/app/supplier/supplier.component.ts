@@ -19,7 +19,7 @@ export interface Supplier {
   styleUrls: ['./supplier.component.css'],
 })
 export class SupplierComponent {
-  ip_address = "192.168.1.9:8000";
+  ip_address = '192.168.1.9:8000';
   supplierToEdit: any;
   pageSize = 10;
   currentPage = 1;
@@ -28,7 +28,7 @@ export class SupplierComponent {
   id = 'pagination';
   closeResult: any;
 
-  public url = "http://" + this.ip_address + "/inventory/Suppliers/";
+  public url = 'http://' + this.ip_address + '/inventory/Suppliers/';
   totalItems: any;
   itemsPerPage: any;
   suppliers: any[] = [];

@@ -1,0 +1,91 @@
+ <h1>Charts Of Accounts</h1>
+ <div class="form-group row mt-3">
+  <div class="col">
+    <label class="form-label">Main Layer:</label>
+    <select name="main_layer" class="form-select">
+      <option value="null">Select Main Layer</option>
+      <option value="assets">Assests</option>
+      <option value="equity">Equity</option>
+      <option value="expense">Expense</option>
+      <option value="liability">Liability</option>
+      <option value="revenue">Revenue</option>
+    </select>
+  </div>
+  <div class="col">
+    <label class="form-label">Layer 1:</label>
+    <select name="layer1" class="form-select">
+      <option [value]="item.id" *ngFor="let item of layer1">
+        {{ item.name }}
+      </option>
+    </select>
+    <button class="btn btn-primary mt-2">Add/Modify Layer 1</button>
+  </div>
+
+  
+  
+  <div class="col">
+    <label class="form-label">Layer 2:</label>
+    <select name="layer2" class="form-select">
+      <option [value]="value.id" *ngFor="let value of layer2">{{value.name}}</option>
+      
+    </select>
+    <button class="btn btn-primary mt-2">Add/Modify Layer 2</button>
+    <button class="btn btn-primary mt-2 float-end" (click)="addSupplier()">
+      <i class="bi bi-plus-circle-fill"></i> Add Account
+    </button>
+  </div>
+</div>
+<br />
+<div class="mt-4 top-sellling">
+  <table class="table table-striped text-center table-bordered table-hover">
+    <thead class="table-head bg-primary text-white">
+      <tr>
+        <th>ID</th>
+        <th>Account Title</th>
+        <th>Contact</th>
+        <th>Status</th>
+        <th>Balance</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let account of accountData">
+        <td>{{ account.id }}</td>
+        <td>{{ account.title }}</td>
+        <td>{{ account.contact }}</td>
+        <td>
+          <button
+            class="btn btn-outline-success"
+            *ngIf="account.status === true"
+          >
+            Active
+          </button>
+          <button
+            class="btn btn-outline-warning"
+            *ngIf="account.status === false"
+          >
+            Inactive
+          </button>
+        </td>
+        <td>{{ account.balance }}</td>
+        <td>{{ account.email }}</td>
+        <td>{{ account.address }}</td>
+        <td>
+          <button class="btn btn-outline-primary mx-2">
+            <!-- (click)="updateProduct(product)" -->
+            <i class="bi bi-pencil-square"></i>
+          </button>
+          <button
+            class="btn btn-outline-danger"
+            (click)="deleteAccount(account.id)"
+          >
+            <i class="bi bi-trash3-fill"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+"
