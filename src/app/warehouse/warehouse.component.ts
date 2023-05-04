@@ -182,6 +182,7 @@ public  url = "http://" + this.ip_address + "/inventory/warehouses/"
   }
   generatePDF() {
     const columns2 = { title: 'All Warehouse List' };
+    // const columns2 = { title: 'All Warehouse List' };
     const columns = [
       { title: 'S.N', dataKey: 'sn' },
       { title: 'Name', dataKey: 'name' },

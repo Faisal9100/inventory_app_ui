@@ -6,3 +6,12 @@
 nav#pagination {
   cursor: pointer;
 }
+.page-item{
+  border-radius: 20px;
+  
+}
+.page-link{
+  
+  border-radius: 20px;
+  margin: 5px;
+}

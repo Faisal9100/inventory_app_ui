@@ -1,8 +1,13 @@
- <h1>Charts Of Accounts</h1>
- <div class="form-group row mt-3">
+<h1>Charts Of Accounts</h1>
+<div class="form-group row mt-3">
   <div class="col">
     <label class="form-label">Main Layer:</label>
-    <select name="main_layer" class="form-select">
+    <select
+      name="main_layer"
+      class="form-select"
+      [(ngModel)]="selectedMainLayer"
+      (change)="onMainLayerChange($event)"
+    >
       <option value="null">Select Main Layer</option>
       <option value="assets">Assests</option>
       <option value="equity">Equity</option>
@@ -13,24 +18,42 @@
   </div>
   <div class="col">
     <label class="form-label">Layer 1:</label>
-    <select name="layer1" class="form-select">
+    <select
+      name="layer1"
+      class="form-select"
+      [(ngModel)]="selectedLayer1"
+      (change)="onLayer1Change(selectedLayer1)"
+    >
+      <option>Select Layer 1</option>
       <option [value]="item.id" *ngFor="let item of layer1">
         {{ item.name }}
       </option>
     </select>
-    <button class="btn btn-primary mt-2">Add/Modify Layer 1</button>
+    <button class="btn btn-primary mt-2" [disabled]="!selectedLayer1">
+      Add/Modify Layer 1
+    </button>
   </div>
 
-  
-  
   <div class="col">
     <label class="form-label">Layer 2:</label>
-    <select name="layer2" class="form-select">
-      <option [value]="value.id" *ngFor="let value of layer2">{{value.name}}</option>
-      
+    <select name="layer2" class="form-select" [(ngModel)]="selectedLayer2">
+      <option>Select Layer 2</option>
+      <option [value]="value.id" *ngFor="let value of layer2">
+        {{ value.name }}
+      </option>
     </select>
-    <button class="btn btn-primary mt-2">Add/Modify Layer 2</button>
-    <button class="btn btn-primary mt-2 float-end" (click)="addSupplier()">
+    <button
+      class="btn btn-primary mt-2"
+      [disabled]="!selectedLayer2"
+      (click)="onAddModifyLayer2()"
+    >
+      Add/Modify Layer 2
+    </button>
+    <button
+      class="btn btn-primary mt-2 float-end"
+      [disabled]="!selectedLayer2"
+      (click)="addAccount()"
+    >
       <i class="bi bi-plus-circle-fill"></i> Add Account
     </button>
   </div>
