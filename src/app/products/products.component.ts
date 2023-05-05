@@ -22,7 +22,7 @@ export interface Product {
   unit: any;
   name: string;
   image: File;
-  quantity: any;
+  // quantity: any;
   note: string;
 }
 
@@ -140,7 +140,7 @@ export class ProductsComponent {
   formData = {
     name: '',
     note: '',
-    quantity: '',
+    
     unit: '',
     brand: '',
     category: '',
@@ -150,7 +150,7 @@ export class ProductsComponent {
   productData!: {
     map(arg0: (product: { image: any; name: any; quantity: any; category: any; note: any; brand: any; unit: any; }, index: number) => { sn: number; title: any; address: any; balance: any; status: any; contact: any; email: any; unit: any; }): unknown;
     name: any;
-    quantity: any;
+    
     note: any;
     brand: any;
     unit: any;
@@ -176,7 +176,7 @@ export class ProductsComponent {
   addProduct() {
     const productData = {
       name: this.productForm.get('name')?.value,
-      quantity: this.productForm.get('quantity')?.value,
+     
       note: this.productForm.get('note')?.value,
       brand: this.productForm.get('brand')?.value,
       unit: this.productForm.get('unit')?.value,
@@ -185,7 +185,7 @@ export class ProductsComponent {
 
     const formData = new FormData();
     formData.append('name', this.productForm.get('name')?.value);
-    formData.append('quantity', this.productForm.get('quantity')?.value);
+   
     formData.append('note', this.productForm.get('note')?.value);
     formData.append('brand', this.productForm.get('brand')?.value);
     formData.append('unit', this.productForm.get('unit')?.value);
@@ -199,7 +199,7 @@ export class ProductsComponent {
       (response) => {
         const formData = {
           name: '',
-          quantity: '',
+         
           note: '',
           brand: '',
           unit: '',
@@ -250,10 +250,7 @@ export class ProductsComponent {
       <input type="text" id="productName" class="swal2-input swal1" placeholder="Name"  value="${
         product.name
       }">
-      <br><label>Quantity:</label>
-      <input type="number" id="productQuantity" class="swal2-input swal2" placeholder="Quantity"  value="${
-        product.quantity
-      }">
+     
       <br><label>Note:</label>
       <input type="text" id="productNote" class="swal2-input swal3" placeholder="Note"  value="${
         product.note
@@ -341,10 +338,7 @@ export class ProductsComponent {
       <input type="text" id="productName" class="swal2-input swal1" placeholder="Name"  value="${
         product.name
       }">
-      <br><label>Quantity:</label>
-      <input type="text" id="productQuantity" class="swal2-input swal2" placeholder="Quantity"  value="${
-        product.quantity
-      }">
+     
       <input type="text" id="productBrand" class="swal2-input swal3" placeholder="Brand" value="${
         product.brand
       }">
@@ -432,7 +426,7 @@ export class ProductsComponent {
       sn: index + 1,
       title: product.image,
       address: product.name,
-      balance: product.quantity,
+      balance: product.quantity, 
       status: product.category,
       contact: product.note,
       email: product.brand,

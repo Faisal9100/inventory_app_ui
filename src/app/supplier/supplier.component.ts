@@ -25,12 +25,12 @@ export class SupplierComponent {
   currentPage = 1;
   totalPages!: number;
   pages: number[] = [];
+  totalItems: any;
+  itemsPerPage: any;
   id = 'pagination';
   closeResult: any;
 
   public url = 'http://' + this.ip_address + '/inventory/Suppliers/';
-  totalItems: any;
-  itemsPerPage: any;
   suppliers: any[] = [];
   supplier: Supplier = {
     id: 0,
@@ -111,11 +111,7 @@ export class SupplierComponent {
         } else {
           const newsupplier = {
             title: supplierTitle,
-            address: supplierAddress,
-            status: supplierStatus,
-            balance: supplierBalance,
-            email: supplierEmail,
-            contact: supplierContact,
+           
           };
           this.http.post<Supplier>(this.url, newsupplier).subscribe(() => {
             this.newsupplier = {

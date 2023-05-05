@@ -1,8 +1,8 @@
-import { ProductService } from './../product.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { AccountlayerService } from '../accountlayer.service';
 import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
 
 export interface Account {
   id: number;
@@ -22,16 +22,69 @@ export interface Account {
 export class AccountlayerComponent implements OnInit {
   selectedMainLayer?: string;
   ip_address = '192.168.1.9:8000';
-  public create_account_url =
-    'http://192.168.1.9:8000/inventory/layer2s/2/accounts/';
 
+  public create_account_url =
+    'http://' + this.ip_address + '/inventory/layer2s/';
+
+  public account_url = 'http://' + this.ip_address + '/inventory/accounts/';
+
+  public selectedProductId: number = 5;
+
+  public url =
+    'http://' +
+    this.ip_address +
+    '/inventory/layer2s/' +
+    this.selectedProductId +
+    '/accounts/';
+
+  id: any;
   selectedLayer1: any;
+
   accountMain: any;
+
   mainLayer: string = '';
+
   layer1: any[] = [];
+
   layer2: any[] = [];
+
   selectedLayer2: any;
+
   accountData: any[] = [];
+
+  pageSize = 10;
+
+  currentPage = 1;
+
+  totalPages?: number;
+
+  pages: number[] = [];
+
+  totalItems: any;
+
+  itemsPerPage: any;
+
+  closeResult: any;
+
+  newAccount = {
+    title: '',
+    address: '',
+    balance: '',
+    status: '',
+    contact: '',
+    email: '',
+  };
+
+  account: Account = {
+    id: 0,
+    title: '',
+    address: '',
+    status: '',
+    balance: 0,
+    contact: 0,
+    email: '',
+  };
+
   constructor(
     public http: HttpClient,
     public accountLayerservice: AccountlayerService
@@ -42,13 +95,21 @@ export class AccountlayerComponent implements OnInit {
     this.accountLayerservice.getAccounts().subscribe(
       (data) => {
         this.accountData = data.results;
-        // console.log(data);
       },
       (error) => {
         console.log(error);
       }
     );
   }
+
+  // __code for pagination__
+
+  onPageChange(event: any) {
+    this.currentPage = event;
+    this.getAccountsData();
+  }
+
+  // __code for displaying data in Main layer__
 
   onMainLayerChange(event: any) {
     this.selectedMainLayer = event.target.value;
@@ -63,6 +124,7 @@ export class AccountlayerComponent implements OnInit {
       this.layer2 = [];
     }
   }
+
   onLayer1Change(selectedLayer1: any) {
     this.accountLayerservice
       .getLayer2(this.selectedLayer1)
@@ -71,6 +133,8 @@ export class AccountlayerComponent implements OnInit {
         console.log(this.selectedLayer1);
       });
   }
+
+  // __ code for adding layer1 data__
 
   getLayer1() {
     this.accountLayerservice.getLayer1(this.selectedMainLayer).subscribe(
@@ -85,6 +149,9 @@ export class AccountlayerComponent implements OnInit {
       }
     );
   }
+
+  // __ code for adding layer2 data__
+
   getLayer2(selectedLayer1: any) {
     this.accountLayerservice.getLayer2(selectedLayer1).subscribe((data) => {
       this.layer2 = data;
@@ -92,30 +159,38 @@ export class AccountlayerComponent implements OnInit {
       console.log(data);
     });
   }
-  // getLayer2(id: any) {
-  //   const url = `http://${this.ip_address}/inventory/layer1s/${id}/layer2s/`;
-  //   console.log('Selected Layer1 ID:', id);
-  //   this.accountLayerservice.getLayer2(url).subscribe((data) => {
-  //     this.layer2 = data;
-  //     console.log(data);
+  // fetchsupplier() {
+  //   let skip = (this.currentPage - 1) * this.pageSize;
+
+  //   let limit = 20;
+  //   let url = `${this.url}?skip=${skip}&limit=${limit}`;
+
+  //   this.http.get<any>(url).subscribe((response) => {
+  //     this.suppliers = <any>response.results;
+  //     this.totalPages = Math.ceil(response.count / this.pageSize);
+  //     this.totalItems = response.count;
+
+  //     this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
   //   });
   // }
 
-  getProducts() {
+  // __code for getting Account Data__
+
+  getAccountsData() {
+    let skip = (this.currentPage - 1) * this.pageSize;
+
+    let limit = 20;
     this.accountLayerservice.getAccounts().subscribe((data) => {
       this.accountData = data.results;
+      this.totalPages = Math.ceil(data.count / this.pageSize);
+      this.totalItems = data.count;
+      this.accountData.push(data);
+      this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
     });
   }
 
-  public selectedProductId: number = 5; // example ID
+  // __code for deleting Accounts__
 
-  public url =
-    'http://' +
-    this.ip_address +
-    '/inventory/layer2s/' +
-    this.selectedProductId +
-    '/accounts/';
-  id: any;
   deleteAccount(id: number) {
     Swal.fire({
       title: 'Are you sure?',
@@ -127,10 +202,8 @@ export class AccountlayerComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.http
-          .delete(
-            `${'http://' + this.ip_address + '/inventory/accounts/${id}'}`
-          )
-          // give proper id
+          .delete(`${this.account_url}${id}/`)
+
           .subscribe(
             () => {
               Swal.fire(
@@ -139,7 +212,7 @@ export class AccountlayerComponent implements OnInit {
                 'success'
               );
 
-              this.accountLayerservice.getAccounts();
+              this.getAccountsData();
             },
             () => {
               Swal.fire('Error!', 'You cannot delete this Account.', 'error');
@@ -148,23 +221,9 @@ export class AccountlayerComponent implements OnInit {
       }
     });
   }
-  newAccount = {
-    title: '',
-    address: '',
-    balance: '',
-    status: '',
-    contact: '',
-    email: '',
-  };
-  account: Account = {
-    id: 0,
-    title: '',
-    address: '',
-    status: '',
-    balance: 0,
-    contact: 0,
-    email: '',
-  };
+
+  // __code for adding account__
+
   addAccount() {
     Swal.fire({
       title: 'Add Account',
@@ -190,9 +249,6 @@ export class AccountlayerComponent implements OnInit {
          
           <br><label>Email:</label>
           <input type="text" id="accountEmail" class="swal2-input" placeholder="Email">
-    
-   
-        
           `,
       showCancelButton: true,
       confirmButtonText: 'Add',
@@ -221,14 +277,12 @@ export class AccountlayerComponent implements OnInit {
         } else {
           const newaccount = {
             title: accountTitle,
-            address: accountAddress,
-            status: accountStatus,
-            balance: accountBalance,
-            email: accountEmail,
-            contact: accountContact,
           };
           this.http
-            .post<Account>(this.create_account_url, newaccount)
+            .post<Account>(
+              `${this.create_account_url}${this.selectedLayer2}/accounts/`,
+              newaccount
+            )
             .subscribe(() => {
               this.newAccount = {
                 title: '',
@@ -238,20 +292,143 @@ export class AccountlayerComponent implements OnInit {
                 contact: '',
                 email: '',
               };
-              this.accountLayerservice.getAccounts();
+              this.getAccountsData();
 
               Swal.fire('Added!', 'Your Account has been added.', 'success');
+              this.accountLayerservice.accountAdded.emit(this.account);
             });
         }
       },
     });
   }
-  onAddModifyLayer2() {
-    const selectedValue = this.selectedLayer2;
+
+  // __code for updating account__
+
+  updateAccount(account: Account): void {
     Swal.fire({
-      title: 'Selected Layer 2',
-      text: selectedValue,
-      icon: 'success',
+      title: 'Update Account',
+      html: `
+        <label>title:</label>
+        <input type="text" id="accountTitle" class="swal2-input" placeholder="Account Title" value="${
+          account.title
+        }">
+       
+        <label>Address:</label>
+        <input type="text" id="accountAddress" class="swal2-input" placeholder=" Address " value="${
+          account.address
+        }">
+      
+        <label>Balance:</label>
+        <input type="text" id="accountBalance" class="swal2-input" placeholder=" Balance" value="${
+          account.balance
+        }">
+        
+        <label>Status:</label>
+        
+        <select id="accountStatus" class="swal2-select">
+          <option value="true" ${
+            account.status ? 'selected' : ''
+          }>Active</option>
+          <option value="false" ${
+            !account.status ? 'selected' : ''
+          }>Inactive</option>
+        </select>
+       
+        <br><label>Contact:</label>
+        <input type="text" id="accountContact" class="swal2-input" placeholder="Contact" value="${
+          account.contact
+        }">
+       
+        <br><label>Email:</label>
+        <input type="text" id="accountEmail" class="swal2-input" placeholder="Email" value="${
+          account.email
+        }">
+        `,
+      showCancelButton: true,
+      confirmButtonText: 'Update',
+      preConfirm: () => {
+        const accountTitle = (<HTMLInputElement>(
+          document.getElementById('accountTitle')
+        )).value;
+        const accountAddress = (<HTMLInputElement>(
+          document.getElementById('accountAddress')
+        )).value;
+        const accountBalance = (<HTMLInputElement>(
+          document.getElementById('accountBalance')
+        )).value;
+        const accountStatus = (<HTMLSelectElement>(
+          document.getElementById('accountStatus')
+        )).value;
+        const accountContact = (<HTMLInputElement>(
+          document.getElementById('accountContact')
+        )).value;
+        const accountEmail = (<HTMLInputElement>(
+          document.getElementById('accountEmail')
+        )).value;
+
+        if (!accountTitle) {
+          Swal.showValidationMessage('Account title is required');
+        } else {
+          const updatedAccount = {
+            title: accountTitle,
+            address: accountAddress,
+            balance: accountBalance,
+            status: accountStatus === 'true',
+            contact: accountContact,
+            email: accountEmail,
+          };
+          this.http
+            .put<Account>(`${this.account_url}${account.id}/`, updatedAccount)
+            .subscribe(() => {
+              this.getAccountsData();
+
+              Swal.fire(
+                'Updated!',
+                'Your Account has been updated.',
+                'success'
+              );
+            });
+        }
+      },
     });
+  }
+
+  // __code for print account Details__
+
+  generatePDF() {
+    const columns2 = { title: 'All Accounts list' };
+
+    const columns = [
+      { title: 'S.N', dataKey: 'sn' },
+      { title: 'Account Title', dataKey: 'title' },
+      { title: 'Contact', dataKey: 'contact' },
+      { title: 'status', dataKey: 'status' },
+      { title: 'Balance', dataKey: 'balance' },
+      { title: 'Email', dataKey: 'email' },
+      { title: 'Address', dataKey: 'address' },
+    ];
+
+    const data = this.accountData.map((account, index) => ({
+      sn: index + 1,
+      title: account.title,
+      contact: account.contact,
+      status: account.status,
+      balance: account.balance,
+      email: account.email,
+      address: account.address,
+    }));
+
+    const doc = new jsPDF();
+    doc.text(columns2.title, 86, 8);
+
+    doc.setFontSize(22);
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(16);
+
+    (doc as any).autoTable({
+      columns: columns,
+      body: data,
+    });
+    doc.save('all_this.accounts.pdf');
   }
 }
