@@ -45,7 +45,7 @@ import { ReportComponent } from './report/report.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { NgChartsModule } from 'ng2-charts';
 import { SupplierComponent } from './supplier/supplier.component';
-import { NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { PaginationComponent } from './pagination/pagination.component';
 import { WarehouseServiceService } from './warehouse-service.service';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -54,7 +54,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { UnitService } from './unit.service';
 import { BrandService } from './brand.service';
 import { AccountlayerComponent } from './accountlayer/accountlayer.component';
-
+import { SupplierService } from './supplier.service';
 
 @NgModule({
   declarations: [
@@ -112,7 +112,6 @@ import { AccountlayerComponent } from './accountlayer/accountlayer.component';
     NgChartsModule,
     NgbModule,
     NgxPaginationModule,
-    
   ],
   providers: [
     WarehouseServiceService,
@@ -120,7 +119,8 @@ import { AccountlayerComponent } from './accountlayer/accountlayer.component';
     UnitService,
     BrandService,
     ProductService,
-    
+    SupplierService,
+    NgbActiveModal,
   ],
   bootstrap: [AppComponent],
 })

@@ -1,3 +1,4 @@
+import { WarehouseService } from './../warehouse.service';
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -17,7 +18,7 @@ export interface Product {
   styleUrls: ['./warehouse.component.css'],
 })
 export class WarehouseComponent {
-  ip_address = "192.168.1.9:8000";
+  ip_address = '192.168.1.9:8000';
   taskToEdit: any;
   currentPage = 1;
   pageSize = 10;
@@ -26,14 +27,15 @@ export class WarehouseComponent {
   products: any[] = [];
   product: Product = { id: 0, name: '', address: '', status: '' };
   closeResult: any;
-  
-public  url = "http://" + this.ip_address + "/inventory/warehouses/"
 
-  constructor(private modalService: NgbModal, public http: HttpClient) {
-    this.fetchwarehouse();
+  public url = 'http://' + this.ip_address + '/inventory/warehouses/';
+  totalItems: any;
+
+  constructor(private modalService: NgbModal, public http: HttpClient, public warehouseService:WarehouseService) {
+    this.getwarehouse();
   }
   ngOnInit(): void {
-    this.fetchwarehouse();
+    this.getwarehouse();
   }
 
   newProduct = { name: '', address: '', status: '' };
@@ -41,15 +43,21 @@ public  url = "http://" + this.ip_address + "/inventory/warehouses/"
     Swal.fire({
       title: 'Add Warehouse',
       html: `
-      <label>Name:</label>
-      <input type="text" id="productName" class="swal2-input" placeholder="Warehouse Name">
-      <br><label>Address:</label>
-      <input type="text" id="productAddress" class="swal2-input" placeholder="Warehouse Address">
-      <label>Warehouse Status:</label>
-      <select id="productStatus" class="swal2-select">
-        <option value="1">Enabled</option>
-        <option value="0">Disabled</option>
-      </select>
+      <div class="form-group">
+      <label for="supplierTitle" class="float-start my-2"> Title:</label>
+      <input type="text" id="productName" class="form-control" class="form-control" placeholder="Warehouse Name" >
+    </div><br>
+      <div class="form-group">
+      <label for="supplierTitle" class="float-start my-2"> Address:</label>
+      <input type="text"  id="productAddress" class="form-control" class="form-control" placeholder="Warehouse Address" >
+    </div><br>
+    <div class="form-group">
+    <label for="supplierStatus" class="float-start my-2"> Status:</label> 
+    <select id="productStatus" class="form-select">
+      <option value="1"}>Enabled</option>
+      <option value="0"}>Disabled</option>
+    </select>
+  </div>
     
       `,
       showCancelButton: true,
@@ -75,7 +83,7 @@ public  url = "http://" + this.ip_address + "/inventory/warehouses/"
           };
           this.http.post<Product>(this.url, newProduct).subscribe(() => {
             this.newProduct = { name: '', address: '', status: '' };
-            this.fetchwarehouse();
+            this.getwarehouse();
             Swal.fire('Added!', 'Your Warehouse has been added.', 'success');
           });
         }
@@ -83,21 +91,17 @@ public  url = "http://" + this.ip_address + "/inventory/warehouses/"
     });
   }
 
-  fetchwarehouse() {
+  getwarehouse() {
     let skip = (this.currentPage - 1) * this.pageSize;
     let limit = this.pageSize;
     let url = `${this.url}?skip=${skip}&limit=${limit}`;
 
-    this.http.get<any>(url).subscribe((response) => {
+    this.warehouseService.GetWarehouse().subscribe((response) => {
       this.products = <any>response.results;
       this.totalPages = Math.ceil(response.count / this.pageSize);
-      this.totalPages = Math.ceil(response.count / this.pageSize);
-      this.currentPage = 1;
+      this.totalItems = response.count;
+
       this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
-      this.pages = [];
-      for (let i = 1; i <= this.totalPages; i++) {
-        this.pages.push(i);
-      }
     });
   }
 
@@ -114,7 +118,7 @@ public  url = "http://" + this.ip_address + "/inventory/warehouses/"
       if (result.isConfirmed) {
         this.http.delete(`${this.url}${id}`).subscribe(() => {
           console.log(`Product with ID ${id} deleted successfully!`);
-          this.fetchwarehouse();
+          this.getwarehouse();
           Swal.fire('Deleted!', 'Your product has been deleted.', 'success');
         });
       } else if (result.isDenied) {
@@ -130,16 +134,22 @@ public  url = "http://" + this.ip_address + "/inventory/warehouses/"
     Swal.fire({
       title: 'Update Warehouse',
       html: `
-      <label>Name:</label>
-      <input type="text" id="productName" class="swal2-input swal1" placeholder="Name"  value="${
+      <div class="form-group">
+      <label class="float-start my-2">Name:</label>
+      <input type="text" id="productName" class="form-control swal1" placeholder="Name"  value="${
         product.name
       }">
-      <br><label>Address:</label>
-      <input type="text" id="productAddress" class="swal2-input swal2" placeholder="Address"  value="${
+      </div>
+      <div class="form-group">
+      <br><label class="float-start my-2">Address:</label>
+      <input type="text" id="productAddress" class="form-control swal2" placeholder="Address"  value="${
         product.address
       }">
-      <label>Status:</label>
-      <select id="productStatus" class="swal2-select">
+      </div>
+      <br>
+      <div class="form-group">
+      <label class="float-start my-2">Status:</label>
+      <select id="productStatus" class="form-select">
         <option value="1" ${
           product.status == '1' ? 'selected' : ''
         }>Enabled</option>
@@ -147,7 +157,7 @@ public  url = "http://" + this.ip_address + "/inventory/warehouses/"
           product.status == '0' ? 'selected' : ''
         }>Disabled</option>
       </select>
-      
+      </div>
     `,
       showCancelButton: true,
       confirmButtonText: 'Update',
@@ -160,7 +170,7 @@ public  url = "http://" + this.ip_address + "/inventory/warehouses/"
           document.querySelector('.swal2')
         )).value;
         const updatedStatus = (<HTMLInputElement>(
-          document.querySelector('.swal2-select')
+          document.querySelector('.form-select')
         )).value;
         this.http
           .put(`${this.url}${product.id}/`, {
@@ -170,7 +180,7 @@ public  url = "http://" + this.ip_address + "/inventory/warehouses/"
           })
           .subscribe(() => {
             console.log(`Product with ID ${product.id} updated successfully!`);
-            this.fetchwarehouse();
+            this.getwarehouse();
             Swal.fire(
               'Updated!',
               'Your warehouse has been updated.',
@@ -192,7 +202,7 @@ public  url = "http://" + this.ip_address + "/inventory/warehouses/"
 
     const data = this.products.map((product, index) => ({
       sn: index + 1,
-      name: product.name, 
+      name: product.name,
       address: product.address,
       status: product.status === '1' ? 'Enabled' : 'Disabled',
     }));

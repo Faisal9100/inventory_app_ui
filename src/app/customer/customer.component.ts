@@ -12,6 +12,8 @@ export interface Supplier {
   status: string;
   contact: number;
   email: string;
+  debit:number;
+  credit:number;
 }
 
 @Component({
@@ -29,9 +31,9 @@ export class CustomerComponent {
   id = 'pagination';
   closeResult: any;
 
-  public url = "http://" + this.ip_address + "/inventory/customers/";
   totalItems: any;
   itemsPerPage: any;
+  public url = "http://" + this.ip_address + "/inventory/customers/";
   suppliers: any[] = [];
   supplier: Supplier = {
     id: 0,
@@ -41,6 +43,8 @@ export class CustomerComponent {
     balance: 0,
     contact: 0,
     email: '',
+    credit:0,
+    debit:0,
   };
   constructor(private modalService: NgbModal, public http: HttpClient) {
     this.fetchsupplier();
@@ -60,30 +64,40 @@ export class CustomerComponent {
   addSupplier() {
     Swal.fire({
       title: 'Add Customer',
-      html: `
-         <label>title:</label>
-          <input type="text" id="supplierTitle" class="swal2-input" placeholder="Customer Title">
-         
-          <label>Address:</label>
-          <input type="text" id="supplierAddress" class="swal2-input" placeholder="Customer Address ">
-        
-          <label>Balance:</label>
-          <input type="number" id="supplierBalance" class="swal2-input" placeholder="Customer Balance">
-          
-          <label>Status:</label>
-          
-          <select id="supplierStatus" class="swal2-select">
-        <option value="true">Enabled</option>
-        <option value="false">Disabled</option>
+      html: `   
+      <div class="form-group">
+      <label for="supplierTitle" class="float-start my-2">Title:</label>
+      <input type="text" id="supplierTitle" class="form-control" placeholder="Customer Name" >
+    </div>
+
+    <div class="form-group">
+      <label for="supplierAddress" class="float-start my-2">Address:</label>
+      <input type="text" id="supplierAddress" class="form-control" placeholder="Supplier Address" >
+    </div>
+
+    
+    <div class="form-group">
+      <label for="supplierBalance" class="float-start my-2">Balance:</label>
+      <input type="number" id="supplierBalance" class="form-control" placeholder="Customer Balance">
+    </div>
+
+    <div class="form-group">
+      <label for="supplierStatus" class="float-start my-2">Status:</label> 
+      <select id="supplierStatus" class="form-select">
+        <option value="true"}>Enabled</option>
+        <option value="false"}>Disabled</option>
       </select>
-         
-          <br><label>Contact:</label>
-          <input type="number" id="supplierContact" class="swal2-input" placeholder="Customer Contact">
-         
-          <br><label>Email:</label>
-          <input type="text" id="supplierEmail" class="swal2-input" placeholder="Customer Email">
-         
-        
+    </div>
+    
+    <div class="form-group">
+      <label for="supplierContact" class="float-start my-2">Contact:</label>
+      <input type="number" id="supplierContact" class="form-control" placeholder="Customer Contact">
+    </div>
+    
+    <div class="form-group">
+      <label for="supplierEmail" class="float-start my-2">Email:</label>
+      <input type="email" id="supplierEmail" class="form-control" placeholder="Customer Email" >
+    </div>
           `,
       showCancelButton: true,
       confirmButtonText: 'Add',
@@ -183,40 +197,72 @@ export class CustomerComponent {
     Swal.fire({
       title: 'Update Supplier Detail',
       html: `
-        <label>Title:</label>
-        <input type="text" id="customerTitle" class="swal2-input swal1" placeholder="Customer Name"  value="${
-          supplier.title
-        }">
+        <div class="update_form" >
+      <div class="form-group row  overflow-y-hidden">
+      <div class="col">
+      <label for="supplierTitle" class="float-start my-2">Title:</label>
+      <input type="text" id="supplierTitle" class="form-control" placeholder="Supplier Name"  value="${
+        supplier.title
+      }">
+      </div>
+      <div class="col">
+      <label for="supplierContact" class="float-start my-2">Contact:</label>
+      <input type="number" id="supplierContact" class="form-control" placeholder="Supplier Contact"  value="${
+        supplier.contact
+      }">
+    
+      </div>
+      </div><br>
+      <div classs="form-group overflow-hidden">
         
-        <br><label>Address:</label>
-        <input type="text" id="customerAddress" class="swal2-input swal2" placeholder="Customer Address"  value="${
-          supplier.address
-        }">
+        <label for="supplierBalance" class="float-start my-2">Balance:</label>
+          <input type="number" id="supplierBalance" class="form-control" disabled=true  placeholder="Supplier Balance"  value="${
+            supplier.balance
+          }" readonly>
+          </div><br>
+        <div class="form-group row overflow-hidden">
+        <div class="col"
+        <label for="supplierBalance" class="py-2">Credit:</label>
+        <input type="number"  class="form-control" placeholder="Supplier Balance" disabled=true   value="${
+          supplier.credit
+        }" readonly>
+        </div>
+        <div class="col"
+        <label for="supplierBalance" class="float-start">Debit:</label>
+        <input type="number"  class="form-control" placeholder="Supplier Balance" disabled=true  value="${
+          supplier.debit
+        }" readonly>
+        </div>
+        </div><br>
         
-        <br><label>Balance:</label>
-        <input type="number" id="customerBalance" class="swal2-input swal3" placeholder="Customer Balance"  value="${
-          supplier.balance
-        }">
+        <div class="form-group row overflow-hidden">
+        <div class="col"
         
-        <label>Status:</label> 
-        <select id="customerStatus" class="swal2-select">
-          <option value="true" ${
-            supplier.status ? 'selected' : ''
-          }>Enabled</option>
-          <option value="false" ${
-            !supplier.status ? 'selected' : ''
-          }>Disabled</option>
+        <label for="supplierStatus" class="float-start my-2">Status:</label> 
+        <select id="supplierStatus" class="form-select">
+        <option value="true" ${
+          supplier.status ? 'selected' : ''
+        }>Enabled</option>
+        <option value="false" ${
+          !supplier.status ? 'selected' : ''
+        }>Disabled</option>
         </select>
+        </div>
         
-        <br><label>Contact:</label>
-        <input type="number" id="customerContact" class="swal2-input swal5" placeholder="Customer Contact"  value="${
-          supplier.contact
-        }">
-        
-        <br><label>Email:</label>
-        <input type="text" id="customerEmail" class="swal2-input swal4" placeholder="Customer Email"  value="${
-          supplier.email
-        }">
+        <div class="col"
+          <label for="supplierEmail" class="float-start my-2">Email:</label>
+          <input type="email" id="supplierEmail" class="form-control" placeholder="Supplier Email"  value="${
+            supplier.email
+          }">
+          </div>
+          </div><br>
+          <div class="form-group overflow-hidden">
+            <label for="supplierAddress" class="float-start my-2">Address:</label>
+            <textarea class="form-control" id="supplierAddress" placeholder="Supplier Address"  rows="3" value="${
+              supplier.address
+            }"></textarea>
+          </div><br>
+          </div>
       
       `,
       showCancelButton: true,

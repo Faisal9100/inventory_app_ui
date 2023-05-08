@@ -47,6 +47,7 @@ const routes: Routes = [
   { path: 'customer', component: CustomerComponent },
   { path: 'supplier', component: SupplierComponent },
   { path: 'accounts', component: AccountlayerComponent },
+  {path:'All-purchase', component:AllPurchaseComponent}
 ];
 
 @NgModule({

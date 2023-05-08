@@ -10,5 +10,7 @@ export class SidebarComponent {
 
   toggleSubMenu() {
     this.showSubMenu = !this.showSubMenu;
+    
   }
+  
 }

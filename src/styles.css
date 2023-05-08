@@ -12,3 +12,7 @@ body {
 .mat-drawer-inner-container {
   background-color: black;
 }
+.swal2-html-container {
+  overflow: hidden;
+}
+

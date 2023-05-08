@@ -6,12 +6,25 @@
 nav#pagination {
   cursor: pointer;
 }
-.page-item{
+.page-item {
   border-radius: 20px;
-  
 }
-.page-link{
-  
+.page-link {
   border-radius: 20px;
   margin: 5px;
+}
+
+.update_form {
+  overflow: hidden;
+  overflow-y: hidden;
+  scroll-behavior: none;
+}
+/* .my-swal-container {
+  overflow: hidden;
+} */
+.my-swal-container {
+}
+.html {
+  width: 100%; /* Change this value to the desired width */
+  overflow: hidden;
 }

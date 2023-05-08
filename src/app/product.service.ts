@@ -9,8 +9,8 @@ export class ProductService {
   // public ip_address = ' 192.168.1.9:8000 ';
 
   constructor(public http: HttpClient) {}
-
-  public url = 'http://192.168.1.9:8000/inventory/products/';
+public ip_address='192.168.1.9:8000'
+  public url = "http://"+this.ip_address+"/inventory/products/";
 
   getProducts(): Observable<any> {
     return this.http.get<any>(this.url);
