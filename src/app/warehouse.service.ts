@@ -6,8 +6,8 @@ import { map } from 'rxjs';
 })
 export class WarehouseService {
   ip_address = '192.168.1.9:8000';
-  pageSize = 10;
   public url = 'http://' + this.ip_address + '/inventory/warehouses/';
+  pageSize = 10;
 
   currentPage = 1;
   totalPages!: number;

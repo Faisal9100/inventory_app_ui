@@ -29,29 +29,27 @@
       <tr>
         <th>Invoice No.</th>
         <th>Title</th>
-        <th>Supplier Account</th>
+        <th>Supplier</th>
         <th>Warehouse</th>
-        <th>Product</th>
+        <th>Transaction_ID</th>
         <th>Quantity</th>
         <th>Amount</th>
-        <th>Voucher Type</th>
         <th>Date</th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let item of AllPurchaseData">
-        <td>{{ item.invoice }}</td>
+        <td>{{ item.invoice_no }}</td>
         <td>{{ item.title }}</td>
-        <td>{{ item.accountupllier }}</td>
-        <td>{{ item.warehouse }}</td>
-        <td>{{ item.product }}</td>
+        <td>{{ item.account_name }}</td>
+        <td>{{ item.warehouse_name }}</td>
+        <td>{{ item.transaction }}</td>
         <td>{{ item.quantity }}</td>
         <td>{{ item.amount }}</td>
-        <td>{{ item.voucher }}</td>
         <td>{{ item.date }}</td>
-
         <td>
+          <button class="btn btn-outline-success "><i class="bi bi-eye-fill"></i></button>
           <button class="btn btn-outline-primary mx-2">
             <i class="bi bi-pencil-square"></i>
           </button>
@@ -119,13 +117,12 @@
           />
         </div>
         <div class="col">
-          <label for="supplierContact" class="float-start my-2"
-            >Supplier*:</label
-          >
-          <select id="supplierStatus" class="form-select">
-            <option>Enabled</option>
-            <option>Disabled</option>
-          </select>
+          <label for="supplierContact" class="py-2">Supplier*:</label>
+          <ng-select id="supplierStatus" class="form-ng-select">
+            <ng-option *ngFor="let item of suppliers">{{
+              item.title
+            }}</ng-option>
+          </ng-select>
         </div>
 
         <div class="col">
@@ -135,24 +132,35 @@
 
         <div class="col">
           <label for="supplierBalance" class="py-2">Warehouse*:</label>
-          <select id="supplierStatus" class="form-select">
-            <option>Enabled</option>
-            <option>Disabled</option>
-          </select>
+          <ng-select id="supplierStatus" class="form-ng-select">
+            <ng-option
+              class=".ng-dropdown-panel"
+              *ngFor="let data of products"
+              >{{ data.name }}</ng-option
+            >
+          </ng-select>
         </div>
       </div>
       <br />
       <div class="col">
-        <label for="supplierBalance" class="float-start py-2">Product*:</label>
-        <select>
-          <option value="">1</option>
-          <option value="">2</option>
-          <option value="">3</option>
-          <option value="">4</option>
-          <option value="">5</option>
-        </select>
+        <label for="supplierBalance" class="py-2">Products*:</label>
+        <ng-select
+          class="form-ng-select"
+          [(ngModel)]="selectedProduct"
+          [bindValue]="'name'"
+          [bindLabel]="'name'"
+          (change)="isProductSelected = true"
+        >
+          <ng-option
+            class="ng-option"
+            *ngFor="let value of productData"
+            [value]="value"
+            >{{ value.name }}</ng-option
+            >
+          </ng-select>
+        </div>
       </div>
-    </div>
+      <button class="btn btn-primary my-2" (click)="addProduct()">add Product</button>
     <br />
     <div class="top-sellling">
       <table class="table table-striped text-center table-bordered table-hover">
@@ -165,60 +173,108 @@
             <th>Action</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
+        <tbody >
+          <tr *ngIf="isProductSelected">
             <td>
               <input
-                type="number"
-                id="purchaseInvoice"
-                class="form-control"
-                placeholder="Invoice Number"
+                type="text"
+                [(ngModel)]="selectedProduct"
+                id="selectedProduct"
+                name="selectedProduct"
+                class="form-control my-3"
+                placeholder="product Name"
+                readonly
+                disabled="true"
               />
             </td>
 
             <td>
-              <input
-                type="number"
-                id="purchaseInvoice"
-                class="form-control"
-                placeholder="Invoice Number"
-              />
+              <div class="input-group mb-3 my-3">
+                <span class="input-group-text">$</span>
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="quantity"
+                  (input)="updateTotal()"
+                />
+              </div>
             </td>
             <td>
-              <input
-                type="number"
-                id="purchaseInvoice"
-                class="form-control"
-                placeholder="Invoice Number"
-              />
+              <div class="input-group mb-3 my-3">
+                <span class="input-group-text">$</span>
+                <input
+                  type="number"
+                  class="form-control"
+                  [(ngModel)]="price"
+                  (input)="updateTotal()"
+                />
+              </div>
             </td>
             <td>
-              <input
-                type="number"
-                id="purchaseInvoice"
-                class="form-control"
-                placeholder="Invoice Number"
-              />
+              <div class="input-group mb-3 my-3">
+                <span class="input-group-text">$</span>
+                <input
+                  type="number"
+                  class="form-control"
+                  readonly
+                  disabled="true"
+                  [(ngModel)]="total"
+                  (input)="updateTotal()"
+                />
+              </div>
             </td>
-            <td><button class="btn btn-outline-danger">Remove</button></td>
+            <td><button class="btn btn-outline-danger my-3">Remove</button></td>
           </tr>
         </tbody>
       </table>
+      <label class="py-2 mx-3"> Remarks: </label>
       <div class="form-group d-flex">
-        <label> Note: </label>
         <div class="px-3">
           <textarea
             class="form-control"
             name=""
             id=""
             cols="100"
-            rows="5"
+            rows="8"
           ></textarea>
         </div>
         <div class="col float-end">
-          <input class="form-control" type="text" /><br />
-          <input class="form-control" type="text" /><br />
-          <input class="form-control" type="text" />
+          <label class="my-1">Total Price</label>
+          <div class="input-group ">
+            <span class="input-group-text">$</span>
+            <input
+              type="number"
+              class="form-control"
+              readonly
+              disabled="true"
+              [(ngModel)]="total"
+              (input)="updateTotal()"
+            />
+          </div>
+          <br />
+          <label class="my-1">Discount</label>
+          <div class="input-group ">
+            <span class="input-group-text">$</span>
+            <input
+              type="number"
+              class="form-control"
+              [(ngModel)]="discount"
+              (input)="updateTotal()"
+            />
+          </div>
+          <br />
+          <label class="my-1">Payable Amount</label>
+          <div class="input-group ">
+            <span class="input-group-text">$</span>
+            <input
+              type="number"
+              class="form-control"
+              readonly
+              disabled="true"
+              [(ngModel)]="total"
+              (input)="updateTotal()"
+            />
+          </div>
         </div>
       </div>
     </div>

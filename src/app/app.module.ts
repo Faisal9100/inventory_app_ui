@@ -55,6 +55,8 @@ import { UnitService } from './unit.service';
 import { BrandService } from './brand.service';
 import { AccountlayerComponent } from './accountlayer/accountlayer.component';
 import { SupplierService } from './supplier.service';
+import { MatSelectModule } from '@angular/material/select';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -112,6 +114,8 @@ import { SupplierService } from './supplier.service';
     NgChartsModule,
     NgbModule,
     NgxPaginationModule,
+    MatSelectModule,
+    NgSelectModule
   ],
   providers: [
     WarehouseServiceService,
