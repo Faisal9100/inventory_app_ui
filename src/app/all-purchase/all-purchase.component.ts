@@ -1,3 +1,4 @@
+import { Product } from './../warehouse/warehouse.component';
 import { AllpurchasesService } from './../allpurchases.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -19,6 +20,8 @@ export interface PurchaseData {
   warehouse: string;
   product: string;
   quantity: number;
+  name:any;
+  total:number,
   amount: number;
   voucher_type: string;
   date: Date;
@@ -39,7 +42,6 @@ export class AllPurchaseComponent implements OnInit {
   pages: number[] = [];
   id = 'pagination';
   closeResult: any;
- 
   AllPurchaseData: any[] = [];
   totalItems: any;
   itemsPerPage: any;
@@ -50,8 +52,10 @@ export class AllPurchaseComponent implements OnInit {
     id: 0,
     invoice: 0,
     title: '',
+    name:'',
     supplier_amount: '',
     warehouse: '',
+    total:0,
     product: '',
     quantity: 0,
     amount: 0,
@@ -124,10 +128,10 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
   selectedProduct = {
-    product: '',
+    name: '',
     quantity: 0,
     price: 0,
-    total: 0
+    total: 0,
   };
   // addProduct() {
   //   this.selectedProducts.push(this.selectedProduct);
@@ -138,17 +142,74 @@ export class AllPurchaseComponent implements OnInit {
   //     total: 0
   //   };
     productList: any[] = [];
-    addProduct() {
-      if (this.isProductSelected && this.quantity && this.price && this.total) {
-        this.productList.push({
-          quantity: this.quantity,
-          price: this.price,
-          total: this.total
-        });
-        // reset form values
+    // addProduct() {
+    //   if (this.isProductSelected && this.quantity && this.price && this.total) {
+    //     this.productList.push({
+    //       quantity: this.quantity,
+    //       price: this.price,
+    //       total: this.total
+    //     });
+    //     // reset form values
        
+    //   }
+    // }
+    
+    // addProduct() {
+    //   if (this.selectedProduct && !this.selectedProducts.includes(this.selectedProduct)) {
+    //     this.selectedProducts.push(this.selectedProduct);
+    //   }
+      
+    // }
+  
+    addProduct() {
+      if (this.selectedProduct) {
+        // Check if a product with the same name already exists
+        const existingProduct = this.selectedProducts.find(p => p.product === this.selectedProduct.name);
+    
+        if (existingProduct) {
+          // If a product with the same name already exists, update its quantity instead of adding a new one
+          existingProduct.quantity++;
+        } else {
+          // If a product with the same name doesn't exist, add the selected product to the selectedProducts array
+          let newProduct = {
+            product: this.selectedProduct.name,
+            price: this.selectedProduct.price,
+            total:this.selectedProduct.total,
+            quantity: 1 // You can set the quantity to whatever you like
+          };
+          newProduct.total= newProduct.price * newProduct.quantity; // Calculate the total
+          this.selectedProducts.push(this.newProduct);
+        }
+    
+        // Reset the selectedProduct variable
+        this.selectedProduct;
       }
     }
+    
+     newProduct = {
+      name: this.selectedProduct.name.toString(),
+      price: this.price,
+      quantity: this.quantity,
+      product: this.selectedProduct.name,
+      total:this.total,
+    };
+    
+    
+    // selectedProducts: any[] = [];
+
+// addProduct() {
+//   if (this.selectedProduct) {
+//     // Add the selected product to the selectedProducts array
+//     this.selectedProducts.push({
+//       product: this.selectedProduct.product,
+//       quantity: 1 // You can set the quantity to whatever you like
+//     });
+
+//     // Reset the selectedProduct variable
+//     this.selectedProduct = null;
+//   }
+// }
+
     
   }
   

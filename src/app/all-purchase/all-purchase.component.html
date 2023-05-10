@@ -158,9 +158,9 @@
             >{{ value.name }}</ng-option
             >
           </ng-select>
+          <button class="btn btn-primary my-2" (click)="addProduct()">add Product</button>
         </div>
       </div>
-      <button class="btn btn-primary my-2" (click)="addProduct()">add Product</button>
     <br />
     <div class="top-sellling">
       <table class="table table-striped text-center table-bordered table-hover">
@@ -174,7 +174,7 @@
           </tr>
         </thead>
         <tbody >
-          <tr *ngIf="isProductSelected">
+          <!-- <tr *ngFor="let product of selectedProducts">
             <td>
               <input
                 type="text"
@@ -224,8 +224,58 @@
               </div>
             </td>
             <td><button class="btn btn-outline-danger my-3">Remove</button></td>
-          </tr>
-        </tbody>
+          </tr> -->
+          <tbody>
+            <tr *ngFor="let product of selectedProducts">
+              <td>
+                <input
+                  type="text"
+                  [(ngModel)]="product.product"
+                  class="form-control my-3"
+                  placeholder="Product Name"
+                  readonly
+                  disabled="true"
+                />
+              </td>
+              <td>
+                <div class="input-group mb-3 my-3">
+                  <span class="input-group-text">Quantity</span>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="product.quantity"
+                    (input)="updateTotal()"
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="input-group mb-3 my-3">
+                  <span class="input-group-text">Price</span>
+                  <input
+                    type="number"
+                    class="form-control"
+                    [(ngModel)]="product.price"
+                    (input)="updateTotal()"
+                  />
+                </div>
+              </td>
+              <td>
+                <div class="input-group mb-3 my-3">
+                  <span class="input-group-text">Total</span>
+                  <input
+                    type="number"
+                    class="form-control"
+                    readonly
+                    disabled="true"
+                    [(ngModel)]="product.total"
+                  />
+                </div>
+              </td>
+              <td><button class="btn btn-outline-danger my-3">Remove</button></td>
+            </tr>
+          </tbody>
+          
+        
       </table>
       <label class="py-2 mx-3"> Remarks: </label>
       <div class="form-group d-flex">
