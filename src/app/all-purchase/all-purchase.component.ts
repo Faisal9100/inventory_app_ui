@@ -1,4 +1,4 @@
-import { Product } from './../warehouse/warehouse.component';
+// import { Product } from './../warehouse/warehouse.component';
 import { AllpurchasesService } from './../allpurchases.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -9,7 +9,6 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { WarehouseService } from '../warehouse.service';
 import { SupplierService } from '../supplier.service';
-import { NgSelectConfig } from '@ng-select/ng-select';
 import { ProductService } from '../product.service';
 
 export interface PurchaseData {
@@ -20,11 +19,26 @@ export interface PurchaseData {
   warehouse: string;
   product: string;
   quantity: number;
-  name:any;
-  total:number,
+  name: any;
+  total: number;
   amount: number;
   voucher_type: string;
   date: Date;
+}
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  product:string;
+}
+
+// Define a row interface to represent a row in the table
+interface Row {
+  product: Product;
+  price: number;
+  quantity: number;
+  total: number;
+  
 }
 @Component({
   selector: 'app-all-purchase',
@@ -34,8 +48,13 @@ export interface PurchaseData {
 export class AllPurchaseComponent implements OnInit {
   public isProductSelected: boolean = false;
   // public selectedProduct: any;
-  selectedProducts: { product: any, quantity: number, price: number, total: number }[] = [];
-
+  selectedProducts: {
+    product: string;
+    quantity: number;
+    price: number;
+    total: number;
+  }[] = [];
+  rows: Row[] = [];
   pageSize = 10;
   currentPage = 1;
   totalPages!: number;
@@ -47,34 +66,55 @@ export class AllPurchaseComponent implements OnInit {
   itemsPerPage: any;
   products: any[] = [];
   suppliers: any[] = [];
+  total:number=0;
   productData: any[] = [];
   purchaseData: PurchaseData = {
     id: 0,
     invoice: 0,
     title: '',
-    name:'',
+    name: '',
     supplier_amount: '',
     warehouse: '',
-    total:0,
+    total: 0,
     product: '',
     quantity: 0,
     amount: 0,
     voucher_type: '',
     date: new Date(),
   };
+  
 
   onPageChange(event: any) {
     this.currentPage = event;
   }
   quantity: number = 0;
   price: number = 0;
-  total: number = 0;
+  Alltotal: number = 0;
+  total1: number = 0;
+  total2: number = 0;
   discount: number = 0;
-  
-
-  updateTotal() {
-    this.total = this.quantity * this.price - this.discount;
+grandTotal: number = 0;
+updateTotal() {
+  let total = 0;
+  for (let row of this.rows) {
+    total += row.price * row.quantity;
   }
+  this.grandTotal = total - this.discount;;
+}
+
+// modify the updateTotal() function
+// updateTotal() {
+//   this.rows.forEach(row => {
+//     row.total = row.price * row.quantity;
+//   });
+
+//   this.grandTotal = this.rows.reduce((acc, row) => acc + row.total, 0);
+// }
+
+
+  // updateTotal() {
+  //   this.total = this.quantity * this.price - this.discount;
+  // }
 
   constructor(
     public http: HttpClient,
@@ -88,7 +128,6 @@ export class AllPurchaseComponent implements OnInit {
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
-    
   }
 
   ngOnInit(): void {
@@ -106,12 +145,7 @@ export class AllPurchaseComponent implements OnInit {
   openXl(content: any) {
     this.modalService.open(content, { size: 'xl' });
   }
-  //   getwarehouse() {
-  //  this.warehouseService.GetWarehouse().subscribe((response) => {
-  //       this.products = <any>response.results;
 
-  //     });
-  //   }
   getwarehouse() {
     this.warehouseService.GetWarehouse().subscribe((response) => {
       this.products = <any>response.results;
@@ -127,95 +161,71 @@ export class AllPurchaseComponent implements OnInit {
       this.productData = <any>Response.results;
     });
   }
-  selectedProduct = {
+  selectedProduct = <any> {
     name: '',
     quantity: 0,
     price: 0,
     total: 0,
   };
-  // addProduct() {
-  //   this.selectedProducts.push(this.selectedProduct);
-  //   this.selectedProduct = {
-  //     product: '',
-  //     quantity: 0,
-  //     price: 0,
-  //     total: 0
-  //   };
-    productList: any[] = [];
-    // addProduct() {
-    //   if (this.isProductSelected && this.quantity && this.price && this.total) {
-    //     this.productList.push({
-    //       quantity: this.quantity,
-    //       price: this.price,
-    //       total: this.total
-    //     });
-    //     // reset form values
-       
-    //   }
-    // }
-    
-    // addProduct() {
-    //   if (this.selectedProduct && !this.selectedProducts.includes(this.selectedProduct)) {
-    //     this.selectedProducts.push(this.selectedProduct);
-    //   }
-      
-    // }
-  
-    addProduct() {
-      if (this.selectedProduct) {
-        // Check if a product with the same name already exists
-        const existingProduct = this.selectedProducts.find(p => p.product === this.selectedProduct.name);
-    
-        if (existingProduct) {
-          // If a product with the same name already exists, update its quantity instead of adding a new one
-          existingProduct.quantity++;
-        } else {
-          // If a product with the same name doesn't exist, add the selected product to the selectedProducts array
-          let newProduct = {
-            product: this.selectedProduct.name,
-            price: this.selectedProduct.price,
-            total:this.selectedProduct.total,
-            quantity: 1 // You can set the quantity to whatever you like
-          };
-          newProduct.total= newProduct.price * newProduct.quantity; // Calculate the total
-          this.selectedProducts.push(this.newProduct);
-        }
-    
-        // Reset the selectedProduct variable
-        this.selectedProduct;
-      }
-    }
-    
-     newProduct = {
-      name: this.selectedProduct.name.toString(),
-      price: this.price,
-      quantity: this.quantity,
-      product: this.selectedProduct.name,
-      total:this.total,
-    };
-    
-    
-    // selectedProducts: any[] = [];
 
-// addProduct() {
-//   if (this.selectedProduct) {
-//     // Add the selected product to the selectedProducts array
-//     this.selectedProducts.push({
-//       product: this.selectedProduct.product,
-//       quantity: 1 // You can set the quantity to whatever you like
-//     });
+  productList: any[] = [];
 
-//     // Reset the selectedProduct variable
-//     this.selectedProduct = null;
-//   }
-// }
 
-    
+
+  newProduct = {
+    name: this.selectedProduct.name.toString(),
+    price: this.price,
+    quantity: this.quantity,
+    product: this.selectedProduct.name,
+    total: this.total,
+  };
+
+
+  // Define the addProduct method to add the selected product to the table
+addProduct() {
+  // Ensure a product is selected
+  if (!this.selectedProduct) {
+    return;
   }
-  
-  
+
+  // Find the selected product in the productData array
+  const selectedProduct = this.productData.find(p => p.id === this.selectedProduct);
+
+  // Calculate the total price based on the product price and quantity
+  const total = selectedProduct.price * this.quantity;
  
+
+  // Create a new row object with the selected product and input values
+  const newRow: Row = {
+    product: selectedProduct,
+    price: selectedProduct.price,
+    quantity: this.quantity,
+    total: total,
+   
+  };
+
+  // Add the new row to the array of rows
+  this.rows.push(newRow);
+
+  // Clear the input fields
+  this.selectedProduct=''
   
+}
 
+get formattedData(): string {
+  // Map the rows array to an array of strings representing each row
+  const rowStrings = this.rows.map(row => `${row.product.name}: $${row.total.toFixed(2)}`);
 
+  // Join the row strings with line breaks
+  return rowStrings.join('\n');
+}
+removeProduct(index: number) {
+  this.rows.splice(index, 1);
+  this.updateTotal();
+}
+i:any;
 
+addPurchase(){
+
+}
+}

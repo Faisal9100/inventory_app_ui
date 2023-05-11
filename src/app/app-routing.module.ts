@@ -22,6 +22,7 @@ import { TypeComponent } from './type/type.component';
 import { UnitsComponent } from './units/units.component';
 import { WarehouseComponent } from './warehouse/warehouse.component';
 import { AccountlayerComponent } from './accountlayer/accountlayer.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent },
@@ -47,7 +48,8 @@ const routes: Routes = [
   { path: 'customer', component: CustomerComponent },
   { path: 'supplier', component: SupplierComponent },
   { path: 'accounts', component: AccountlayerComponent },
-  {path:'All-purchase', component:AllPurchaseComponent}
+  {path:'All-purchase', component:AllPurchaseComponent},
+  {path:'login', component:LoginComponent}
 ];
 
 @NgModule({

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { HttpClientModule } from '@angular/common/http';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -57,6 +57,7 @@ import { AccountlayerComponent } from './accountlayer/accountlayer.component';
 import { SupplierService } from './supplier.service';
 import { MatSelectModule } from '@angular/material/select';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +97,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     SupplierComponent,
     PaginationComponent,
     AccountlayerComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserAnimationsModule,
@@ -115,7 +117,9 @@ import { NgSelectModule } from '@ng-select/ng-select';
     NgbModule,
     NgxPaginationModule,
     MatSelectModule,
-    NgSelectModule
+    NgSelectModule,
+    ReactiveFormsModule,
+    
   ],
   providers: [
     WarehouseServiceService,

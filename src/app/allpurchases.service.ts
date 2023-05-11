@@ -29,4 +29,7 @@ export class AllpurchasesService {
   getProduct() {
     return this.http.get<any>(this.product_url);
   }
+  addPurchase(formData: FormData): Observable<any> {
+    return this.http.post(this.url, formData);
+  }
 }
