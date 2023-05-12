@@ -108,7 +108,7 @@
     <div class="update_form">
       <div class="form-group row">
         <div class="col-sm">
-          <label for="supplierTitle" class="float-start my-2"
+          <label for="purchaseInvoice" class="float-start my-2"
             >Invoice No:</label
           >
           <input
@@ -116,28 +116,43 @@
             id="purchaseInvoice"
             class="form-control"
             placeholder="Invoice Number"
+            [(ngModel)]="purchaseInvoice"
           />
         </div>
         <div class="col-sm">
           <label for="supplierContact" class="py-2">Supplier*:</label>
-          <ng-select id="supplierStatus" class="form-ng-select">
-            <ng-option *ngFor="let item of suppliers">{{
+          <ng-select
+            id="supplierStatus"
+            class="form-ng-select"
+            [(ngModel)]="selectedSupplier"
+          >
+            <ng-option *ngFor="let item of suppliers" [value]="item.id">{{
               item.title
             }}</ng-option>
           </ng-select>
         </div>
 
         <div class="col-sm">
-          <label for="supplierBalance" class="float-start my-2">Date*:</label>
-          <input type="date" id="purchaseDate" class="form-control" />
+          <label for="purchaseDate" class="float-start my-2">Date*:</label>
+          <input
+            type="date"
+            id="purchaseDate"
+            class="form-control"
+            [(ngModel)]="purchaseDate"
+          />
         </div>
 
         <div class="col-sm">
-          <label for="supplierBalance" class="py-2">Warehouse*:</label>
-          <ng-select id="supplierStatus" class="form-ng-select">
+          <label for="warehouse" class="py-2">Warehouse*:</label>
+          <ng-select
+            id="warehouse"
+            class="form-ng-select"
+            [(ngModel)]="selectedWarehouse"
+          >
             <ng-option
               class=".ng-dropdown-panel"
               *ngFor="let data of products"
+              [value]="data.id"
               >{{ data.name }}</ng-option
             >
           </ng-select>
@@ -145,10 +160,11 @@
       </div>
       <br />
       <div class="col-sm">
-        <label for="supplierBalance" class="py-2">Products*:</label>
+        <label for="selectedProduct" class="py-2">Products*:</label>
         <ng-select
           class="form-ng-select"
           [(ngModel)]="selectedProduct"
+          id="selectedProduct"
           [bindValue]="'name'"
           [bindLabel]="'name'"
           (change)="isProductSelected = true"
@@ -174,7 +190,6 @@
             <th>Quantity</th>
             <th>Price</th>
             <th>Total</th>
-            <th>Grand Total</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -188,7 +203,7 @@
               <input
                 class="form-control"
                 type="number"
-                [(ngModel)]="row.price"
+                [(ngModel)]="row.quantity"
                 (input)="updateTotal()"
               />
             </td>
@@ -196,7 +211,7 @@
               <input
                 class="form-control"
                 type="number"
-                [(ngModel)]="row.quantity"
+                [(ngModel)]="row.price"
                 (input)="updateTotal()"
               />
             </td>
@@ -216,15 +231,17 @@
           </tr>
         </tbody>
       </table>
-      <div class="form-group  col-sm ">
+      <div class="form-group col-sm">
         <label class="py-2"> Remarks: </label>
-        <div >
+        <div>
           <textarea
             class="form-control"
             name=""
             id=""
             cols="100"
             rows="2"
+            id="title"
+            [(ngModel)]="selectedRemark"
           ></textarea>
         </div>
         <div class="col-sm float-end">
@@ -266,6 +283,12 @@
               readonly
             />
           </div>
+          <label class="my-1">Quantity</label>
+          <div class="input-group col-sm">
+            <span class="input-group-text">$</span>
+            <input class="form-control" type="number" [(ngModel)]="totalQuantity" />
+
+          </div>
         </div>
       </div>
     </div>
@@ -276,6 +299,8 @@
       type="button"
       class="btn btn-outline-dark"
       (click)="c('Save click')"
+      (click)="addPurchase()"
+      (click)="addStock(id)"
     >
       Add
     </button>
