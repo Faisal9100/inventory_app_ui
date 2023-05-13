@@ -228,27 +228,41 @@ export class AccountlayerComponent implements OnInit {
     Swal.fire({
       title: 'Add Account',
       html: `
-         <label>title:</label>
-          <input type="text" id="accountTitle" class="swal2-input" placeholder="Account Title">
-         
-          <label>Address:</label>
-          <input type="text" id="accountAddress" class="swal2-input" placeholder=" Address ">
-        
-          <label>Balance:</label>
-          <input type="text" id="accountBalance" class="swal2-input" placeholder=" Balance">
+      <div class="form-group">
+        <label for="Title" class="float-start my-2">Title:</label>
+        <input type="text" id="accountTitle" class="form-control" placeholder="Account Title" >
+        </div>
+     
+        <div class="form-group">
+        <label for="Address" class="float-start my-2">Address:</label>
+        <input type="text" id="accountAddress" class="form-control" placeholder=" Address" >
+      </div>
+      
+      <div class="form-group">
+        <label for="Balance:" class="float-start my-2">Balance:</label>
+        <input type="text" id="accountBalance" class="form-control" placeholder=" Balance" >
+      </div>
+       
+      <div class="form-group">
+  <label for="supplierStatus" class="float-start my-2">Status:</label> 
+  <select id="accountStatus" class="form-select">
+    <option value="true"}>Active</option>
+    <option value="false"}>Inactive</option>
+  </select>
+</div>
           
-          <label>Status:</label>
+         
+      <div class="form-group">
+      <label for="Balance:" class="float-start my-2">Contact:</label>
+      <input type="text" id="accountContact" class="form-control"placeholder="Contact">
+    </div>
+         
           
-          <select id="accountStatus" class="swal2-select">
-        <option value="true">Active</option>
-        <option value="false">Inactive</option>
-      </select>
-         
-          <br><label>Contact:</label>
-          <input type="text" id="accountContact" class="swal2-input" placeholder="Contact">
-         
-          <br><label>Email:</label>
-          <input type="text" id="accountEmail" class="swal2-input" placeholder="Email">
+          <div class="form-group">
+          <label for="Balance:" class="float-start my-2">Email:</label>
+          <input type="text" id="accountEmail" class="form-control" placeholder=" Email" >
+        </div>
+
           `,
       showCancelButton: true,
       confirmButtonText: 'Add',
@@ -302,30 +316,31 @@ export class AccountlayerComponent implements OnInit {
     });
   }
 
-  // __code for updating account__
 
   updateAccount(account: Account): void {
     Swal.fire({
       title: 'Update Account',
       html: `
-        <label>title:</label>
-        <input type="text" id="accountTitle" class="swal2-input" placeholder="Account Title" value="${
+      <div class="form-group">
+        <label class="float-start my-2">title:</label>
+        <input type="text" id="accountTitle" class="form-control" placeholder="Account Title" value="${
           account.title
         }">
-       
-        <label>Address:</label>
-        <input type="text" id="accountAddress" class="swal2-input" placeholder=" Address " value="${
+       </div>
+
+        <label class="float-start my-2">Address:</label>
+        <input type="text" id="accountAddress" class="form-control" placeholder=" Address " value="${
           account.address
         }">
       
-        <label>Balance:</label>
-        <input type="text" id="accountBalance" class="swal2-input" placeholder=" Balance" value="${
+        <label class="float-start my-2">Balance:</label>
+        <input type="text" id="accountBalance" class="form-control" placeholder=" Balance" value="${
           account.balance
         }">
         
-        <label>Status:</label>
+        <label class="float-start my-2">Status:</label>
         
-        <select id="accountStatus" class="swal2-select">
+        <select id="accountStatus" class="form-select">
           <option value="true" ${
             account.status ? 'selected' : ''
           }>Active</option>
@@ -334,13 +349,13 @@ export class AccountlayerComponent implements OnInit {
           }>Inactive</option>
         </select>
        
-        <br><label>Contact:</label>
-        <input type="text" id="accountContact" class="swal2-input" placeholder="Contact" value="${
+        <br><label class="float-start my-2">Contact:</label>
+        <input type="text" id="accountContact" class="form-control" placeholder="Contact" value="${
           account.contact
         }">
        
-        <br><label>Email:</label>
-        <input type="text" id="accountEmail" class="swal2-input" placeholder="Email" value="${
+        <br><label class="float-start my-2">Email:</label>
+        <input type="text" id="accountEmail" class="form-control" placeholder="Email" value="${
           account.email
         }">
         `,
@@ -371,11 +386,7 @@ export class AccountlayerComponent implements OnInit {
         } else {
           const updatedAccount = {
             title: accountTitle,
-            address: accountAddress,
-            balance: accountBalance,
-            status: accountStatus === 'true',
-            contact: accountContact,
-            email: accountEmail,
+           
           };
           this.http
             .put<Account>(`${this.account_url}${account.id}/`, updatedAccount)

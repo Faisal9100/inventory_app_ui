@@ -13,12 +13,17 @@ export class AllpurchasesService {
 
   public url = 'http://' + this.ip_address + '/inventory/stocks_purchase';
 
+  public stock_url = 'http://' + this.ip_address + 'inventory/stocks_purchase/${purchaseId}/stocks';
+
   public warehouse_url = "http://192.168.1.9:8000/inventory/warehouses/";
 
   public product_url = 'http://' + this.ip_address + '/inventory/products/';
 
   getAllPurchase(): Observable<any> {
     return this.http.get<any>(this.url);
+  }
+  getStockpurchase(): Observable<any> {
+    return this.http.get<any>(this.stock_url);
   }
   getSupplier(): Observable<any> {
     return this.http.get<any>(this.supplier_url);

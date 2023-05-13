@@ -12,8 +12,8 @@ export interface Supplier {
   status: string;
   contact: number;
   email: string;
-  debit:number;
-  credit:number;
+  debit: number;
+  credit: number;
 }
 
 @Component({
@@ -22,7 +22,7 @@ export interface Supplier {
   styleUrls: ['./customer.component.css'],
 })
 export class CustomerComponent {
-  public ip_address="192.168.1.9:8000";
+  public ip_address = '192.168.1.9:8000';
   supplierToEdit: any;
   pageSize = 10;
   currentPage = 1;
@@ -33,7 +33,7 @@ export class CustomerComponent {
 
   totalItems: any;
   itemsPerPage: any;
-  public url = "http://" + this.ip_address + "/inventory/customers/";
+  public url = 'http://' + this.ip_address + '/inventory/customers/';
   suppliers: any[] = [];
   supplier: Supplier = {
     id: 0,
@@ -43,8 +43,8 @@ export class CustomerComponent {
     balance: 0,
     contact: 0,
     email: '',
-    credit:0,
-    debit:0,
+    credit: 0,
+    debit: 0,
   };
   constructor(private modalService: NgbModal, public http: HttpClient) {
     this.fetchsupplier();
@@ -195,7 +195,7 @@ export class CustomerComponent {
   }
   openUpdateModal(supplier: Supplier) {
     Swal.fire({
-      title: 'Update Supplier Detail',
+      title: 'Update Customer Detail',
       html: `
         <div class="update_form" >
       <div class="form-group row  overflow-y-hidden">
@@ -256,6 +256,7 @@ export class CustomerComponent {
           }">
           </div>
           </div><br>
+          
           <div class="form-group overflow-hidden">
             <label for="supplierAddress" class="float-start my-2">Address:</label>
             <textarea class="form-control" id="supplierAddress" placeholder="Supplier Address"  rows="3" value="${
@@ -271,21 +272,22 @@ export class CustomerComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         const updatedTitle = (<HTMLInputElement>(
-          document.querySelector('.swal1')
+          document.querySelector('#supplierTitle')
         )).value;
         const updatedAddress = (<HTMLInputElement>(
-          document.querySelector('.swal2')
+          document.querySelector('#supplierAddress')
         )).value;
         const updatedBalance = parseInt(
-          (<HTMLInputElement>document.querySelector('.swal3')).value
+          (<HTMLInputElement>document.querySelector('#supplierBalance')).value
         );
 
         const updatedContact = (<HTMLInputElement>(
-          document.querySelector('.swal5')
+          document.querySelector('#supplierContact')
         )).value;
         const updatedEmail = (<HTMLInputElement>(
-          document.querySelector('.swal4')
+          document.querySelector('#supplierEmail')
         )).value;
+       
         const updatedStatus =
           (<HTMLSelectElement>document.querySelector('.swal2-select')).value ===
           'true';
@@ -348,7 +350,7 @@ export class CustomerComponent {
   // }
   generatePDF() {
     const columns2 = { title: 'All Customer List' };
-    
+
     const columns = [
       { title: 'S.N', dataKey: 'sn' },
       { title: 'Title', dataKey: 'title' },
@@ -368,9 +370,9 @@ export class CustomerComponent {
       contact: supplier.contact,
       email: supplier.email,
     }));
-    
+
     const doc = new jsPDF();
-    
+
     doc.text(columns2.title, 86, 8);
     doc.setFontSize(22);
     // doc.setTextColor('red');

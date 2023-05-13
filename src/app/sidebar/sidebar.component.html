@@ -87,7 +87,11 @@
           <i class="bi bi-receipt-cutoff"></i>
           <span class="sidenav-nav-link-text">Supplier</span>
         </li>
-        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
+        <li class="sidenav-nav-item" routerLink="All-purchase">
+          <i class="bi bi-receipt-cutoff"></i>
+          <span class="sidenav-nav-link-text">All Purchase</span>
+        </li>
+        <!-- <li class="sidenav-nav-item" (click)="toggleSubMenu()">
           <i class="bi bi-bag-heart"></i>
           <span class="sidenav-nav-link-text">Purchase</span>
           <i
@@ -114,7 +118,7 @@
               >
             </li>
           </div>
-        </li>
+        </li> -->
         <li class="sidenav-nav-item" (click)="toggleSubMenu()">
           <i class="bi bi-cart-plus"></i>
           <span class="sidenav-nav-link-text">Sale</span>
@@ -143,76 +147,9 @@
             </li>
           </div>
         </li>
-        <li class="sidenav-nav-item">
-          <i class="bi bi-diagram-3-fill"></i>
-          <span class="sidenav-nav-link-text">Adjustment</span>
-        </li>
-        <li class="sidenav-nav-item">
-          <i class="bi bi-cart-check-fill"></i>
-          <span class="sidenav-nav-link-text">Transfer</span>
-        </li>
-        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
-          <i class="bi bi-cash-coin"></i>
-          <span class="sidenav-nav-link-text">Expense</span>
-          <i
-            class="bi bi-chevron-down float-end"
-            style="
-              font-size: 12px;
-              font-weight: bold;
-              text-align: center;
-              margin: auto;
-              margin-top: 5px;
-            "
-          ></i>
-          <div *ngIf="showSubMenu">
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
-                Type</span
-              >
-            </li>
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i> All
-                Expenses</span
-              >
-            </li>
-          </div>
-        </li>
-        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
-          <i class="bi bi-cart-check-fill"></i>
-          <span class="sidenav-nav-link-text">Payment Report</span>
-          <i
-            class="bi bi-chevron-down float-end"
-            style="
-              font-size: 12px;
-              font-weight: bold;
-              text-align: center;
-              margin: auto;
-              margin-top: 5px;
-            "
-          ></i>
-          <div *ngIf="showSubMenu">
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
-                Supplier Payments</span
-              >
-            </li>
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
-                Customer Payments</span
-              >
-            </li>
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i> Stock
-                Report</span
-              >
-            </li>
-          </div>
-        </li>
+        
+       
+     
         <li class="sidenav-nav-item" (click)="toggleSubMenu()">
           <i class="bi bi-cart-check-fill"></i>
           <span class="sidenav-nav-link-text">Data Entry Report</span>
@@ -269,89 +206,23 @@
                 Return</span
               >
             </li>
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
-                Adjustments</span
-              >
-            </li>
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
-                Transfer</span
-              >
-            </li>
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
-                Expense</span
-              >
-            </li>
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
-                Supplier Payments</span
-              >
-            </li>
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
-                Customer Payment</span
-              >
-            </li>
+           
+           
+           
+           
+           
           </div>
         </li>
         <li class="sidenav-nav-item">
           <i class="bi bi-gear-wide-connected"></i>
           <span class="sidenav-nav-link-text">General Setting</span>
         </li>
-        <li class="sidenav-nav-item">
-          <i class="bi bi-gear"></i>
-          <span class="sidenav-nav-link-text">System Configuration</span>
-        </li>
+<!--        
         <li class="sidenav-nav-item">
           <i class="bi bi-image-alt"></i>
           <span class="sidenav-nav-link-text">Logo & Favicon</span>
         </li>
 
-        <li class="sidenav-nav-item">
-          <i class="bi bi-bell-fill"></i>
-          <span class="sidenav-nav-link-text">Notification Setting</span>
-        </li>
-        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
-          <i class="bi bi-menu-button-wide-fill"></i>
-          <span class="sidenav-nav-link-text">System</span>
-          <i
-            class="bi bi-chevron-down float-end"
-            style="
-              font-size: 12px;
-              font-weight: bold;
-              text-align: center;
-              margin: auto;
-              margin-top: 5px;
-            "
-          ></i>
-          <div *ngIf="showSubMenu">
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
-                Application</span
-              >
-            </li>
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
-                Server</span
-              >
-            </li>
-            <li>
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
-                Cache</span
-              >
-            </li>
-          </div>
-        </li>
         <li class="sidenav-nav-item">
           <i class="bi bi-bug"></i>
           <span class="sidenav-nav-link-text">Report & Request</span>
@@ -359,7 +230,7 @@
         <li class="sidenav-nav-item"  routerLink="login">
           <i class="bi bi-bug"></i>
           <span class="sidenav-nav-link-text">login</span>
-        </li>
+        </li> -->
       </ul>
     </mat-nav-list>
   </mat-sidenav>
