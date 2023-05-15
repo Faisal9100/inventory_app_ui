@@ -11,6 +11,7 @@ import { WarehouseService } from '../warehouse.service';
 import { SupplierService } from '../supplier.service';
 import { ProductService } from '../product.service';
 import Swal from 'sweetalert2';
+import { PageEvent } from '@angular/material/paginator';
 
 export interface PurchaseData {
   id: number;
@@ -33,7 +34,7 @@ interface Product {
   product: string;
 }
 
-// Define a row interface to represent a row in the table
+
 interface Row {
   product: Product;
   price: number;
@@ -55,15 +56,13 @@ export class AllPurchaseComponent implements OnInit {
     total: number;
   }[] = [];
   rows: Row[] = [];
-  pageSize = 10;
-  currentPage = 1;
   totalPages!: number;
   pages: number[] = [];
   id: any;
   closeResult: any;
   AllPurchaseData: any[] = [];
   stockPurchaseData: any[] = [];
-  totalItems: any;
+  
   itemsPerPage: any;
   products: any[] = [];
   suppliers: any[] = [];
@@ -76,10 +75,13 @@ export class AllPurchaseComponent implements OnInit {
   payableAmount?: number;
   selectedRemark: any;
   purchaseId: any;
+  payload: any;
+  isLoading = false;
 
-  onPageChange(event: any) {
-    this.currentPage = event;
-  }
+  pageSize = 10; // Number of items per page
+currentPage = 1; // Current page number
+totalItems = 0; // Total number of items
+
 
   quantity: number = 0;
   price: number = 0;
@@ -89,6 +91,7 @@ export class AllPurchaseComponent implements OnInit {
   discount: number = 0;
   grandTotal: number = 0;
   totalQuantity: number = 0;
+  searchedPurchaseData: any[]=[];
 
   updateTotal() {
     let total = 0;
@@ -110,7 +113,7 @@ export class AllPurchaseComponent implements OnInit {
     public warehouseService: WarehouseService,
     public supplierService: SupplierService,
     public productService: ProductService
-  ) {
+    ) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
@@ -119,39 +122,121 @@ export class AllPurchaseComponent implements OnInit {
     this.getwarehouse();
     this.getSupplier();
     this.getProducts();
-    this.getAllPurchase();
-    this.getStockPurchase();
-  }
-  getAllPurchase() {
-    this.allpurchasesService.getAllPurchase().subscribe((data) => {
-      this.AllPurchaseData = data.results;
-    });
+    this.getAllPurchaseData();
+    
   }
   ip_address = '192.168.1.9:8000';
-  getStockPurchase() {
-    // console.log(`http://192.168.1.9:8000/inventory/stocks_purchase/${this.purchaseId}/stocks/`);
-    // this.http.get('http://' + this.ip_address + 'inventory/stocks_purchase/'+ this.purchaseId +'/stocks').subscribe((response) => {
-    //   console.log(response);
-    // });
+  stocks: any;
+
+  //  __code for getting AllPurchase__
+
+  // getAllPurchase() {
+  //   this.allpurchasesService.getAllPurchase().subscribe((data) => {
+  //     this.AllPurchaseData = data.results;
+  //   });
+  // }
+  // getAllPurchaseData() {
+    
+  //   this.allpurchasesService.getAllPurchase().subscribe((data) => {
+  //     this.AllPurchaseData = data.results;
+  //     this.isLoading = false; // Set isLoading to false
+  //   });
+  // }
+  getAllPurchaseData() {
+    this.isLoading = true; // Set isLoading to true
+  
+    this.allpurchasesService.getAllPurchase().subscribe((data) => {
+      this.AllPurchaseData = data.results;
+      this.searchedPurchaseData = this.AllPurchaseData; 
+     
+      this.isLoading = false; // Set isLoading to false
+    });
   }
+  
+  
+  //  __code for getting StockList__
+  
+  getStockList(id: number) {
+    this.isLoading = true; // Set isLoading to true
+    this.http
+    .get(`http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`)
+    .subscribe((response: any) => {
+      this.stocks = response;
+      this.isLoading = false; // Set isLoading to true
+       
+      });
+  }
+
+  //  __code for deleting StockList__
+
+  deleteStockList(stockid: number,purchasedId:number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this account!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel',
+    }).then((result: { isConfirmed: any }) => {
+      if (result.isConfirmed) {
+        this.http
+          .delete(
+            `http://192.168.1.9:8000/inventory/stocks_purchase/${purchasedId}/stocks/` +
+              stockid +
+              '/'
+          )
+          .subscribe(
+            () => {
+              Swal.fire(
+                'Deleted!',
+                'Your product has been deleted.',
+                'success'
+              );
+
+              this.getStockList(purchasedId);
+            },
+            () => {
+              Swal.fire(
+                'Error!',
+                'Cannot delete stock purchase with child rows in stock.',
+                'error'
+              );
+            }
+          );
+      }
+    });
+  }
+
+  //  __code for opening model one for adding purchase__
 
   openXl(content: any) {
     this.modalService.open(content, { size: 'xl' });
   }
+
+   //  __code for opening model one for adding StockList__
+
   openXl2(content2: any) {
     this.modalService.open(content2, { size: 'xl' });
   }
+
+  //  __code for getting warehouse Data__
 
   getwarehouse() {
     this.warehouseService.GetWarehouse().subscribe((response) => {
       this.products = <any>response.results;
     });
   }
+
+  //  __code for getting supplier Data__
+  
   getSupplier() {
     this.supplierService.fetchsupplier().subscribe((response) => {
       this.suppliers = <any>response.results;
     });
   }
+
+    //  __code for getting Product Data__
+
   getProducts() {
     this.productService.getProducts().subscribe((Response) => {
       this.productData = <any>Response.results;
@@ -176,6 +261,7 @@ export class AllPurchaseComponent implements OnInit {
   };
 
   // Define the addProduct method to add the selected product to the table
+  
   addProduct() {
     // Ensure a product is selected
     if (!this.selectedProduct) {
@@ -212,22 +298,17 @@ export class AllPurchaseComponent implements OnInit {
 
     return rowStrings.join('\n');
   }
+
+  // __code for removing product from the table__
+
   removeProduct(index: number) {
     this.rows.splice(index, 1);
     this.updateTotal();
   }
   i: any;
 
-  // deletePurchase(purchaseId: number) {
-  //   console.log(purchaseId);
-  //   this.http
-  //   .delete('http://192.168.1.9:8000/inventory/stocks_purchase/'+ purchaseId + '/')
-  //   .subscribe((response) => {
-  //     const purchaseId = response;
-  //     console.log(`Purchase ${purchaseId} deleted successfully`);
-  //   });
-  //   this.productService.getProducts();
-  // }
+  // __ code for deleting purchase__
+
   deletePurchase(purchaseId: number) {
     Swal.fire({
       title: 'Are you sure?',
@@ -252,7 +333,7 @@ export class AllPurchaseComponent implements OnInit {
                 'success'
               );
 
-              this.getAllPurchase();
+              this.getAllPurchaseData();
             },
             () => {
               Swal.fire(
@@ -265,6 +346,10 @@ export class AllPurchaseComponent implements OnInit {
       }
     });
   }
+
+  // __ code for adding purchase__
+
+  // this.isLoading = true;
   addPurchase() {
     const payload: any = {
       invoice_no: this.purchaseInvoice,
@@ -285,9 +370,14 @@ export class AllPurchaseComponent implements OnInit {
         console.log(response);
         const purchaseId = response.id;
         this.addStock(purchaseId);
+        // this.isLoading = true;
+        // this.getStockList(this.id);
         // this.getAllPurchase();
       });
   }
+
+  // __ code for adding stock purchase__
+  
 
   addStock(id: any) {
     console.log(id);
@@ -309,85 +399,34 @@ export class AllPurchaseComponent implements OnInit {
         )
         .subscribe((response) => {
           console.log(response);
+          // this.getStockList(this.id);
         });
     }
   }
+  searchTerm = '';
 
-  //   addPurchase() {
-  //   const payload: any = {
-  //     invoice_no: this.purchaseInvoice,
-  //     date: this.purchaseDate,
-  //     account: this.selectedSupplier,
-  //     warehouse: this.selectedWarehouse,
-  //     amount: this.grandTotal,
-  //     quantity: this.totalQuantity,
-  //     title: this.selectedRemark,
-  //   };
+  onSearchTermChange() {
+    this.searchedPurchaseData = this.AllPurchaseData.filter((purchase) =>
+      purchase.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+    );
+  }
+  getPaginationRange() {
+    const totalPages = Math.ceil(this.totalItems / this.pageSize);
+    return Array(totalPages).fill(0).map((_, i) => i + 1);
+  }
+  onPageChange(event: any) {
+    this.page = event;
+    this.getAllPurchaseData(); // Assuming your method to fetch data is getAllPurchase(page)
+  }
+  onTableSizeChange(event:any){
+    this.tableSize = event.target.value;
+    this.page=1
+    this.getAllPurchaseData(); // Assuming your method to fetch data is getAllPurchase(page)
+  }
+    
+  count:number = 0;
+  page:number= 1;
+  tableSize:number = 10;
+  tableSizes:any=[5,10,25,100];
 
-  //   const purchasePromise = new Promise<number>((resolve, reject) => {
-  //     this.http
-  //       .post<{ id: number }>(
-  //         'http://192.168.1.9:8000/inventory/stocks_purchase/',
-  //         payload
-  //       )
-  //       .subscribe((response) => {
-  //         const purchaseId = response.id;
-  //         console.log(purchaseId);
-  //         resolve(purchaseId);
-  //       }, (error) => {
-  //         reject(error);
-  //       });
-  //   });
-
-  //   purchasePromise.then(() => {
-  //     this.addStock(purchasePromise);
-  //     this.getAllPurchase();
-  //   }).catch((error) => {
-  //     console.error(error);
-  //   });
-  // }
-
-  // addStock(purchasePromise: Promise<number>) {
-  //   console.log(this.purchaseId);
-  //   let Products = [];
-  //   for (let row of this.rows) {
-  //     let product = {
-  //       product: row.product.id,
-  //       quantity: row.quantity,
-  //       amount: row.quantity * row.price,
-  //       date: this.purchaseDate,
-  //       account_supplier: this.selectedSupplier,
-  //       warehouse: this.selectedWarehouse,
-  //       title: this.selectedRemark,
-  //       vocuher_type: 'Purchase',
-  //     };
-
-  //     purchasePromise.then((purchaseId) => {
-  //       console.log(purchaseId);
-  //       this.http
-  //         .post(
-  //           `http://192.168.1.9:8000/inventory/stocks_purchase/${purchaseId}/stocks/`,
-  //           product
-  //         )
-  //         .subscribe((response) => {
-  //           console.log(response);
-  //         });
-  //     }).catch((error) => {
-  //       console.error(error);
-  //     });
-  //   }
-  // }
-
-  // updatePurchase(purchaseId: any, payload: any) {
-  //   this.http
-  //     .put(
-  //       `http://192.168.1.9:8000/inventory/stocks_purchase/${purchaseId}/`,
-  //       payload
-  //     )
-  //     .subscribe((response) => {
-  //       console.log(response);
-  //     });
-  // }
-
-  payload: any;
 }

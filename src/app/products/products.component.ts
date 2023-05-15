@@ -242,21 +242,187 @@ export class ProductsComponent {
       }
     });
   }
-  updateProduct(product: Product) {
+  // updateProduct(product: Product) {
+  //   Swal.fire({
+  //     title: 'Update Warehouse',
+  //     html: `
+  //     <label>Name:</label>
+  //     <input type="text" id="productName" class="swal2-input swal1" placeholder="Name"  value="${
+  //       product.name
+  //     }">
+     
+  //     <br><label>Note:</label>
+  //     <input type="text" id="productNote" class="swal2-input swal3" placeholder="Note"  value="${
+  //       product.note
+  //     }">
+  //     <br><label>Brand:</label>
+  //     <select id="productBrand" class="swal2-select">
+  //       ${this.brands.map(
+  //         (brand) =>
+  //           `<option value="${brand.id}" ${
+  //             brand.id === product.brand ? 'selected' : ''
+  //           }>${brand.name}</option>`
+  //       )}
+  //     </select>
+  //     <br><label>Unit:</label>
+  //     <select id="productUnit" class="swal2-select">
+  //       ${this.units.map(
+  //         (unit) =>
+  //           `<option value="${unit.id}" ${
+  //             unit.id === product.unit ? 'selected' : ''
+  //           }>${unit.name}</option>`
+  //       )}
+  //     </select>
+  //     <br><label>Category:</label>
+  //     <select id="productCategory" class="swal2-select">
+  //       ${this.categories.map(
+  //         (category) =>
+  //           `<option value="${category.id}" ${
+  //             category.id === product.category ? 'selected' : ''
+  //           }>${category.name}</option>`
+  //       )}
+  //     </select>
+    
+   
+      
+  //   `,
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Update',
+  //     cancelButtonText: 'Cancel',
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       const updatedName = (<HTMLInputElement>document.querySelector('.swal1'))
+  //         .value;
+  //       const updatedQuantity = (<HTMLInputElement>(
+  //         document.querySelector('.swal2')
+  //       )).value;
+  //       const updatedNote = (<HTMLInputElement>document.querySelector('.swal3'))
+  //         .value;
+  //       const updatedBrand = (<HTMLSelectElement>(
+  //         document.querySelector('#productBrand')
+  //       )).value;
+  //       const updatedUnit = (<HTMLSelectElement>(
+  //         document.querySelector('#productUnit')
+  //       )).value;
+  //       const updatedCategory = (<HTMLSelectElement>(
+  //         document.querySelector('#productCategory')
+  //       )).value;
+       
+     
+  //       this.http
+  //         .put(`${this.url}${product.id}/`, {
+  //           name: updatedName,
+  //           quantity: updatedQuantity,
+  //           unit: updatedUnit,
+  //           note: updatedNote,
+  //           brand: updatedBrand,
+  //           category: updatedCategory,
+  //         })
+  //         .subscribe(() => {
+  //           console.log(`Product with ID ${product.id} updated successfully!`);
+  //           this.getProducts();
+  //           Swal.fire(
+  //             'Updated!',
+  //             'Your warehouse has been updated.',
+  //             'success'
+  //           );
+  //         });
+  //     }
+  //   });
+  // }
+  // openUpdateModal(product: Product) {
+  //   Swal.fire({
+  //     title: 'Update Product',
+  //     html: `
+  //     <label>Name:</label>
+  //     <input type="text" id="productName" class="form-control swal1" placeholder="Name"  value="${
+  //       product.name
+  //     }">
+     
+  //     <input type="text" id="productBrand" class="form-select swal3" placeholder="Brand" value="${
+  //       product.brand
+  //     }">
+  //     <label>Unit:</label>
+  //     <input type="text" id="productUnit" class="form-select swal4" placeholder="Unit" value="${
+  //       product.unit
+  //     }">
+  //     <label>Category:</label>
+  //     <input type="text" id="productCategory" class="form-select swal5" placeholder="Category" value="${
+  //       product.category
+  //     }">
+  //     <br><label>Note:</label>
+  //     <input type="text" id="productNote" class="form-control swal6" placeholder="Note"  value="${
+  //       product.note
+  //     }">
+  //     <br><label>Image:</label>
+  //     <input type="file" class="form-control id="productImage" accept="image/*">
+  //     <br><br><img src="${product.image}" alt="Product Image" height="50" width="50">
+      
+  //   `,
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Update',
+  //     cancelButtonText: 'Cancel',
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       const updatedName = (<HTMLInputElement>document.querySelector('.swal1'))
+  //         .value;
+  //       const updatedQuantity = (<HTMLInputElement>(
+  //         document.querySelector('.swal2')
+  //       )).value;
+  //       const updatedNote = (<HTMLTextAreaElement>(
+  //         document.querySelector('.swal6')
+  //       )).value;
+  //       const updatedBrand = (<HTMLInputElement>(
+  //         document.querySelector('#productBrand')
+  //       )).value;
+  //       const updatedUnit = (<HTMLInputElement>(
+  //         document.querySelector('#productUnit')
+  //       )).value;
+  //       const updatedCategory = (<HTMLInputElement>(
+  //         document.querySelector('#productCategory')
+  //       )).value;
+  //       const formData = new FormData();
+  //       formData.append('name', updatedName);
+  //       formData.append('quantity', updatedQuantity);
+  //       formData.append('note', updatedNote);
+  //       formData.append('brand', updatedBrand);
+  //       formData.append('unit', updatedUnit);
+  //       formData.append('category', updatedCategory);
+  //       if (this.selectedFile) {
+  //         formData.append('image', this.selectedFile, this.selectedFile.name);
+  //       }
+  //       this.productService.updateProduct(product.id,formData).subscribe(
+  //         (response) => {
+  //           console.log(response);
+  //           this.getProducts();
+  //           Swal.fire({
+  //             icon: 'success',
+  //             title: 'Product updated successfully!',
+  //             showConfirmButton: false,
+  //             timer: 2000,
+  //           });
+  //         },
+  //         (error) => console.log(error),
+  //         () => console.log('error updating product')
+  //       );
+  //     }
+  //   });
+  // }
+  openUpdateModal(product: Product) {
     Swal.fire({
-      title: 'Update Warehouse',
+      title: 'Update Product',
       html: `
-      <label>Name:</label>
-      <input type="text" id="productName" class="swal2-input swal1" placeholder="Name"  value="${
+      <label class="float-start my-1">Name:</label>
+      <input type="text" id="productName" class="form-control swal1" placeholder="Name"  value="${
         product.name
       }">
      
-      <br><label>Note:</label>
-      <input type="text" id="productNote" class="swal2-input swal3" placeholder="Note"  value="${
+      <br><label class="float-start my-1">Note:</label>
+      <input type="text" id="productNote" class="form-control swal3" placeholder="Note"  value="${
         product.note
       }">
-      <br><label>Brand:</label>
-      <select id="productBrand" class="swal2-select">
+      <br><label class="float-start my-1">Brand:</label>
+      <select id="productBrand" class="form-select">
         ${this.brands.map(
           (brand) =>
             `<option value="${brand.id}" ${
@@ -264,8 +430,8 @@ export class ProductsComponent {
             }>${brand.name}</option>`
         )}
       </select>
-      <br><label>Unit:</label>
-      <select id="productUnit" class="swal2-select">
+      <br><label class="float-start my-1">Unit:</label>
+      <select id="productUnit" class="form-select">
         ${this.units.map(
           (unit) =>
             `<option value="${unit.id}" ${
@@ -273,8 +439,8 @@ export class ProductsComponent {
             }>${unit.name}</option>`
         )}
       </select>
-      <br><label>Category:</label>
-      <select id="productCategory" class="swal2-select">
+      <br><label class="float-start my-1">Category:</label>
+      <select id="productCategory" class="form-select">
         ${this.categories.map(
           (category) =>
             `<option value="${category.id}" ${
@@ -282,6 +448,10 @@ export class ProductsComponent {
             }>${category.name}</option>`
         )}
       </select>
+
+      <br><label class="float-start my-1">Image:</label>
+          <input type="file" id="productImage" accept="image/*" (change)="onFileSelected($event)">
+          <br><br><img src="${product.image}" alt="Product Image" height="50" width="50">
     
    
       
@@ -293,9 +463,6 @@ export class ProductsComponent {
       if (result.isConfirmed) {
         const updatedName = (<HTMLInputElement>document.querySelector('.swal1'))
           .value;
-        const updatedQuantity = (<HTMLInputElement>(
-          document.querySelector('.swal2')
-        )).value;
         const updatedNote = (<HTMLInputElement>document.querySelector('.swal3'))
           .value;
         const updatedBrand = (<HTMLSelectElement>(
@@ -307,16 +474,20 @@ export class ProductsComponent {
         const updatedCategory = (<HTMLSelectElement>(
           document.querySelector('#productCategory')
         )).value;
-       
+        
+        const UpdatedImage = new FormData();
+        UpdatedImage.append('image', this.selectedFile, this.selectedFile.name);
      
         this.http
           .put(`${this.url}${product.id}/`, {
             name: updatedName,
-            quantity: updatedQuantity,
+            // quantity: updatedQuantity,
             unit: updatedUnit,
             note: updatedNote,
             brand: updatedBrand,
             category: updatedCategory,
+            image:UpdatedImage,
+           
           })
           .subscribe(() => {
             console.log(`Product with ID ${product.id} updated successfully!`);
@@ -327,84 +498,6 @@ export class ProductsComponent {
               'success'
             );
           });
-      }
-    });
-  }
-  openUpdateModal(product: Product) {
-    Swal.fire({
-      title: 'Update Product',
-      html: `
-      <label>Name:</label>
-      <input type="text" id="productName" class="swal2-input swal1" placeholder="Name"  value="${
-        product.name
-      }">
-     
-      <input type="text" id="productBrand" class="swal2-input swal3" placeholder="Brand" value="${
-        product.brand
-      }">
-      <label>Unit:</label>
-      <input type="text" id="productUnit" class="swal2-input swal4" placeholder="Unit" value="${
-        product.unit
-      }">
-      <label>Category:</label>
-      <input type="text" id="productCategory" class="swal2-input swal5" placeholder="Category" value="${
-        product.category
-      }">
-      <br><label>Note:</label>
-      <input type="text" id="productNote" class="swal2-input swal6" placeholder="Note"  value="${
-        product.note
-      }">
-      <br><label>Image:</label>
-      <input type="file" id="productImage" accept="image/*">
-      <br><br><img src="${product.image}" alt="Product Image" height="50" width="50">
-      
-    `,
-      showCancelButton: true,
-      confirmButtonText: 'Update',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const updatedName = (<HTMLInputElement>document.querySelector('.swal1'))
-          .value;
-        const updatedQuantity = (<HTMLInputElement>(
-          document.querySelector('.swal2')
-        )).value;
-        const updatedNote = (<HTMLTextAreaElement>(
-          document.querySelector('.swal6')
-        )).value;
-        const updatedBrand = (<HTMLInputElement>(
-          document.querySelector('#productBrand')
-        )).value;
-        const updatedUnit = (<HTMLInputElement>(
-          document.querySelector('#productUnit')
-        )).value;
-        const updatedCategory = (<HTMLInputElement>(
-          document.querySelector('#productCategory')
-        )).value;
-        const formData = new FormData();
-        formData.append('name', updatedName);
-        formData.append('quantity', updatedQuantity);
-        formData.append('note', updatedNote);
-        formData.append('brand', updatedBrand);
-        formData.append('unit', updatedUnit);
-        formData.append('category', updatedCategory);
-        if (this.selectedFile) {
-          formData.append('image', this.selectedFile, this.selectedFile.name);
-        }
-        this.productService.updateProduct(product.id,formData).subscribe(
-          (response) => {
-            console.log(response);
-            this.getProducts();
-            Swal.fire({
-              icon: 'success',
-              title: 'Product updated successfully!',
-              showConfirmButton: false,
-              timer: 2000,
-            });
-          },
-          (error) => console.log(error),
-          () => console.log('error updating product')
-        );
       }
     });
   }

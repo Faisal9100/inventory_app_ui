@@ -48,8 +48,9 @@ const routes: Routes = [
   { path: 'customer', component: CustomerComponent },
   { path: 'supplier', component: SupplierComponent },
   { path: 'accounts', component: AccountlayerComponent },
-  {path:'All-purchase', component:AllPurchaseComponent},
-  {path:'login', component:LoginComponent}
+  {path:'All-purchase', component:AllPurchaseComponent}, 
+  {path:'Sale', component:AllSaleComponent}, 
+  {path:'login', component:LoginComponent}       
 ];
 
 @NgModule({

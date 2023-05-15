@@ -1,11 +1,17 @@
 <h1 class="fs-2">All Purchases</h1>
 
+<div *ngIf="isLoading" class="spinner-border text-primary" role="status">
+  <span class="visually-hidden">Loading...</span>
+</div>
+
 <div class="add-categories">
   <div class="input-group mb-3">
     <input
       type="text"
       class="form-control w-25"
       placeholder="Search Customers"
+      [(ngModel)]="searchTerm"
+      (input)="onSearchTermChange()"
     />
     <button class="btn btn-primary">
       <i class="bi bi-search"></i>
@@ -40,7 +46,18 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of AllPurchaseData">
+      <tr
+        *ngFor="
+          let item of AllPurchaseData
+            | paginate
+              : {
+                  itemsPerPage: tableSize,
+                  currentPage: page,
+                  totalItems: count
+                };
+          let i = index
+        "
+      >
         <td>{{ item.id }}</td>
         <td>{{ item.invoice_no }}</td>
         <td>{{ item.title }}</td>
@@ -54,12 +71,10 @@
           <button
             class="btn btn-outline-success mx-2"
             (click)="openXl2(content2)"
+            (click)="getStockList(item.id)"
           >
             <i class="bi bi-eye-fill"></i>
           </button>
-          <!-- <button class="btn btn-outline-primary mx-2" (click)="updatePurchase(item,id)">
-            <i class="bi bi-pencil-square"></i>
-          </button> -->
           <button
             class="btn btn-outline-danger"
             (click)="deletePurchase(item.id)"
@@ -99,6 +114,8 @@
     </li>
   </ul>
 </nav> -->
+
+<!-- code for adding purchase -->
 
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header">
@@ -291,12 +308,6 @@
               readonly
             />
           </div>
-          <!-- <label class="my-1">Quantity</label>
-          <div class="input-group col-sm">
-            <span class="input-group-text">$</span>
-            <input class="form-control" type="number" [(ngModel)]="totalQuantity" />
-
-          </div> -->
         </div>
       </div>
     </div>
@@ -314,9 +325,18 @@
   </div>
 </ng-template>
 
+<!--  model for showing stock list data -->
+
 <ng-template #content2 let-c="close" let-d="dismiss">
   <div class="modal-header">
     <h2 class="modal-title text-center" id="modal-basic-title">Stock List</h2>
+    <div class="loader">
+      <div
+        *ngIf="isLoading"
+        class="spinner-border text-primary"
+        role="status"
+      ></div>
+    </div>
     <button
       type="button"
       class="btn-close"
@@ -327,7 +347,7 @@
   <div class="modal-body">
     <table class="table table-striped text-center table-bordered table-hover">
       <thead class="table-head">
-        <tr>
+        <tr *ngIf="searchedPurchaseData.length > 0">
           <th>Id</th>
           <th>Title</th>
           <th>Account Supplier</th>
@@ -343,22 +363,22 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let stock of stockPurchaseData">
+        <tr *ngFor="let stock of stocks">
           <td>{{ stock.id }}</td>
           <td>{{ stock.title }}</td>
           <td>{{ stock.stock_purchase }}</td>
-          <td>{{ stock.stock_purchase }}</td>
           <td>{{ stock.product }}</td>
+          <td>{{ stock.quantity }}</td>
           <td>{{ stock.amount }}</td>
-          <td>{{ stock.vocher_type }}</td>
+          <td>{{ stock.vocuher_type }}</td>
           <td>{{ stock.date }}</td>
-          <td>{{ stock.account.name }}</td>
+          <td>{{ stock.account_name }}</td>
           <td>{{ stock.product_name }}</td>
           <td>{{ stock.warehouse_name }}</td>
           <td>
             <button
               class="btn btn-outline-danger"
-              (click)="deletePurchase(stock.id)"
+              (click)="deleteStockList(stock.id, stock.stock_purchase)"
             >
               <i class="bi bi-trash3-fill"></i>
             </button>
@@ -368,15 +388,16 @@
     </table>
   </div>
 
-  <div class="modal-footer">
-    <!-- <button
-      type="button"
-      class="btn btn-outline-dark"
-      (click)="c('Save click')"
-      (click)="addPurchase()"
-      (click)="addStock(id)"
-    >
-      Add
-    </button> -->
-  </div>
+  <div class="modal-footer"></div>
 </ng-template>
+
+<!-- <mat-paginator
+  [length]="totalItems"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  (page)="onPageChange($event)"
+  aria-label="Select page"
+  ></mat-paginator> -->
+<pagination-controls>
+  previousLabel="prev" nextLabel="Next" (page)="onPageChange($event)"
+</pagination-controls>

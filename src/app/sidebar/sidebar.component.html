@@ -1,5 +1,5 @@
 <mat-toolbar color="primary">
-  <mat-toolbar-row>
+  <mat-toolbar-row style="background-color: #071251 !important ;">
     <i class="bi bi-hdd-stack-fill text-white" (click)="sidenav.toggle()"></i>
     <h1 class="mt-2">Inventary App</h1>
     <div
@@ -109,17 +109,26 @@
               <span class="mat-list-item"
                 ><i class="bi bi-hypnotize" style="font-size: 12px"></i> All
                 Purchase</span
-              >
-            </li>
-            <li>
-              <span class="mat-list-item"
+                >
+              </li>
+              <li>
+                <span class="mat-list-item"
                 ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
                 Purchase Return</span
-              >
-            </li>
-          </div>
-        </li> -->
-        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
+                >
+              </li>
+            </div>
+          </li> -->
+          <li class="sidenav-nav-item" routerLink="Sale">
+            <i class="bi bi-receipt-cutoff"></i>
+            <span class="sidenav-nav-link-text">All Sale</span>
+          </li>
+          <li class="sidenav-nav-item" routerLink="Sale">
+            <i class="bi bi-receipt-cutoff"></i>
+            <span class="sidenav-nav-link-text">Sale Return</span>
+          </li>
+         
+        <!-- <li class="sidenav-nav-item" (click)="toggleSubMenu()">
           <i class="bi bi-cart-plus"></i>
           <span class="sidenav-nav-link-text">Sale</span>
           <i
@@ -135,21 +144,15 @@
           <div *ngIf="showSubMenu">
             <li>
               <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i> All
-                Sales</span
-              >
-            </li>
-            <li>
-              <span class="mat-list-item"
                 ><i class="bi bi-hypnotize" style="font-size: 12px"></i> Sale
                 Return</span
               >
             </li>
           </div>
         </li>
-        
+         -->
        
-     
+<!--      
         <li class="sidenav-nav-item" (click)="toggleSubMenu()">
           <i class="bi bi-cart-check-fill"></i>
           <span class="sidenav-nav-link-text">Data Entry Report</span>
@@ -212,7 +215,7 @@
            
            
           </div>
-        </li>
+        </li> -->
         <li class="sidenav-nav-item">
           <i class="bi bi-gear-wide-connected"></i>
           <span class="sidenav-nav-link-text">General Setting</span>
@@ -236,7 +239,7 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <div class="p-4" style="height: 88vh">
+    <div class="p-4" style="height: 100vh">
       <router-outlet></router-outlet>
     </div>
   </mat-sidenav-content>
