@@ -23,9 +23,13 @@ import { UnitsComponent } from './units/units.component';
 import { WarehouseComponent } from './warehouse/warehouse.component';
 import { AccountlayerComponent } from './accountlayer/accountlayer.component';
 import { LoginComponent } from './login/login.component';
-
+// import { AuthQuardGuard } from './auth-quard.guard';
+import { AuthGuard } from './login/authQuard';
 const routes: Routes = [
-  { path: 'dashboard', component: DashboardComponent },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'products', component: ProductsComponent },
   { path: 'categories', component: CategoriesComponent },
   { path: 'brands', component: BrandsComponent },
@@ -50,7 +54,7 @@ const routes: Routes = [
   { path: 'accounts', component: AccountlayerComponent },
   {path:'All-purchase', component:AllPurchaseComponent}, 
   {path:'Sale', component:AllSaleComponent}, 
-  {path:'login', component:LoginComponent}       
+      
 ];
 
 @NgModule({

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -58,6 +58,7 @@ import { SupplierService } from './supplier.service';
 import { MatSelectModule } from '@angular/material/select';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { LoginComponent } from './login/login.component';
+// import { AuthQuardGuard } from './auth-quard.guard';
 
 @NgModule({
   declarations: [
@@ -119,6 +120,9 @@ import { LoginComponent } from './login/login.component';
     MatSelectModule,
     NgSelectModule,
     ReactiveFormsModule,
+    FormsModule,
+    
+  
     
   ],
   providers: [
@@ -129,6 +133,7 @@ import { LoginComponent } from './login/login.component';
     ProductService,
     SupplierService,
     NgbActiveModal,
+    // AuthQuardGuard,
   ],
   bootstrap: [AppComponent],
 })

@@ -12,5 +12,10 @@ export class SidebarComponent {
     this.showSubMenu = !this.showSubMenu;
     
   }
+  loginFormVisible: boolean = true;
+  
+  showLoginForm(): void {
+    this.loginFormVisible = false;
+  }
   
 }
