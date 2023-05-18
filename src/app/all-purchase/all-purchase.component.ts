@@ -91,6 +91,8 @@ export class AllPurchaseComponent implements OnInit {
   grandTotal: number = 0;
   totalQuantity: number = 0;
   searchedPurchaseData: any[] = [];
+value: any;
+  stockForm: any;
 
   updateTotal() {
     let total = 0;
@@ -123,7 +125,7 @@ export class AllPurchaseComponent implements OnInit {
     this.getProducts();
     this.getAllPurchaseData();
   }
-  ip_address = '192.168.1.9:8000';
+  ip_address = '127.0.0.1:8000';
   stocks: any;
 
   //  __code for getting AllPurchase__
@@ -156,7 +158,7 @@ export class AllPurchaseComponent implements OnInit {
   getStockList(id: number) {
     this.isLoading = true; // Set isLoading to true
     this.http
-      .get(`http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`)
+      .get(`http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`)
       .subscribe((response: any) => {
         this.stocks = response;
         this.isLoading = false; // Set isLoading to true
@@ -177,7 +179,7 @@ export class AllPurchaseComponent implements OnInit {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/stocks_purchase/${purchasedId}/stocks/` +
+            `http://127.0.0.1:8000/inventory/stocks_purchase/${purchasedId}/stocks/` +
               stockid +
               '/'
           )
@@ -323,7 +325,7 @@ export class AllPurchaseComponent implements OnInit {
       if (result.isConfirmed) {
         this.http
           .delete(
-            'http://192.168.1.9:8000/inventory/stocks_purchase/' +
+            'http://127.0.0.1:8000/inventory/stocks_purchase/' +
               purchaseId +
               '/'
           )
@@ -365,7 +367,7 @@ export class AllPurchaseComponent implements OnInit {
 
     this.http
       .post<{ id: number }>(
-        'http://192.168.1.9:8000/inventory/stocks_purchase/',
+        'http://127.0.0.1:8000/inventory/stocks_purchase/',
         payload
       )
       .subscribe((response) => {
@@ -397,7 +399,7 @@ export class AllPurchaseComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`,
+          `http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`,
           product
         )
         .subscribe(
@@ -408,6 +410,42 @@ export class AllPurchaseComponent implements OnInit {
         );
     });
   }
+  postUpdateStock(product: any, id: any) {
+    return new Promise((resolve, reject) => {
+      this.http
+        .put(
+          `http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`,
+          product
+        )
+        .subscribe(
+          (response) => {
+            resolve(response);
+          },
+          (error) => reject(error)
+        );
+    });
+  }
+// Assuming you have the necessary imports and dependencies
+updatedStock:any;
+// openStockModal(productId: any) {
+//   // Open your modal here
+
+//   // Handle form submission or any user interaction to update the stock
+//   // Retrieve the updated stock information in the 'updatedStock' variable
+
+//   this.postUpdateStock(this.updatedStock, productId)
+//     .then((response) => {
+//       // Handle successful response
+//       console.log(response);
+//       // Close the modal or perform any additional actions
+//     })
+//     .catch((error) => {
+//       // Handle error
+//       console.error(error);
+//       // Display an error message or perform any additional error handling
+//     });
+// }
+  
 
   p: any;
   count: number = 0;
@@ -424,11 +462,52 @@ export class AllPurchaseComponent implements OnInit {
       });
     }
   }
+  getStock(id: any) {
+    return this.http.get(`http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`);
+  }
+  openStockModal(productId: any) {
+    // Open your modal here
+  
+    this.getStock(productId)
+      .subscribe(
+        (response) => {
+          // Populate the form fields in the modal with the retrieved data
+          const stockData = response; // Assuming the API response is a JSON object representing the stock data
+          // Assign the stock data to your form fields in the modal
+          this.stockForm.patchValue(stockData);
+        },
+        (error) => {
+          console.error(error);
+          // Handle error if necessary
+        }
+      );
+  }
+  invoiceNumber?:number;
+  stockData:any[]=[];
+  onSubmit() {
+    const updatedStockData = this.stockForm.value;
+    const stockId = updatedStockData.id; // Assuming the stock ID is included in the form data
+  
+    this.postUpdateStock(updatedStockData, stockId)
+      .then((response) => {
+        // Handle successful response
+        console.log(response);
+        // Close the modal or perform any additional actions
+      })
+      .catch((error) => {
+        // Handle error
+        console.error(error);
+        // Display an error message or perform any additional error handling
+      });
+  }
+  
+  
+  
   // updateStock() {
   //   for (let row of this.rows) {
   //     const { productid, stock } = row.product; // Assuming productId and stock properties exist on the product object
   
-  //     const url = `http://192.168.1.9:8000/inventory/stocks_purchase/${productId}`; // Replace with the appropriate API endpoint for updating a product's stock
+  //     const url = `http://127.0.0.1:8000/inventory/stocks_purchase/${productId}`; // Replace with the appropriate API endpoint for updating a product's stock
   
   //     const body = { stock }; // Assuming the API expects the stock value in the request body
   
@@ -442,19 +521,19 @@ export class AllPurchaseComponent implements OnInit {
   //     );
   //   }
   // }
-  getStock(id: number) {
-    this.isLoading = true; // Set isLoading to true
-   this.http.put(`http://192.168.1.9:8000/inventory/stocks_purchase/${id}`,id).subscribe(
-    (response: any) => {
-      const invoiceNumber = response.invoiceNumber; // Assuming the API response contains the invoiceNumber field
-      const inputElement = document.getElementById('purchaseInvoice') as HTMLInputElement;
-      inputElement.value = invoiceNumber;
-    },
-    (error) => {
-      console.error('Failed to retrieve invoice number:', error);
-    }
-  );
-  }
+  // getStock(id: number) {
+  //   this.isLoading = true; // Set isLoading to true
+  //  this.http.put(`http://127.0.0.1:8000/inventory/stocks_purchase/${id}`,id).subscribe(
+  //   (response: any) => {
+  //     const invoiceNumber = response.invoiceNumber; // Assuming the API response contains the invoiceNumber field
+  //     const inputElement = document.getElementById('purchaseInvoice') as HTMLInputElement;
+  //     inputElement.value = invoiceNumber;
+  //   },
+  //   (error) => {
+  //     console.error('Failed to retrieve invoice number:', error);
+  //   }
+  // );
+  // }
 
   
   

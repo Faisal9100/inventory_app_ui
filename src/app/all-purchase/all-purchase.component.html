@@ -74,7 +74,7 @@
           <button
             class="btn btn-outline-primary mx-1"
             (click)="openXl3(content3)"
-            (click)="  getStock(item.id)"
+            (click)="openStockModal(item.id)"
           >
             <i class="bi bi-plus-circle"></i>
           </button>
@@ -394,8 +394,7 @@
             placeholder="Invoice Number"
             disabled="true"
             readonly
-           
-
+            [(ngModel)]="stockData"
           />
         </div>
         <div class="col-sm">
@@ -443,13 +442,13 @@
       <div class="col-sm">
         <label for="selectedProduct" class="py-2">Products*:</label>
         <ng-select
-          class="form-ng-select"
-          [(ngModel)]="selectedProduct"
-          id="selectedProduct"
-          [bindValue]="'name'"
-          [bindLabel]="'name'"
-          (change)="isProductSelected = true"
-        >
+        class="form-ng-select"
+        [(ngModel)]="selectedProduct"
+        id="selectedProduct"
+        [bindValue]="'name'"
+        [bindLabel]="'name'"
+        (change)="isProductSelected = true"
+      >
           <ng-option
             class="ng-option"
             *ngFor="let value of productData"
@@ -477,7 +476,7 @@
         <tbody>
           <tr
             class="text-center m-auto justify-content-center"
-            *ngFor="let row of rows"
+            *ngFor="let row of stockData; let i = index"
           >
             <td class="text-center my-3">{{ row.product.name }}</td>
             <td>
@@ -504,7 +503,14 @@
                 (input)="updateTotal()"
               />
             </td>
-            <td><input class="form-control" type="number" [(ngModel)]="row.stock" (input)="updateTotal()" /></td>
+            <td>
+              <input
+                class="form-control"
+                type="number"
+                [(ngModel)]="row.stock"
+                (input)="updateTotal()"
+              />
+            </td>
             <td>
               <button class="btn btn-outline-danger" (click)="removeProduct(i)">
                 Remove
@@ -571,13 +577,8 @@
   </div>
 
   <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-outline-dark"
-      (click)="c('Save click')"
-      (click)="addPurchase()"
-    >
-      update Stock
+    <button type="button" class="btn btn-outline-dark" (click)="onSubmit()">
+      Update Stock
     </button>
   </div>
 </ng-template>

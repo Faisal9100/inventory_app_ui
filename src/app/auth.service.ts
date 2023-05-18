@@ -3,26 +3,30 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private tokenKey = 'auth_token';
-  private apiUrl = 'http://192.168.1.9:8000/auth/jwt/create/';
+  private apiUrl = 'http://127.0.0.1:8000/auth/jwt/create/';
   loginFormVisible: boolean=true;
 
   constructor(private http: HttpClient, private router: Router) {}
 
 
-  signIn(loginData: { username: string; password: string }): void {
-    this.http
-      .post(this.apiUrl, loginData)
-      .subscribe((result: any) => {
-        localStorage.setItem('token', result.access);
-        this.loginFormVisible = false;
-        this.router.navigate(['/dashboard']);
-        // console.warn(result); 
-      });
+  // LogIn(loginData: { username: string; password: string }): void {
+  //   this.http
+  //     .post(this.apiUrl, loginData)
+  //     .subscribe((result: any) => {
+  //       localStorage.setItem('token', result.access);
+  //       this.loginFormVisible = false;
+  //       this.router.navigate(['/dashboard']);
+  //       console.warn(result); 
+  //     });
+  // }
+  onLogIn(obj:any):Observable<any>{
+return this.http.post(this.apiUrl,obj)
   }
   isAuthenticated(): boolean {
     // Implement your authentication logic here

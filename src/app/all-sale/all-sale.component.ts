@@ -140,9 +140,9 @@ export class AllSaleComponent {
       this.AllPurchaseData = data.results;
     });
   }
-  ip_address = '192.168.1.9:8000';
+  ip_address = '127.0.0.1:8000';
   getStockPurchase() {
-    // console.log(`http://192.168.1.9:8000/inventory/stocks_purchase/${this.purchaseId}/stocks/`);
+    // console.log(`http://127.0.0.1:8000/inventory/stocks_purchase/${this.purchaseId}/stocks/`);
     // this.http.get('http://' + this.ip_address + 'inventory/stocks_purchase/'+ this.purchaseId +'/stocks').subscribe((response) => {
     //   console.log(response);
     // });
@@ -198,7 +198,7 @@ export class AllSaleComponent {
   getProductById(warehouseId: number) {
     this.http
       .get(
-        `http://192.168.1.9:8000/inventory/warehouses/${warehouseId}/stocks/`
+        `http://127.0.0.1:8000/inventory/warehouses/${warehouseId}/stocks/`
       )
       .subscribe((resp) => {
         this.productSale = <any>resp;
@@ -209,7 +209,7 @@ export class AllSaleComponent {
   stocks: any[] = [];
 
   // getProducts() {
-  //   const productStockUrl = `http://192.168.1.9:8000/inventory/warehouses/2/stocks/`;
+  //   const productStockUrl = `http://127.0.0.1:8000/inventory/warehouses/2/stocks/`;
 
   //   this.http.get(productStockUrl).subscribe((res) => {
   //     this.stocks = <any>res;
@@ -292,7 +292,7 @@ export class AllSaleComponent {
       if (result.isConfirmed) {
         this.http
           .delete(
-            "http://192.168.1.9:8000/inventory/sales/" +
+            "http://127.0.0.1:8000/inventory/sales/" +
               purchaseId +
               '/'
           )
@@ -334,7 +334,7 @@ export class AllSaleComponent {
     };
 
     this.http
-      .post<{ id: number }>('http://192.168.1.9:8000/inventory/sales/', payload)
+      .post<{ id: number }>('http://127.0.0.1:8000/inventory/sales/', payload)
       .subscribe((response) => {
         console.log(response);
         const purchaseId = response.id;
@@ -360,7 +360,7 @@ export class AllSaleComponent {
       };
       this.http
         .post(
-          `http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`,
+          `http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`,
           product
         )
         .subscribe((response) => {

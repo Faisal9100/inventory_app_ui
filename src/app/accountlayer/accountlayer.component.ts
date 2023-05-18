@@ -21,7 +21,7 @@ export interface Account {
 })
 export class AccountlayerComponent implements OnInit {
   selectedMainLayer?: string;
-  ip_address = '192.168.1.9:8000';
+  ip_address = '127.0.0.1:8000';
 
   public create_account_url =
     'http://' + this.ip_address + '/inventory/layer2s/';

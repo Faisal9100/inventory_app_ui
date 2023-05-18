@@ -15,7 +15,7 @@ export class AccountlayerService {
   pages: number[] = [];
   totalItems: any;
   itemsPerPage: any;
-  public ip_address = '192.168.1.9:8000';
+  public ip_address = '127.0.0.1:8000';
 
   selectedMainLayer: any;
 
