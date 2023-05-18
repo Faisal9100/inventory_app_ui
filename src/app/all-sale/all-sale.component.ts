@@ -1,3 +1,5 @@
+import { SaleService } from './../sale.service';
+
 import { AllpurchasesService } from './../allpurchases.service';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -10,6 +12,7 @@ import { WarehouseService } from '../warehouse.service';
 import { SupplierService } from '../supplier.service';
 import { ProductService } from '../product.service';
 import Swal from 'sweetalert2';
+import { CustomerService } from '../customer.service';
 
 export interface PurchaseData {
   id: number;
@@ -23,6 +26,9 @@ export interface PurchaseData {
   total: number;
   amount: number;
   voucher_type: string;
+  account_customer: string;
+  reamrks: string;
+
   date: Date;
 }
 interface Product {
@@ -36,6 +42,7 @@ interface Product {
 
 interface Row {
   product: Product;
+  product_name: string;
   price: number;
   quantity: number;
   total: number;
@@ -43,10 +50,11 @@ interface Row {
 @Component({
   selector: 'app-all-sale',
   templateUrl: './all-sale.component.html',
-  styleUrls: ['./all-sale.component.css']
+  styleUrls: ['./all-sale.component.css'],
 })
 export class AllSaleComponent {
   public isProductSelected: boolean = false;
+  p: any;
   selectedProducts: {
     id: any;
     product: string;
@@ -71,7 +79,7 @@ export class AllSaleComponent {
   productData: any[] = [];
   purchaseInvoice?: number;
   purchaseDate?: Date;
-  selectedSupplier: any;
+  selectedCustomer: any;
   selectedWarehouse: any;
   payableAmount?: number;
   selectedRemark: any;
@@ -90,6 +98,8 @@ export class AllSaleComponent {
   discount: number = 0;
   grandTotal: number = 0;
   totalQuantity: number = 0;
+  remarks: any;
+  account_customer:any;
 
   updateTotal() {
     let total = 0;
@@ -110,21 +120,23 @@ export class AllSaleComponent {
     private modalService: NgbModal,
     public warehouseService: WarehouseService,
     public supplierService: SupplierService,
-    public productService: ProductService
+    public productService: ProductService,
+    public SaleService: SaleService,
+    public customerservice: CustomerService
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
 
   ngOnInit(): void {
-    this.getwarehouse();
-    this.getSupplier();
-    this.getProducts();
+    this.getWarehouse();
+    this.getCustomer();
+    // this.getProducts();
     this.getAllPurchase();
     this.getStockPurchase();
   }
   getAllPurchase() {
-    this.allpurchasesService.getAllPurchase().subscribe((data) => {
+    this.SaleService.getAllPurchase().subscribe((data) => {
       this.AllPurchaseData = data.results;
     });
   }
@@ -143,21 +155,66 @@ export class AllSaleComponent {
     this.modalService.open(content2, { size: 'xl' });
   }
 
-  getwarehouse() {
-    this.warehouseService.GetWarehouse().subscribe((response) => {
-      this.products = <any>response.results;
-    });
-  }
   getSupplier() {
     this.supplierService.fetchsupplier().subscribe((response) => {
       this.suppliers = <any>response.results;
     });
   }
-  getProducts() {
-    this.productService.getProducts().subscribe((Response) => {
-      this.productData = <any>Response.results;
+  customers: any[] = [];
+  getCustomer() {
+    this.customerservice.getAllPurchase().subscribe((response) => {
+      this.customers = <any>response.results;
     });
   }
+  // getwarehouse() {
+  //   this.warehouseService.GetWarehouse().subscribe((response) => {
+  //     this.products = <any>response.results;
+  //   });
+  // }
+  selectedWarehouseId?: number;
+  getWarehouse() {
+    this.warehouseService.GetWarehouse().subscribe((response) => {
+      this.warehouses = <any>response.results;
+      if (this.warehouses.length > 0) {
+        this.selectedWarehouse = this.warehouses[0]; // Store the first warehouse object
+        this.warehouseId = this.selectedWarehouse.id; // Access the ID from the selected warehouse object
+        // console.log(this.warehouseId);
+      }
+    });
+  }
+  onWarehouseChange(warehouseId: any) {
+    const selectedWarehouse = this.warehouses.find(
+      (warehouse: any) => warehouse.id === warehouseId
+    );
+    if (selectedWarehouse) {
+      this.warehouseId = selectedWarehouse.id;
+      this.getProductById(warehouseId);
+      console.log(this.warehouseId);
+    }
+  }
+  warehouses: any[] = [];
+  warehouseId: any;
+  productSale: any[] = [];
+  getProductById(warehouseId: number) {
+    this.http
+      .get(
+        `http://192.168.1.9:8000/inventory/warehouses/${warehouseId}/stocks/`
+      )
+      .subscribe((resp) => {
+        this.productSale = <any>resp;
+        console.log(this.productSale);
+      });
+  }
+
+  stocks: any[] = [];
+
+  // getProducts() {
+  //   const productStockUrl = `http://192.168.1.9:8000/inventory/warehouses/2/stocks/`;
+
+  //   this.http.get(productStockUrl).subscribe((res) => {
+  //     this.stocks = <any>res;
+  //   });
+  // }
   selectedProduct = <any>{
     id: '',
     name: '',
@@ -184,7 +241,7 @@ export class AllSaleComponent {
     }
 
     // Find the selected product in the productData array
-    const selectedProduct = this.productData.find(
+    const selectedProduct = this.productSale.find(
       (p) => p.id === this.selectedProduct
     );
 
@@ -194,6 +251,7 @@ export class AllSaleComponent {
     // Create a new row object with the selected product and input values
     const newRow: Row = {
       product: selectedProduct,
+      product_name: selectedProduct.product_name,
       price: selectedProduct.price,
       quantity: this.quantity,
       total: total,
@@ -204,6 +262,7 @@ export class AllSaleComponent {
 
     // Clear the input fields
     this.selectedProduct = '';
+    console.log(newRow);
   }
 
   get formattedData(): string {
@@ -219,7 +278,7 @@ export class AllSaleComponent {
   }
   i: any;
 
-// __ code for deleting purchase__
+  // __ code for deleting purchase__
 
   deletePurchase(purchaseId: number) {
     Swal.fire({
@@ -233,7 +292,7 @@ export class AllSaleComponent {
       if (result.isConfirmed) {
         this.http
           .delete(
-            'http://192.168.1.9:8000/inventory/stocks_purchase/' +
+            "http://192.168.1.9:8000/inventory/sales/" +
               purchaseId +
               '/'
           )
@@ -265,28 +324,26 @@ export class AllSaleComponent {
     const payload: any = {
       invoice_no: this.purchaseInvoice,
       date: this.purchaseDate,
-      account: this.selectedSupplier,
+      // account: this.selectedCustomer,
       warehouse: this.selectedWarehouse,
       amount: this.grandTotal,
       quantity: this.totalQuantity,
-      title: this.selectedRemark,
+      remarks: this.remarks,
+      account_customer:this.selectedCustomer,
+
     };
 
     this.http
-      .post<{ id: number }>(
-        'http://192.168.1.9:8000/inventory/stocks_purchase/',
-        payload
-      )
+      .post<{ id: number }>('http://192.168.1.9:8000/inventory/sales/', payload)
       .subscribe((response) => {
         console.log(response);
         const purchaseId = response.id;
         this.addStock(purchaseId);
-        // this.getAllPurchase();
+        this.getAllPurchase();
       });
   }
 
-// __ code for adding stock purchase__
-
+  // __ code for adding stock purchase__
 
   addStock(id: any) {
     console.log(id);
@@ -296,7 +353,7 @@ export class AllSaleComponent {
         quantity: row.quantity,
         amount: row.quantity * row.price,
         date: this.purchaseDate,
-        account_supplier: this.selectedSupplier,
+        account_supplier: this.selectedCustomer,
         warehouse: this.selectedWarehouse,
         title: this.selectedRemark,
         vocuher_type: 'Purchase',
@@ -311,4 +368,21 @@ export class AllSaleComponent {
         });
     }
   }
+  warehouse: any;
+  Search() {
+    if (this.warehouse == '') {
+      this.ngOnInit();
+    } else {
+      this.AllPurchaseData = this.AllPurchaseData.filter((res) => {
+        return res.title.match(this.warehouse);
+      });
+    }
+  }
+  // searchTerm = '';
+  // searchedPurchaseData:any[]=[];
+  // onSearchTermChange() {
+  //   this.searchedPurchaseData = this.AllPurchaseData.filter((purchase) =>
+  //     purchase.title.toLowerCase().includes(this.searchTerm.toLowerCase())
+  //   );
+  // }
 }

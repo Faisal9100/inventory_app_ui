@@ -22,16 +22,13 @@ export class UnitService {
   constructor(private http: HttpClient) { }
   
   // code for unit
-  getUnit(pageIndex: number, pageSize: number): Observable<any> {
-    let limit=20;    
-    let url = `${this.url}?skip=${skip}&limit=${limit}`
-        
+  getUnit(): Observable<any> {
     return this.http.get<any>(this.url);
     
   }
-  searchUnit(query: string): Observable<any> {
-    return this.http.get(`${this.url}?search=${query}`);
-  }
+  // searchUnit(query: string): Observable<any> {
+  //   return this.http.get(`${this.url}?search=${query}`);
+  // }
   
   addUnit(category: any): Observable<any> {
     return this.http.post<any>(this.url, category);

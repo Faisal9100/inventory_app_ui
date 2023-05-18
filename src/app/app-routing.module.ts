@@ -25,8 +25,10 @@ import { AccountlayerComponent } from './accountlayer/accountlayer.component';
 import { LoginComponent } from './login/login.component';
 // import { AuthQuardGuard } from './auth-quard.guard';
 import { AuthGuard } from './login/authQuard';
+import { SidebarComponent } from './sidebar/sidebar.component';
 const routes: Routes = [
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
+  // { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'sidebar', component: SidebarComponent },
   { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: '/login', pathMatch: 'full' },

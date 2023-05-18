@@ -41,44 +41,37 @@ export class UnitsComponent implements OnInit {
   itemperPage: any;
   productData: any;
 
-  constructor(public unitService: UnitService, public http: HttpClient, public productService:ProductService) {}
+  constructor(
+    public unitService: UnitService,
+    public http: HttpClient,
+    public productService: ProductService
+  ) {}
 
   ngOnInit() {
     this.getProducts();
-    this.getUnit(this.pageIndex, this.pageSize);
   
+    this.unitService.getUnit().subscribe((response) => {
+      this.Units = response.results;
+    });
   }
   getProducts() {
     this.productService.getProducts().subscribe((data) => {
       this.productData = data.results;
     });
-    console.log(this.productData)
+    console.log(this.productData);
   }
   searchUnits(): void {
     this.pageIndex = 0;
-    this.getUnit(this.pageIndex, this.pageSize);
+    this.getUnit();
   }
-  getUnit(pageIndex: number, pageSize: number) {
-    let limit = 20;
-    if (this.searchQuery.trim() === '') {
-      this.unitService.getUnit(pageIndex, pageSize).subscribe((response) => {
-        this.Units = response.results;
-        this.totalUnits = response.count;
-      });
-    } else {
-      this.unitService.searchUnit(this.searchQuery).subscribe((response) => {
-        this.Units = response.results;
-        this.totalPages = Math.ceil(response.count / this.pageSize);
-        this.totalItems = response.count;
-        let skip = (this.currentPage - 1) * this.pageSize;
-
-        this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
-      });
-    }
+  getUnit() {
+    this.unitService.getUnit().subscribe((response) => {
+      this.Units = response.results;
+    });
   }
   onPageChange(event: any) {
     this.currentPage = event;
-    this.getUnit(this.pageIndex, this.pageSize);
+    this.getUnit();
   }
   pages: number[] = [];
   addUnit() {
@@ -95,7 +88,7 @@ export class UnitsComponent implements OnInit {
           this.unitService.addUnit(newCategory).subscribe(
             (response) => {
               resolve(response);
-              this.getUnit(this.pageIndex, this.pageSize);
+              this.getUnit();
             },
             (error) => {
               reject(error);
@@ -151,8 +144,8 @@ export class UnitsComponent implements OnInit {
       });
   }
   taskToEdit: any;
-public ip_address= "192.168.1.9:8000";
-  public url = "http://" + this.ip_address +"/inventory/Units/";
+  public ip_address = '192.168.1.9:8000';
+  public url = 'http://' + this.ip_address + '/inventory/Units/';
 
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);
@@ -175,12 +168,22 @@ public ip_address= "192.168.1.9:8000";
         product.name = updatedName;
         this.unitService.putProduct(product).subscribe(() => {
           console.log(`Product with ID ${product.id} updated successfully!`);
-          this.getUnit(this.pageIndex, this.pageSize);
+          this.getUnit();
           Swal.fire('Updated!', 'Your product has been updated.', 'success');
         });
       }
     });
   }
 
-  
+  p: any;
+  name: any;
+  Search() {
+    if (this.name == '') {
+      this.ngOnInit();
+    } else {
+      this.products = this.products.filter((res) => {
+        return res.name.match(this.name);
+      });
+    }
+  }
 }

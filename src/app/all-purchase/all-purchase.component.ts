@@ -34,12 +34,12 @@ interface Product {
   product: string;
 }
 
-
 interface Row {
   product: Product;
   price: number;
   quantity: number;
   total: number;
+  stock:any;
 }
 @Component({
   selector: 'app-all-purchase',
@@ -62,7 +62,7 @@ export class AllPurchaseComponent implements OnInit {
   closeResult: any;
   AllPurchaseData: any[] = [];
   stockPurchaseData: any[] = [];
-  
+
   itemsPerPage: any;
   products: any[] = [];
   suppliers: any[] = [];
@@ -79,9 +79,8 @@ export class AllPurchaseComponent implements OnInit {
   isLoading = false;
 
   pageSize = 10; // Number of items per page
-currentPage = 1; // Current page number
-totalItems = 0; // Total number of items
-
+  currentPage = 1; // Current page number
+  totalItems = 0; // Total number of items
 
   quantity: number = 0;
   price: number = 0;
@@ -91,7 +90,7 @@ totalItems = 0; // Total number of items
   discount: number = 0;
   grandTotal: number = 0;
   totalQuantity: number = 0;
-  searchedPurchaseData: any[]=[];
+  searchedPurchaseData: any[] = [];
 
   updateTotal() {
     let total = 0;
@@ -113,7 +112,7 @@ totalItems = 0; // Total number of items
     public warehouseService: WarehouseService,
     public supplierService: SupplierService,
     public productService: ProductService
-    ) {
+  ) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
@@ -123,7 +122,6 @@ totalItems = 0; // Total number of items
     this.getSupplier();
     this.getProducts();
     this.getAllPurchaseData();
-    
   }
   ip_address = '192.168.1.9:8000';
   stocks: any;
@@ -136,7 +134,7 @@ totalItems = 0; // Total number of items
   //   });
   // }
   // getAllPurchaseData() {
-    
+
   //   this.allpurchasesService.getAllPurchase().subscribe((data) => {
   //     this.AllPurchaseData = data.results;
   //     this.isLoading = false; // Set isLoading to false
@@ -144,32 +142,30 @@ totalItems = 0; // Total number of items
   // }
   getAllPurchaseData() {
     this.isLoading = true; // Set isLoading to true
-  
+
     this.allpurchasesService.getAllPurchase().subscribe((data) => {
       this.AllPurchaseData = data.results;
-      this.searchedPurchaseData = this.AllPurchaseData; 
-     
+      this.searchedPurchaseData = this.AllPurchaseData;
+
       this.isLoading = false; // Set isLoading to false
     });
   }
-  
-  
+
   //  __code for getting StockList__
-  
+
   getStockList(id: number) {
     this.isLoading = true; // Set isLoading to true
     this.http
-    .get(`http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`)
-    .subscribe((response: any) => {
-      this.stocks = response;
-      this.isLoading = false; // Set isLoading to true
-       
+      .get(`http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`)
+      .subscribe((response: any) => {
+        this.stocks = response;
+        this.isLoading = false; // Set isLoading to true
       });
   }
 
   //  __code for deleting StockList__
 
-  deleteStockList(stockid: number,purchasedId:number) {
+  deleteStockList(stockid: number, purchasedId: number) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to recover this account!',
@@ -213,10 +209,15 @@ totalItems = 0; // Total number of items
     this.modalService.open(content, { size: 'xl' });
   }
 
-   //  __code for opening model one for adding StockList__
+  //  __code for opening model one for adding StockList__
 
   openXl2(content2: any) {
     this.modalService.open(content2, { size: 'xl' });
+  }
+
+  // __code for opening model for adding product in stock__
+  openXl3(content3: any) {
+    this.modalService.open(content3, { size: 'xl' });
   }
 
   //  __code for getting warehouse Data__
@@ -228,14 +229,14 @@ totalItems = 0; // Total number of items
   }
 
   //  __code for getting supplier Data__
-  
+
   getSupplier() {
     this.supplierService.fetchsupplier().subscribe((response) => {
       this.suppliers = <any>response.results;
     });
   }
 
-    //  __code for getting Product Data__
+  //  __code for getting Product Data__
 
   getProducts() {
     this.productService.getProducts().subscribe((Response) => {
@@ -261,7 +262,7 @@ totalItems = 0; // Total number of items
   };
 
   // Define the addProduct method to add the selected product to the table
-  
+
   addProduct() {
     // Ensure a product is selected
     if (!this.selectedProduct) {
@@ -282,6 +283,7 @@ totalItems = 0; // Total number of items
       price: selectedProduct.price,
       quantity: this.quantity,
       total: total,
+      stock:this.stockPurchaseData
     };
 
     // Add the new row to the array of rows
@@ -369,17 +371,15 @@ totalItems = 0; // Total number of items
       .subscribe((response) => {
         console.log(response);
         const purchaseId = response.id;
-        this.addStock(purchaseId);
-        // this.isLoading = true;
-        // this.getStockList(this.id);
-        // this.getAllPurchase();
+        this.addStock(purchaseId).then((res) => {
+          this.getAllPurchaseData();
+        });
       });
   }
 
   // __ code for adding stock purchase__
-  
 
-  addStock(id: any) {
+  async addStock(id: any) {
     console.log(id);
     for (let row of this.rows) {
       let product = {
@@ -387,46 +387,75 @@ totalItems = 0; // Total number of items
         quantity: row.quantity,
         amount: row.quantity * row.price,
         date: this.purchaseDate,
-        account_supplier: this.selectedSupplier,
-        warehouse: this.selectedWarehouse,
-        title: this.selectedRemark,
-        vocuher_type: 'Purchase',
       };
+      await this.postOneStock(product, id);
+    }
+    return true;
+  }
+
+  postOneStock(product: any, id: any) {
+    return new Promise((resolve, reject) => {
       this.http
         .post(
           `http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`,
           product
         )
-        .subscribe((response) => {
-          console.log(response);
-          // this.getStockList(this.id);
-        });
+        .subscribe(
+          (response) => {
+            resolve(response);
+          },
+          (error) => reject(error)
+        );
+    });
+  }
+
+  p: any;
+  count: number = 0;
+  page: number = 1;
+  tableSize: number = 10;
+  tableSizes: any = [5, 10, 25, 100];
+  title: any;
+  Search() {
+    if (this.title == '') {
+      this.ngOnInit();
+    } else {
+      this.AllPurchaseData = this.AllPurchaseData.filter((res) => {
+        return res.title.match(this.title);
+      });
     }
   }
-  searchTerm = '';
+  // updateStock() {
+  //   for (let row of this.rows) {
+  //     const { productid, stock } = row.product; // Assuming productId and stock properties exist on the product object
+  
+  //     const url = `http://192.168.1.9:8000/inventory/stocks_purchase/${productId}`; // Replace with the appropriate API endpoint for updating a product's stock
+  
+  //     const body = { stock }; // Assuming the API expects the stock value in the request body
+  
+  //     this.http.put(url, body).subscribe(
+  //       (response) => {
+  //         console.log('Stock updated successfully:', response);
+  //       },
+  //       (error) => {
+  //         console.error('Failed to update stock:', error);
+  //       }
+  //     );
+  //   }
+  // }
+  getStock(id: number) {
+    this.isLoading = true; // Set isLoading to true
+   this.http.put(`http://192.168.1.9:8000/inventory/stocks_purchase/${id}`,id).subscribe(
+    (response: any) => {
+      const invoiceNumber = response.invoiceNumber; // Assuming the API response contains the invoiceNumber field
+      const inputElement = document.getElementById('purchaseInvoice') as HTMLInputElement;
+      inputElement.value = invoiceNumber;
+    },
+    (error) => {
+      console.error('Failed to retrieve invoice number:', error);
+    }
+  );
+  }
 
-  onSearchTermChange() {
-    this.searchedPurchaseData = this.AllPurchaseData.filter((purchase) =>
-      purchase.title.toLowerCase().includes(this.searchTerm.toLowerCase())
-    );
-  }
-  getPaginationRange() {
-    const totalPages = Math.ceil(this.totalItems / this.pageSize);
-    return Array(totalPages).fill(0).map((_, i) => i + 1);
-  }
-  onPageChange(event: any) {
-    this.page = event;
-    this.getAllPurchaseData(); // Assuming your method to fetch data is getAllPurchase(page)
-  }
-  onTableSizeChange(event:any){
-    this.tableSize = event.target.value;
-    this.page=1
-    this.getAllPurchaseData(); // Assuming your method to fetch data is getAllPurchase(page)
-  }
-    
-  count:number = 0;
-  page:number= 1;
-  tableSize:number = 10;
-  tableSizes:any=[5,10,25,100];
-
+  
+  
 }

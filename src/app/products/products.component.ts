@@ -95,7 +95,7 @@ export class ProductsComponent {
       .getBrand(this.pageIndex, this.pageSize)
       .subscribe((brands) => (this.brands = brands.results));
     this.unitService
-      .getUnit(this.pageIndex, this.pageSize)
+      .getUnit()
       .subscribe((units) => (this.units = units.results));
   }
 
@@ -113,7 +113,7 @@ export class ProductsComponent {
 
   getUnit() {
     this.unitService
-      .getUnit(this.pageIndex, this.pageSize)
+      .getUnit()
       .subscribe((data) => {
         this.units = data.results;
       });

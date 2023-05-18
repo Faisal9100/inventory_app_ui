@@ -6,7 +6,10 @@
     <input
       type="text"
       class="form-control w-25"
-      placeholder="Search Customers"
+      placeholder="Search All Sale"
+      name="warehouse"
+      [(ngModel)]="warehouse"
+      (ngModelChange)="Search()"
     />
     <button class="btn btn-primary">
       <i class="bi bi-search"></i>
@@ -41,11 +44,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of AllPurchaseData">
+      <tr *ngFor="let item of AllPurchaseData  | paginate : { itemsPerPage: 8, currentPage: p};">
         <td>{{ item.id }}</td>
         <td>{{ item.invoice_no }}</td>
         <td>{{ item.title }}</td>
-        <td>{{ item.account_name }}</td>
+        <td>{{ item.account_customer }}</td>
         <td>{{ item.warehouse_name }}</td>
         <td>{{ item.transaction }}</td>
         <td>{{ item.quantity }}</td>
@@ -70,6 +73,8 @@
         </td>
       </tr>
     </tbody>
+    <pagination-controls class="my-pagination" (pageChange)="p = $event">
+    </pagination-controls>
   </table>
 </div>
 <!-- <p>Page {{ currentPage }} of {{ totalPages }}</p>
@@ -129,13 +134,13 @@
           />
         </div>
         <div class="col-sm">
-          <label for="supplierContact" class="py-2">Supplier*:</label>
+          <label for="supplierContact" class="py-2">Customers*:</label>
           <ng-select
-            id="supplierStatus"
+            id="selectedCustomer"
             class="form-ng-select"
-            [(ngModel)]="selectedSupplier"
+            [(ngModel)]="selectedCustomer"
           >
-            <ng-option *ngFor="let item of suppliers" [value]="item.id">{{
+            <ng-option *ngFor="let item of customers" [value]="item.id">{{
               item.title
             }}</ng-option>
           </ng-select>
@@ -157,10 +162,11 @@
             id="warehouse"
             class="form-ng-select"
             [(ngModel)]="selectedWarehouse"
+            (change)="onWarehouseChange(selectedWarehouse)"
           >
             <ng-option
               class=".ng-dropdown-panel"
-              *ngFor="let data of products"
+              *ngFor="let data of warehouses"
               [value]="data.id"
               >{{ data.name }}</ng-option
             >
@@ -170,21 +176,12 @@
       <br />
       <div class="col-sm">
         <label for="selectedProduct" class="py-2">Products*:</label>
-        <ng-select
-          class="form-ng-select"
-          [(ngModel)]="selectedProduct"
-          id="selectedProduct"
-          [bindValue]="'name'"
-          [bindLabel]="'name'"
-          (change)="isProductSelected = true"
-        >
-          <ng-option
-            class="ng-option"
-            *ngFor="let value of productData"
-            [value]="value.id"
-            >{{ value.name }}</ng-option
-          >
+        <ng-select class="form-ng-select" [(ngModel)]="selectedProduct">
+          <ng-option  class="ng-option" *ngFor="let product of productSale" [value]="product.id">
+            {{ product.id }} - {{ product.product_name }}
+          </ng-option>
         </ng-select>
+       
         <button class="btn btn-primary my-2" (click)="addProduct()">
           add Product
         </button>
@@ -207,7 +204,7 @@
             class="text-center m-auto justify-content-center"
             *ngFor="let row of rows"
           >
-            <td class="text-center my-3">{{ row.product.name }}</td>
+            <td class="text-center my-3">{{ row.product_name }}</td>
             <td>
               <input
                 class="form-control"
@@ -246,16 +243,16 @@
           <textarea
             class="form-control"
             name=""
-            id=""
+            id="remarks"
             cols="100"
             rows="2"
             id="title"
-            [(ngModel)]="selectedRemark"
+            [(ngModel)]="remarks"
           ></textarea>
         </div>
         <div class="col-sm float-end">
           <div class="col-sm">
-            <label class="my-1">Grand Total</label>
+            <label class="my-1">Total price</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
               <input
@@ -280,7 +277,7 @@
             />
           </div>
           <br />
-          <label class="my-1">Payable Amount</label>
+          <label class="my-1">Receivable Amount</label>
           <div class="input-group col-sm">
             <span class="input-group-text">$</span>
             <input
@@ -331,7 +328,7 @@
         <tr>
           <th>Id</th>
           <th>Title</th>
-          <th>Account Supplier</th>
+          <th>Account Customer</th>
           <th>Stock Purchase</th>
           <th>Product</th>
           <th>Amount</th>
@@ -347,7 +344,7 @@
         <tr *ngFor="let stock of stockPurchaseData">
           <td>{{ stock.id }}</td>
           <td>{{ stock.title }}</td>
-          <td>{{ stock.stock_purchase }}</td>
+          <td>{{ stock.account_customer }}</td>
           <td>{{ stock.stock_purchase }}</td>
           <td>{{ stock.product }}</td>
           <td>{{ stock.amount }}</td>

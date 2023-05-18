@@ -511,4 +511,16 @@ export class SupplierComponent {
     });
     doc.save('all_suppliers.pdf');
   }
+  p:any;
+  title:any;
+  Search() {
+  if (this.title == '') {
+    this.ngOnInit();
+  } else {
+    this.suppliers = this.suppliers.filter((res) => {
+      return res.title
+        .match(this.title);
+    });
+  }
+}
 }

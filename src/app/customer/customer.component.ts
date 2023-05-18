@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
+import { CustomerService } from '../customer.service';
 
 export interface Supplier {
   id: number;
@@ -22,7 +23,6 @@ export interface Supplier {
   styleUrls: ['./customer.component.css'],
 })
 export class CustomerComponent {
-  public ip_address = '192.168.1.9:8000';
   supplierToEdit: any;
   pageSize = 10;
   currentPage = 1;
@@ -30,9 +30,10 @@ export class CustomerComponent {
   pages: number[] = [];
   id = 'pagination';
   closeResult: any;
-
+  
   totalItems: any;
   itemsPerPage: any;
+  public ip_address = '192.168.1.9:8000';
   public url = 'http://' + this.ip_address + '/inventory/customers/';
   suppliers: any[] = [];
   supplier: Supplier = {
@@ -46,11 +47,11 @@ export class CustomerComponent {
     credit: 0,
     debit: 0,
   };
-  constructor(private modalService: NgbModal, public http: HttpClient) {
-    this.fetchsupplier();
+  constructor(private modalService: NgbModal, public http: HttpClient,public customerservice:CustomerService) {
+    this.getCustomers();
   }
   ngOnInit(): void {
-    this.fetchsupplier();
+    this.getCustomers();
   }
 
   newsupplier = {
@@ -141,7 +142,7 @@ export class CustomerComponent {
               contact: '',
               email: '',
             };
-            this.fetchsupplier();
+            this.getCustomers();
             Swal.fire('Added!', 'Your Customer has been added.', 'success');
           });
         }
@@ -149,24 +150,29 @@ export class CustomerComponent {
     });
   }
 
-  fetchsupplier() {
-    let skip = (this.currentPage - 1) * this.pageSize;
+  // getCustomers() {
+  //   let skip = (this.currentPage - 1) * this.pageSize;
 
-    let limit = 20;
-    let url = `${this.url}?skip=${skip}&limit=${limit}`;
+  //   let limit = 20;
+  //   let url = `${this.url}?skip=${skip}&limit=${limit}`;
 
-    this.http.get<any>(url).subscribe((response) => {
+  //   this.http.get<any>(url).subscribe((response) => {
+  //     this.suppliers = <any>response.results;
+  //     this.totalPages = Math.ceil(response.count / this.pageSize);
+  //     this.totalItems = response.count;
+
+  //     this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
+  //   });
+  // }
+  getCustomers(){
+    this.customerservice.getAllPurchase().subscribe(response =>{
       this.suppliers = <any>response.results;
-      this.totalPages = Math.ceil(response.count / this.pageSize);
-      this.totalItems = response.count;
-
-      this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
-    });
+    })
   }
 
   onPageChange(event: any) {
     this.currentPage = event;
-    this.fetchsupplier();
+    this.getCustomers();
   }
   deleteSupplier(id: number) {
     Swal.fire({
@@ -181,7 +187,7 @@ export class CustomerComponent {
       if (result.isConfirmed) {
         this.http.delete(`${this.url}${id}`).subscribe(() => {
           console.log(`Customer with ID ${id} deleted successfully!`);
-          this.fetchsupplier();
+          this.getCustomers();
           Swal.fire('Deleted!', 'Your Customer has been deleted.', 'success');
         });
       } else if (result.isDenied) {
@@ -305,7 +311,7 @@ export class CustomerComponent {
             console.log(
               `Customer with ID ${supplier.id} updated successfully!`
             );
-            this.fetchsupplier();
+            this.getCustomers();
             Swal.fire(
               'Updated!',
               'Your Customer list has been updated.',
@@ -315,39 +321,7 @@ export class CustomerComponent {
       }
     });
   }
-  // generatePDF() {
-  //   const columns = [
-  //     { title: 'S.N', dataKey: 'sn' },
-  //     { title: 'Name', dataKey: 'name' },
-  //     { title: 'Address', dataKey: 'address' },
-  //     { title: 'Mobile', dataKey: 'mobile' },
-  //     { title: 'Email', dataKey: 'email' },
-  //     { title: 'Recievable', dataKey: 'recievable' },
-  //     { title: 'Payable', dataKey: 'payable' },
-  //   ];
 
-  //   const data = this.products.map((product, index) => ({
-  //     sn: index + 1,
-  //     name: product.name,
-  //     address: product.address,
-  //     mobile: product.mobile,
-  //     email: product.email,
-  //     reciavable: product.reciavable,
-  //     payable: product.payable,
-  //   }));
-
-  //   const doc = new jsPDF();
-
-  //   doc.setFontSize(22);
-  //   doc.setTextColor(0, 0, 0);
-  //   doc.text('All Customers', 14, 22);
-
-  //   (doc as any).autoTable({
-  //     columns: columns,
-  //     body: data,
-  //   });
-  //   doc.save('all_customers.pdf');
-  // }
   generatePDF() {
     const columns2 = { title: 'All Customer List' };
 
@@ -383,5 +357,17 @@ export class CustomerComponent {
       body: data,
     });
     doc.save('all_customers.pdf');
+  }
+  p:any;
+  title:any;
+  Search() {
+    if (this.title == '') {
+      this.ngOnInit();
+    } else {
+      this.suppliers = this.suppliers.filter((res) => {
+        return res.title
+          .match(this.title);
+      });
+    }
   }
 }

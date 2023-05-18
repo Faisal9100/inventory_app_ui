@@ -10,15 +10,20 @@ import { HttpClient } from '@angular/common/http';
 })
 export class LoginComponent {
   constructor(private authService: AuthService, private router: Router,private http: HttpClient) { }
-  
-  f:any;
-  error?: string;
-  invalidLogin: boolean = false;
-  showLoginForm = true;
-  // loginData = { username: '', password: '' };
-  userLogin(data:any): void {
-    this.authService.signIn(data);
-    console.log(data)
+  username?: string;
+  password?: string;
+  login() {
+    // Perform the login logic
+    // Assuming hardcoded username and password for demonstration purposes
+    const hardcodedUsername = 'admin';
+    const hardcodedPassword = '1234';
+
+    if (this.username === hardcodedUsername && this.password === hardcodedPassword) {
+      // Navigate to the sidebar component upon successful login
+      this.router.navigate(['/sidebar']);
+    } else {
+      // Handle login error (e.g., display an error message)
+    }
   }
 //   userLogin(data:any){
 // this.authService.login(this.loginData);

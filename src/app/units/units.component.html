@@ -3,11 +3,13 @@
 <div class="add-categories">
   <div class="input-group mb-3">
     <input
-      type="text"
-      [(ngModel)]="searchQuery"
-      class="form-control w-25"
-      placeholder="Search Categories"
-    />
+    type="text"
+    class="form-control w-25"
+    placeholder="Search Unit"
+    name="name"
+    [(ngModel)]="name"
+    (ngModelChange)="Search()"
+  />
     <button class="btn btn-primary" (click)="searchUnits()">
       <i class="bi bi-search"></i>
     </button>
@@ -32,7 +34,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let unit of Units; let i = index">
+      <tr *ngFor="let unit of Units| paginate : { itemsPerPage: 2, currentPage: p}; let i = index">
         <td>{{ unit.id }}</td>
         <td>{{ unit.name }}</td>
         <td>{{ productData?.[i]?.quantity ?? 0 }}</td>
@@ -50,34 +52,10 @@
         </td>
       </tr>
     </tbody>
+    <pagination-controls
+    class="my-pagination"
+    (pageChange)="p = $event"
+  ></pagination-controls>
   </table>
 </div>
 
-<p>Page {{ currentPage }} of {{ totalPages }}</p>
-<nav id="{{ id }}" aria-label="Page navigation">
-  <ul class="pagination">
-    <li class="page-item">
-      <a
-        class="page-link"
-        aria-label="Previous"
-        (click)="onPageChange(currentPage - 1)"
-        >Previous</a
-      >
-    </li>
-    <li
-      class="page-item"
-      *ngFor="let page of pages"
-      [class.active]="currentPage === page"
-    >
-      <a class="page-link" (click)="onPageChange(page)">{{ page }}</a>
-    </li>
-    <li class="page-item">
-      <a
-        class="page-link"
-        aria-label="Next"
-        (click)="onPageChange(currentPage + 1)"
-        >Next</a
-      >
-    </li>
-  </ul>
-</nav>

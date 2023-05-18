@@ -7,9 +7,6 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'inventery-app';
-  loginFormVisible: boolean = true;
-  
-  showLoginForm(): void {
-    this.loginFormVisible = true;
-  }
+
+  isLoggedIn = false;
 }

@@ -66,6 +66,8 @@ export class AccountlayerComponent implements OnInit {
 
   closeResult: any;
 
+  p:any;
+
   newAccount = {
     title: '',
     address: '',

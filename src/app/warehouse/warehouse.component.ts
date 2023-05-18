@@ -92,16 +92,8 @@ export class WarehouseComponent {
   }
 
   getwarehouse() {
-    let skip = (this.currentPage - 1) * this.pageSize;
-    let limit = this.pageSize;
-    let url = `${this.url}?skip=${skip}&limit=${limit}`;
-
     this.warehouseService.GetWarehouse().subscribe((response) => {
       this.products = <any>response.results;
-      this.totalPages = Math.ceil(response.count / this.pageSize);
-      this.totalItems = response.count;
-
-      this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
     });
   }
 
@@ -218,5 +210,17 @@ export class WarehouseComponent {
     });
 
     doc.save('all_warehouses.pdf');
+  }
+  p:any;
+  name:any;
+  Search() {
+    if (this.name == '') {
+      this.ngOnInit();
+    } else {
+      this.products = this.products.filter((res) => {
+        return res.name
+          .match(this.name);
+      });
+    }
   }
 }

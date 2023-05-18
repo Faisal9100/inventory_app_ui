@@ -6,6 +6,9 @@
       type="text"
       class="form-control w-25"
       placeholder="Search Warehouses"
+      name="name"
+      [(ngModel)]="name"
+      (ngModelChange)="Search()"
     />
     <button class="btn btn-primary">
       <i class="bi bi-search"></i>
@@ -38,14 +41,7 @@
       <tr
         *ngFor="
           let product of products
-            | paginate
-              : {
-                  itemsPerPage: pageSize,
-                  currentPage: currentPage,
-                  totalItems: products.length
-                }
-        "
-      >
+            | paginate : { itemsPerPage: 4, currentPage: p};">
         <td>{{ product.id }}</td>
         <td>{{ product.name }}</td>
         <td>{{ product.address }}</td>
@@ -80,11 +76,9 @@
         </td>
       </tr>
     </tbody>
+    <pagination-controls
+      class="my-pagination"
+      (pageChange)="p = $event"
+    ></pagination-controls>
   </table>
 </div>
-<p>Page {{ currentPage }} of {{ totalPages }}</p>
-<pagination-controls
-  previousLabel="Previous"
-  nextLabel="Next"
-  (pageChange)="currentPage = $event"
-></pagination-controls>
