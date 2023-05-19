@@ -1,13 +1,9 @@
 <!-- <app-login></app-login> -->
  <!-- <app-sidebar></app-sidebar> -->
 
+ <app-sidebar></app-sidebar>
  <!-- Display the login component when not logged in -->
- <div *ngIf="!isLoggedIn"> -->
-    <app-login (loggedIn)="isLoggedIn = true;"></app-login>
-  </div>
-  
-  <div *ngIf="isLoggedIn"> 
-    <app-sidebar></app-sidebar>
-  </div> 
+ <!-- <div *ngIf="!isLoggedIn"> -->
+\
   <!-- Display the sidebar component after login -->
   

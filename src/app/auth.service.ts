@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
   private tokenKey = 'auth_token';
-  private apiUrl = 'http://127.0.0.1:8000/auth/jwt/create/';
+  private apiUrl = 'http://192.168.1.9:8000/auth/jwt/create/';
   loginFormVisible: boolean=true;
 
   constructor(private http: HttpClient, private router: Router) {}

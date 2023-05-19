@@ -39,7 +39,7 @@ interface Row {
   price: number;
   quantity: number;
   total: number;
-  stock:any;
+  stock: any;
 }
 @Component({
   selector: 'app-all-purchase',
@@ -91,7 +91,7 @@ export class AllPurchaseComponent implements OnInit {
   grandTotal: number = 0;
   totalQuantity: number = 0;
   searchedPurchaseData: any[] = [];
-value: any;
+  value: any;
   stockForm: any;
 
   updateTotal() {
@@ -285,7 +285,7 @@ value: any;
       price: selectedProduct.price,
       quantity: this.quantity,
       total: total,
-      stock:this.stockPurchaseData
+      stock: this.stockPurchaseData,
     };
 
     // Add the new row to the array of rows
@@ -425,27 +425,26 @@ value: any;
         );
     });
   }
-// Assuming you have the necessary imports and dependencies
-updatedStock:any;
-// openStockModal(productId: any) {
-//   // Open your modal here
+  // Assuming you have the necessary imports and dependencies
+  updatedStock: any;
+  // openStockModal(productId: any) {
+  //   // Open your modal here
 
-//   // Handle form submission or any user interaction to update the stock
-//   // Retrieve the updated stock information in the 'updatedStock' variable
+  //   // Handle form submission or any user interaction to update the stock
+  //   // Retrieve the updated stock information in the 'updatedStock' variable
 
-//   this.postUpdateStock(this.updatedStock, productId)
-//     .then((response) => {
-//       // Handle successful response
-//       console.log(response);
-//       // Close the modal or perform any additional actions
-//     })
-//     .catch((error) => {
-//       // Handle error
-//       console.error(error);
-//       // Display an error message or perform any additional error handling
-//     });
-// }
-  
+  //   this.postUpdateStock(this.updatedStock, productId)
+  //     .then((response) => {
+  //       // Handle successful response
+  //       console.log(response);
+  //       // Close the modal or perform any additional actions
+  //     })
+  //     .catch((error) => {
+  //       // Handle error
+  //       console.error(error);
+  //       // Display an error message or perform any additional error handling
+  //     });
+  // }
 
   p: any;
   count: number = 0;
@@ -463,31 +462,32 @@ updatedStock:any;
     }
   }
   getStock(id: any) {
-    return this.http.get(`http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`);
+    return this.http.get(
+      `http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`
+    );
   }
   openStockModal(productId: any) {
     // Open your modal here
-  
-    this.getStock(productId)
-      .subscribe(
-        (response) => {
-          // Populate the form fields in the modal with the retrieved data
-          const stockData = response; // Assuming the API response is a JSON object representing the stock data
-          // Assign the stock data to your form fields in the modal
-          this.stockForm.patchValue(stockData);
-        },
-        (error) => {
-          console.error(error);
-          // Handle error if necessary
-        }
-      );
+
+    this.getStock(productId).subscribe(
+      (response) => {
+        // Populate the form fields in the modal with the retrieved data
+        const stockData = response; // Assuming the API response is a JSON object representing the stock data
+        // Assign the stock data to your form fields in the modal
+        this.stockForm.patchValue(stockData);
+      },
+      (error) => {
+        console.error(error);
+        // Handle error if necessary
+      }
+    );
   }
-  invoiceNumber?:number;
-  stockData:any[]=[];
+  invoiceNumber?: number;
+  stockData: any[] = [];
   onSubmit() {
     const updatedStockData = this.stockForm.value;
     const stockId = updatedStockData.id; // Assuming the stock ID is included in the form data
-  
+
     this.postUpdateStock(updatedStockData, stockId)
       .then((response) => {
         // Handle successful response
@@ -500,17 +500,15 @@ updatedStock:any;
         // Display an error message or perform any additional error handling
       });
   }
-  
-  
-  
+
   // updateStock() {
   //   for (let row of this.rows) {
   //     const { productid, stock } = row.product; // Assuming productId and stock properties exist on the product object
-  
+
   //     const url = `http://127.0.0.1:8000/inventory/stocks_purchase/${productId}`; // Replace with the appropriate API endpoint for updating a product's stock
-  
+
   //     const body = { stock }; // Assuming the API expects the stock value in the request body
-  
+
   //     this.http.put(url, body).subscribe(
   //       (response) => {
   //         console.log('Stock updated successfully:', response);
@@ -534,7 +532,4 @@ updatedStock:any;
   //   }
   // );
   // }
-
-  
-  
 }

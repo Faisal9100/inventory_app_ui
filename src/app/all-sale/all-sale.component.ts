@@ -43,7 +43,7 @@ interface Product {
 interface Row {
   product: Product;
   product_name: string;
-  price: number;
+  amount: number;
   quantity: number;
   total: number;
 }
@@ -59,7 +59,7 @@ export class AllSaleComponent {
     id: any;
     product: string;
     quantity: number;
-    price: number;
+    amount: number;
     total: number;
   }[] = [];
   rows: Row[] = [];
@@ -99,13 +99,13 @@ export class AllSaleComponent {
   grandTotal: number = 0;
   totalQuantity: number = 0;
   remarks: any;
-  account_customer:any;
+  account_customer: any;
 
   updateTotal() {
     let total = 0;
     let quantityTotal = 0;
     for (let row of this.rows) {
-      total += row.price * row.quantity;
+      total += row.amount * row.quantity;
       quantityTotal += row.quantity;
     }
     this.grandTotal = total - this.discount;
@@ -133,19 +133,25 @@ export class AllSaleComponent {
     this.getCustomer();
     // this.getProducts();
     this.getAllPurchase();
-    this.getStockPurchase();
+    // this.getStockPurchase();
+    // this.getStockList(this.id);
   }
   getAllPurchase() {
     this.SaleService.getAllPurchase().subscribe((data) => {
       this.AllPurchaseData = data.results;
     });
   }
-  ip_address = '127.0.0.1:8000';
-  getStockPurchase() {
-    // console.log(`http://127.0.0.1:8000/inventory/stocks_purchase/${this.purchaseId}/stocks/`);
-    // this.http.get('http://' + this.ip_address + 'inventory/stocks_purchase/'+ this.purchaseId +'/stocks').subscribe((response) => {
-    //   console.log(response);
-    // });
+
+  isLoading: boolean = false;
+  getStockList(id: number) {
+    this.isLoading = true; // Set isLoading to true
+    this.http
+      .get(`http://192.168.1.9:8000/inventory/sales/${id}/sale_items`)
+      .subscribe((response: any) => {
+        this.stocks = response.results;
+        console.log(this.stocks);
+        this.isLoading = false; // Set isLoading to true
+      });
   }
 
   openXl(content: any) {
@@ -198,7 +204,7 @@ export class AllSaleComponent {
   getProductById(warehouseId: number) {
     this.http
       .get(
-        `http://127.0.0.1:8000/inventory/warehouses/${warehouseId}/stocks/`
+        `http://192.168.1.9:8000/inventory/warehouses/${warehouseId}/stocks/`
       )
       .subscribe((resp) => {
         this.productSale = <any>resp;
@@ -209,7 +215,7 @@ export class AllSaleComponent {
   stocks: any[] = [];
 
   // getProducts() {
-  //   const productStockUrl = `http://127.0.0.1:8000/inventory/warehouses/2/stocks/`;
+  //   const productStockUrl = `http://  /inventory/warehouses/2/stocks/`;
 
   //   this.http.get(productStockUrl).subscribe((res) => {
   //     this.stocks = <any>res;
@@ -219,21 +225,51 @@ export class AllSaleComponent {
     id: '',
     name: '',
     quantity: 0,
-    price: 0,
+    amount: 0,
     total: 0,
   };
 
   productList: any[] = [];
 
-  newProduct = {
-    name: this.selectedProduct.name.toString(),
-    price: this.price,
-    quantity: this.quantity,
-    product: this.selectedProduct.name,
-    total: this.total,
-  };
+  // newProduct = {
+  //   name: this.selectedProduct.name.toString(),
+  //   amount: this.price,
+  //   quantity: this.quantity,
+  //   product: this.selectedProduct.name,
+  //   total: this.total,
+  // };
 
   // Define the addProduct method to add the selected product to the table
+  // addProduct() {
+  //   // Ensure a product is selected
+  //   if (!this.selectedProduct) {
+  //     return;
+  //   }
+
+  //   // Find the selected product in the productData array
+  //   const selectedProduct = this.productSale.find(
+  //     (p) => p.id === this.selectedProduct
+  //   );
+
+  //   // Calculate the total price based on the product price and quantity
+  //   const total = selectedProduct.amount * this.quantity;
+
+  //   // Create a new row object with the selected product and input values
+  //   const newRow: Row = {
+  //     product: selectedProduct,
+  //     product_name: selectedProduct.product_name,
+  //     amount: selectedProduct.amount,
+  //     quantity: this.quantity,
+  //     total: total,
+  //   };
+
+  //   // Add the new row to the array of rows
+  //   this.rows.push(newRow);
+
+  //   // Clear the input fields
+  //   this.selectedProduct = '';
+  //   console.log(newRow);
+  // }
   addProduct() {
     // Ensure a product is selected
     if (!this.selectedProduct) {
@@ -246,25 +282,23 @@ export class AllSaleComponent {
     );
 
     // Calculate the total price based on the product price and quantity
-    const total = selectedProduct.price * this.quantity;
-
+    const total = selectedProduct.amount * this.quantity;
+    const amount=0;
     // Create a new row object with the selected product and input values
     const newRow: Row = {
       product: selectedProduct,
       product_name: selectedProduct.product_name,
-      price: selectedProduct.price,
+      amount: amount,
       quantity: this.quantity,
       total: total,
     };
-
-    // Add the new row to the array of rows
     this.rows.push(newRow);
 
-    // Clear the input fields
+    //   // Clear the input fields
     this.selectedProduct = '';
-    console.log(newRow);
+    // this.quantity = null;
   }
-
+  amount=0;
   get formattedData(): string {
     const rowStrings = this.rows.map(
       (row) => `${row.product.name}: $${row.total.toFixed(2)}`
@@ -291,11 +325,7 @@ export class AllSaleComponent {
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
         this.http
-          .delete(
-            "http://127.0.0.1:8000/inventory/sales/" +
-              purchaseId +
-              '/'
-          )
+          .delete('http://192.168.1.9:8000/inventory/sales/' + purchaseId + '/')
           .subscribe(
             () => {
               Swal.fire(
@@ -324,17 +354,16 @@ export class AllSaleComponent {
     const payload: any = {
       invoice_no: this.purchaseInvoice,
       date: this.purchaseDate,
-      // account: this.selectedCustomer,
+      account: this.selectedCustomer,
       warehouse: this.selectedWarehouse,
       amount: this.grandTotal,
       quantity: this.totalQuantity,
       remarks: this.remarks,
-      account_customer:this.selectedCustomer,
-
+      account_customer: this.selectedCustomer,
     };
 
     this.http
-      .post<{ id: number }>('http://127.0.0.1:8000/inventory/sales/', payload)
+      .post<{ id: number }>('http://192.168.1.9:8000/inventory/sales/', payload)
       .subscribe((response) => {
         console.log(response);
         const purchaseId = response.id;
@@ -345,29 +374,50 @@ export class AllSaleComponent {
 
   // __ code for adding stock purchase__
 
-  addStock(id: any) {
+  async addStock(id: any) {
     console.log(id);
     for (let row of this.rows) {
       let product = {
         product: row.product.id,
         quantity: row.quantity,
-        amount: row.quantity * row.price,
-        date: this.purchaseDate,
-        account_supplier: this.selectedCustomer,
-        warehouse: this.selectedWarehouse,
-        title: this.selectedRemark,
-        vocuher_type: 'Purchase',
+        amount: row.amount,
+        total: row.quantity * row.amount,
       };
+      await this.postOneStock(product, id);
+    }
+    return true;
+  }
+
+  postOneStock(product: any, id: any) {
+    return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`,
+          `http://192.168.1.9:8000/inventory/sales/${id}/sale_items/`,
           product
         )
-        .subscribe((response) => {
-          console.log(response);
-        });
-    }
+        .subscribe(
+          (response) => {
+            resolve(response);
+          },
+          (error) => reject(error)
+        );
+    });
   }
+  // postUpdateStock(product: any, id: any) {
+  //   return new Promise((resolve, reject) => {
+  //     this.http
+  //       .put(
+  //         `http://192.168.1.9:8000/inventory/sales/${id}/sale_items/`,
+  //         product
+  //       )
+  //       .subscribe(
+  //         (response) => {
+  //           resolve(response);
+  //         },
+  //         (error) => reject(error)
+  //       );
+  //   });
+  // }
   warehouse: any;
   Search() {
     if (this.warehouse == '') {
@@ -385,4 +435,42 @@ export class AllSaleComponent {
   //     purchase.title.toLowerCase().includes(this.searchTerm.toLowerCase())
   //   );
   // }
+
+  deleteStockList(stockid: number, purchasedId: number) {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You will not be able to recover this account!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel',
+    }).then((result: { isConfirmed: any }) => {
+      if (result.isConfirmed) {
+        this.http
+          .delete(
+            `http://192.168.1.9:8000/inventory/stocks_purchase/${purchasedId}/stocks/` +
+              stockid +
+              '/'
+          )
+          .subscribe(
+            () => {
+              Swal.fire(
+                'Deleted!',
+                'Your product has been deleted.',
+                'success'
+              );
+
+              this.getStockList(purchasedId);
+            },
+            () => {
+              Swal.fire(
+                'Error!',
+                'Cannot delete stock purchase with child rows in stock.',
+                'error'
+              );
+            }
+          );
+      }
+    });
+  }
 }
