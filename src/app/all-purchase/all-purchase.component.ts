@@ -1,7 +1,7 @@
 // import { Product } from './../warehouse/warehouse.component';
 import { AllpurchasesService } from './../allpurchases.service';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   NgbActiveModal,
   NgbModal,
@@ -11,7 +11,6 @@ import { WarehouseService } from '../warehouse.service';
 import { SupplierService } from '../supplier.service';
 import { ProductService } from '../product.service';
 import Swal from 'sweetalert2';
-import { PageEvent } from '@angular/material/paginator';
 
 export interface PurchaseData {
   id: number;
@@ -41,6 +40,7 @@ interface Row {
   total: number;
   stock: any;
 }
+
 @Component({
   selector: 'app-all-purchase',
   templateUrl: './all-purchase.component.html',
@@ -125,23 +125,11 @@ export class AllPurchaseComponent implements OnInit {
     this.getProducts();
     this.getAllPurchaseData();
   }
-  ip_address = '127.0.0.1:8000';
+  ip_address = '192.168.1.9:8000';
   stocks: any;
 
   //  __code for getting AllPurchase__
 
-  // getAllPurchase() {
-  //   this.allpurchasesService.getAllPurchase().subscribe((data) => {
-  //     this.AllPurchaseData = data.results;
-  //   });
-  // }
-  // getAllPurchaseData() {
-
-  //   this.allpurchasesService.getAllPurchase().subscribe((data) => {
-  //     this.AllPurchaseData = data.results;
-  //     this.isLoading = false; // Set isLoading to false
-  //   });
-  // }
   getAllPurchaseData() {
     this.isLoading = true; // Set isLoading to true
 
@@ -158,7 +146,7 @@ export class AllPurchaseComponent implements OnInit {
   getStockList(id: number) {
     this.isLoading = true; // Set isLoading to true
     this.http
-      .get(`http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`)
+      .get(`http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`)
       .subscribe((response: any) => {
         this.stocks = response;
         this.isLoading = false; // Set isLoading to true
@@ -179,7 +167,7 @@ export class AllPurchaseComponent implements OnInit {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://127.0.0.1:8000/inventory/stocks_purchase/${purchasedId}/stocks/` +
+            `http://192.168.1.9:8000/inventory/stocks_purchase/${purchasedId}/stocks/` +
               stockid +
               '/'
           )
@@ -219,7 +207,7 @@ export class AllPurchaseComponent implements OnInit {
 
   // __code for opening model for adding product in stock__
   openXl3(content3: any) {
-    this.modalService.open(content3, { size: 'xl' });
+    this.modalService.open(content3);
   }
 
   //  __code for getting warehouse Data__
@@ -325,7 +313,7 @@ export class AllPurchaseComponent implements OnInit {
       if (result.isConfirmed) {
         this.http
           .delete(
-            'http://127.0.0.1:8000/inventory/stocks_purchase/' +
+            'http://192.168.1.9:8000/inventory/stocks_purchase/' +
               purchaseId +
               '/'
           )
@@ -360,14 +348,14 @@ export class AllPurchaseComponent implements OnInit {
       date: this.purchaseDate,
       account: this.selectedSupplier,
       warehouse: this.selectedWarehouse,
-      amount: this.grandTotal,
-      quantity: this.totalQuantity,
+      // amount: this.grandTotal,
+      // quantity: this.totalQuantity,
       title: this.selectedRemark,
     };
 
     this.http
       .post<{ id: number }>(
-        'http://127.0.0.1:8000/inventory/stocks_purchase/',
+        'http://192.168.1.9:8000/inventory/stocks_purchase/',
         payload
       )
       .subscribe((response) => {
@@ -379,14 +367,24 @@ export class AllPurchaseComponent implements OnInit {
       });
   }
 
+  openAddProductModal(content3: any, item: any) {
+    this.update_purchase_id = item.id;
+    this.modalService.open(content3).result.then((result) => {
+      if (result === 'add') {
+        this.addStock(this.purchaseId);
+        // this.addProduct();
+      }
+    });
+  }
+
   // __ code for adding stock purchase__
 
   async addStock(id: any) {
-    console.log(id);
     for (let row of this.rows) {
       let product = {
         product: row.product.id,
         quantity: row.quantity,
+        price: row.price,
         amount: row.quantity * row.price,
         date: this.purchaseDate,
       };
@@ -399,7 +397,7 @@ export class AllPurchaseComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`,
+          `http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`,
           product
         )
         .subscribe(
@@ -410,41 +408,30 @@ export class AllPurchaseComponent implements OnInit {
         );
     });
   }
-  postUpdateStock(product: any, id: any) {
-    return new Promise((resolve, reject) => {
-      this.http
-        .put(
-          `http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`,
-          product
-        )
-        .subscribe(
-          (response) => {
-            resolve(response);
-          },
-          (error) => reject(error)
-        );
-    });
+  update_purchase_id: any;
+  postUpdateStock(product: any, q: any, p: any, date: any) {
+    const requestBody = {
+      date: date.value,
+      product: product,
+      quantity: q.value,
+      price: p.value,
+      amount: p.value * q.value,
+    };
+    console.log(requestBody);
+    this.http
+      .post(
+        `http://192.168.1.9:8000/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
+        requestBody
+      )
+      .subscribe((response) => {
+        console.log(requestBody);
+      });
+
+    // console.log(this.i)
   }
+
   // Assuming you have the necessary imports and dependencies
   updatedStock: any;
-  // openStockModal(productId: any) {
-  //   // Open your modal here
-
-  //   // Handle form submission or any user interaction to update the stock
-  //   // Retrieve the updated stock information in the 'updatedStock' variable
-
-  //   this.postUpdateStock(this.updatedStock, productId)
-  //     .then((response) => {
-  //       // Handle successful response
-  //       console.log(response);
-  //       // Close the modal or perform any additional actions
-  //     })
-  //     .catch((error) => {
-  //       // Handle error
-  //       console.error(error);
-  //       // Display an error message or perform any additional error handling
-  //     });
-  // }
 
   p: any;
   count: number = 0;
@@ -463,7 +450,7 @@ export class AllPurchaseComponent implements OnInit {
   }
   getStock(id: any) {
     return this.http.get(
-      `http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`
+      `http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`
     );
   }
   openStockModal(productId: any) {
@@ -484,52 +471,4 @@ export class AllPurchaseComponent implements OnInit {
   }
   invoiceNumber?: number;
   stockData: any[] = [];
-  onSubmit() {
-    const updatedStockData = this.stockForm.value;
-    const stockId = updatedStockData.id; // Assuming the stock ID is included in the form data
-
-    this.postUpdateStock(updatedStockData, stockId)
-      .then((response) => {
-        // Handle successful response
-        console.log(response);
-        // Close the modal or perform any additional actions
-      })
-      .catch((error) => {
-        // Handle error
-        console.error(error);
-        // Display an error message or perform any additional error handling
-      });
-  }
-
-  // updateStock() {
-  //   for (let row of this.rows) {
-  //     const { productid, stock } = row.product; // Assuming productId and stock properties exist on the product object
-
-  //     const url = `http://127.0.0.1:8000/inventory/stocks_purchase/${productId}`; // Replace with the appropriate API endpoint for updating a product's stock
-
-  //     const body = { stock }; // Assuming the API expects the stock value in the request body
-
-  //     this.http.put(url, body).subscribe(
-  //       (response) => {
-  //         console.log('Stock updated successfully:', response);
-  //       },
-  //       (error) => {
-  //         console.error('Failed to update stock:', error);
-  //       }
-  //     );
-  //   }
-  // }
-  // getStock(id: number) {
-  //   this.isLoading = true; // Set isLoading to true
-  //  this.http.put(`http://127.0.0.1:8000/inventory/stocks_purchase/${id}`,id).subscribe(
-  //   (response: any) => {
-  //     const invoiceNumber = response.invoiceNumber; // Assuming the API response contains the invoiceNumber field
-  //     const inputElement = document.getElementById('purchaseInvoice') as HTMLInputElement;
-  //     inputElement.value = invoiceNumber;
-  //   },
-  //   (error) => {
-  //     console.error('Failed to retrieve invoice number:', error);
-  //   }
-  // );
-  // }
 }

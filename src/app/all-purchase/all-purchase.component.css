@@ -25,6 +25,16 @@ ng-option {
   align-items: center;
   text-align: center;
 }
-.modal-body{
-  /* position: relative;   */
+
+.spinneer{
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  position: relative;
+
+}
+.visually-hidden{
+  margin: auto;
+  justify-content: center;
+  text-align: center;
 }

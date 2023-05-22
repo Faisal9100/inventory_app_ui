@@ -283,7 +283,7 @@ export class AllSaleComponent {
 
     // Calculate the total price based on the product price and quantity
     const total = selectedProduct.amount * this.quantity;
-    const amount=0;
+    const amount = 0;
     // Create a new row object with the selected product and input values
     const newRow: Row = {
       product: selectedProduct,
@@ -298,7 +298,7 @@ export class AllSaleComponent {
     this.selectedProduct = '';
     // this.quantity = null;
   }
-  amount=0;
+  amount = 0;
   get formattedData(): string {
     const rowStrings = this.rows.map(
       (row) => `${row.product.name}: $${row.total.toFixed(2)}`

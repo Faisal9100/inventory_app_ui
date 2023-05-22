@@ -1,8 +1,13 @@
 <h1 class="fs-2">All Purchases</h1>
 
-<div *ngIf="isLoading" class="spinner-border text-primary" role="status">
+<div
+  *ngIf="isLoading"
+  class="spinner-border text-primary py-2 spinneer"
+  role="status"
+>
   <span class="visually-hidden">Loading...</span>
 </div>
+<br />
 
 <div class="add-categories">
   <div class="input-group mb-3">
@@ -65,21 +70,22 @@
         <td>{{ item.date }}</td>
         <td>
           <button
-            class="btn btn-outline-success"
+            class="btn btn-outline-success mx-1"
             (click)="openXl2(content2)"
             (click)="getStockList(item.id)"
           >
             <i class="bi bi-eye-fill"></i>
           </button>
           <button
-            class="btn btn-outline-primary mx-1"
-            (click)="openXl3(content3)"
-            (click)="openStockModal(item.id)"
+            type="button"
+            class="btn btn-outline-dark"
+            (click)="openAddProductModal(content3, item)"
           >
-            <i class="bi bi-plus-circle"></i>
+            <i class="bi bi-plus-circle"></i>Add Product
           </button>
+
           <button
-            class="btn btn-outline-danger"
+            class="btn btn-outline-danger mx-1"
             (click)="deletePurchase(item.id)"
           >
             <i class="bi bi-trash3-fill"></i>
@@ -367,11 +373,11 @@
 
   <div class="modal-footer"></div>
 </ng-template>
-
 <ng-template #content3 let-c="close" let-d="dismiss">
+  <!-- Modal content -->
   <div class="modal-header">
     <h4 class="modal-title text-center" id="modal-basic-title">
-      Add Purchase!
+      Update Purchase!
     </h4>
     <button
       type="button"
@@ -381,204 +387,53 @@
     ></button>
   </div>
   <div class="modal-body">
-    <div class="update_form">
-      <div class="form-group row">
-        <div class="col-sm">
-          <label for="purchaseInvoice" class="float-start my-2"
-            >Invoice No:</label
-          >
-          <input
-            type="number"
-            id="purchaseInvoice"
-            class="form-control"
-            placeholder="Invoice Number"
-            disabled="true"
-            readonly
-            [(ngModel)]="stockData"
-          />
-        </div>
-        <div class="col-sm">
-          <label for="supplierContact" class="py-2">Supplier*:</label>
-          <ng-select
-            id="supplierStatus"
-            class="form-ng-select"
-            disabled="true"
-            [(ngModel)]="selectedSupplier"
-          >
-            <ng-option *ngFor="let item of suppliers" [value]="item.id">{{
-              item.title
-            }}</ng-option>
-          </ng-select>
-        </div>
-
-        <div class="col-sm">
-          <label for="purchaseDate" class="float-start my-2">Date*:</label>
-          <input
-            type="date"
-            id="purchaseDate"
-            disabled="true"
-            class="form-control"
-            [(ngModel)]="purchaseDate"
-          />
-        </div>
-
-        <div class="col-sm">
-          <label for="warehouse" class="py-2">Warehouse*:</label>
-          <ng-select
-            id="warehouse"
-            class="form-ng-select"
-            [(ngModel)]="selectedWarehouse"
-          >
-            <ng-option
-              class=".ng-dropdown-panel"
-              *ngFor="let data of products"
-              [value]="data.id"
-              >{{ data.name }}</ng-option
-            >
-          </ng-select>
-        </div>
-      </div>
-      <br />
-      <div class="col-sm">
-        <label for="selectedProduct" class="py-2">Products*:</label>
-        <ng-select
+    <div class="col-sm">
+      <label for="selectedProduct" class="py-2">Products*:</label>
+      <ng-select
         class="form-ng-select"
         [(ngModel)]="selectedProduct"
         id="selectedProduct"
         [bindValue]="'name'"
         [bindLabel]="'name'"
         (change)="isProductSelected = true"
+        #update_stock_product
       >
-          <ng-option
-            class="ng-option"
-            *ngFor="let value of productData"
-            [value]="value.id"
-            >{{ value.name }}</ng-option
-          >
-        </ng-select>
-        <button class="btn btn-primary my-2" (click)="addProduct()">
-          add Product
-        </button>
-      </div>
-    </div>
-    <br />
-    <div class="top-sellling">
-      <table class="table table-striped text-center table-bordered table-hover">
-        <thead class="table-head">
-          <tr>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th>Price</th>
-            <th>Total</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            class="text-center m-auto justify-content-center"
-            *ngFor="let row of stockData; let i = index"
-          >
-            <td class="text-center my-3">{{ row.product.name }}</td>
-            <td>
-              <input
-                class="form-control"
-                type="number"
-                [(ngModel)]="row.quantity"
-                (input)="updateTotal()"
-              />
-            </td>
-            <td>
-              <input
-                class="form-control"
-                type="number"
-                [(ngModel)]="row.price"
-                (input)="updateTotal()"
-              />
-            </td>
-            <td>
-              <input
-                class="form-control"
-                type="number"
-                [(ngModel)]="row.quantity * row.price"
-                (input)="updateTotal()"
-              />
-            </td>
-            <td>
-              <input
-                class="form-control"
-                type="number"
-                [(ngModel)]="row.stock"
-                (input)="updateTotal()"
-              />
-            </td>
-            <td>
-              <button class="btn btn-outline-danger" (click)="removeProduct(i)">
-                Remove
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="form-group col-sm">
-        <label class="py-2"> Remarks: </label>
-        <div>
-          <textarea
-            class="form-control"
-            name=""
-            id=""
-            cols="100"
-            rows="2"
-            id="title"
-            [(ngModel)]="selectedRemark"
-          ></textarea>
-        </div>
-        <div class="col-sm float-end">
-          <div class="col-sm">
-            <label class="my-1">Grand Total</label>
-            <div class="input-group">
-              <span class="input-group-text">$</span>
-              <input
-                type="number"
-                class="form-control"
-                [(ngModel)]="grandTotal"
-                disabled="true"
-                readonly
-              />
-            </div>
-          </div>
+        <ng-option
+          class="ng-option"
+          *ngFor="let value of productData"
+          [value]="value.id"
+          >{{ value.name }}</ng-option
+        >
+      </ng-select>
 
-          <br />
-          <label class="my-1">Discount</label>
-          <div class="input-group col-sm">
-            <span class="input-group-text">$</span>
-            <input
-              type="number"
-              class="form-control"
-              [(ngModel)]="discount"
-              (input)="updateTotal()"
-            />
-          </div>
-          <br />
-          <label class="my-1">Payable Amount</label>
-          <div class="input-group col-sm">
-            <span class="input-group-text">$</span>
-            <input
-              type="number"
-              class="form-control"
-              [(ngModel)]="grandTotal"
-              (input)="updateTotal()"
-              disabled="true"
-              readonly
-            />
-          </div>
-        </div>
-      </div>
+      <label for="" class="p-2">Quantity</label>
+      <input
+        type="number"
+        class="form-control"
+        id="quantity"
+        [(ngModel)]="quantity"
+        #q
+      />
+
+      <label for="" class="p-2">Price</label>
+      <input type="number" class="form-control" #p />
+
+      <label for="" class="p-2">date</label>
+
+      <input type="date" class="form-control" #update_stock_date />
     </div>
   </div>
 
   <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="onSubmit()">
-      Update Stock
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="postUpdateStock(update_stock_product, q, p, update_stock_date)"
+    >
+      Add Product
+    </button>
+    <button type="button" class="btn btn-outline-dark" (click)="c('close')">
+      Close
     </button>
   </div>
 </ng-template>
