@@ -70,6 +70,14 @@
             <i class="bi bi-pencil-square"></i>
           </button> -->
           <button
+          type="button"
+          class="btn btn-outline-dark"
+          (click)="openAddProductModal(content3, item)"
+        >
+          <i class="bi bi-plus-circle"></i>
+        </button>
+
+          <button
             class="btn btn-outline-danger"
             (click)="deletePurchase(item.id)"
           >
@@ -430,4 +438,67 @@
   </div>
 
   <div class="modal-footer"></div>
+</ng-template>
+<ng-template #content3 let-c="close" let-d="dismiss">
+  <!-- Modal content -->
+  <div class="modal-header">
+    <h4 class="modal-title text-center" id="modal-basic-title">
+      Update Purchase!
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="col-sm">
+      <label for="selectedProduct" class="py-2">Products*:</label>
+      <select
+        class="form-control"
+        [(ngModel)]="selectedProduct"
+        id="selectedProduct"
+        #product
+        (change)="isProductSelected = true"
+        #update_stock_product
+      >
+        <option
+          class="option"
+          *ngFor="let value of productData"
+          [value]="value.id"
+          >{{ value.name }}</option
+        >
+      </select>
+
+      <label for="" class="p-2">Quantity</label>
+      <input
+        type="number"
+        class="form-control"
+        id="quantity"
+        [(ngModel)]="quantity"
+        #q
+      />
+
+      <label for="" class="p-2">Price</label>
+      <input type="number" class="form-control" #p />
+
+      <label for="" class="p-2">date</label>
+
+      <input type="date" class="form-control" #update_stock_date />
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="postUpdateStock(update_stock_product, q, p, update_stock_date)"
+    >
+      Add Product
+    </button>
+    <button type="button" class="btn btn-outline-dark" (click)="c('close')">
+      Close
+    </button>
+  </div>
 </ng-template>

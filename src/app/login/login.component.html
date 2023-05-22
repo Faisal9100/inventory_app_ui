@@ -90,7 +90,7 @@
   </form>
 </div> -->
 
-<link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
+<!-- <link href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap" rel="stylesheet">
 	<div class="main">  	
 		<input type="checkbox" id="chk" aria-hidden="true">
 
@@ -112,4 +112,125 @@
 					<button (click)="onLogIn()">Login</button>
 				</form>
 			</div>
-	</div>
+    </div> -->
+    <div class="limiter">
+      <div class="container-login100">
+        <div class="wrap-login100">
+          <div class="login100-pic js-tilt" data-tilt>
+            <img src="{{ basic.images }}logo.png" alt="IMG" />
+          </div>
+    
+          <form class="login100-form validate-form" [formGroup]="form">
+            <span class="login100-form-title">Inventory Managenent System</span>
+    
+            <div class="wrap-input100 validate-input">
+              <input
+                class="input100"
+                type="text"
+                placeholder="Username"
+                formControlName="username"
+                id="username_input"
+              />
+              <span class="focus-input100"></span>
+              <span class="symbol-input100">
+                <i class="fa fa-user"></i>
+              </span>
+            </div>
+    
+            <div
+              class="wrap-input100 validate-input"
+              data-validate="Password is required"
+            >
+              <input
+                class="input100"
+                type="password"
+                placeholder="Password"
+                formControlName="password"
+              />
+              <span class="focus-input100"></span>
+              <span class="symbol-input100">
+                <i class="fa fa-lock"></i>
+              </span>
+            </div>
+    
+            <div class="container-login100-form-btn">
+              <button
+                class="login100-form-btn"
+                [disabled]="form.invalid || (loader | async)"
+                (click)="login()"
+              >
+                <span *ngIf="!(loader | async)">Login</span>
+                <span *ngIf="loader | async">Loging In ....</span>
+              </button>
+            </div>
+            <a
+              data-bs-toggle="modal"
+              data-bs-target="#resetPasswordModal"
+              class="forgot text-center my-2 col-12 d-inline-block"
+            >
+              Forgot Password / Reset Password
+            </a>
+            <div class="site_alert" *ngIf="loginError">
+              Username / Password is Incorrect
+              <button type="button" class="close">
+                <i class="bi bi-x" (click)="basic.closeAlert($event)"></i>
+              </button>
+            </div>
+    
+            <!-- <div class="text-center p-t-12">
+                <span class="txt1"> Forgot </span>
+                <a class="txt2" href="#"> Username / Password? </a>
+              </div> -->
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="resetPasswordModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Reset Password</h5>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="resetForm">
+              <div class="form-group">
+                <label for="email">email</label>
+                <input
+                  type="text"
+                  id="email"
+                  class="form-control"
+                  formControlName="email"
+                />
+              </div>
+              <div class="d-flex justify-content-end mt-4">
+                <button
+                  class="save_button py-2 px-3"
+                  (click)="resetPassword()"
+                  [disabled]="reset_loader | async"
+                >
+                  <div
+                    class="spinner-border text-light spinner-sm"
+                    *ngIf="reset_loader | async"
+                  ></div>
+                  Reset Password
+                </button>
+                <button
+                  class="d-none"
+                  id="resetPasswordModelCloseButton"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+            </form>
+          </div>
+          <!-- <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                Close
+              </button>
+              <button type="button" class="btn btn-primary">Reset Password</button>
+            </div> -->
+        </div>
+      </div>
+    </div>
+    

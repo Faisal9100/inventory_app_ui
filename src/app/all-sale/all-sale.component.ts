@@ -146,7 +146,7 @@ export class AllSaleComponent {
   getStockList(id: number) {
     this.isLoading = true; // Set isLoading to true
     this.http
-      .get(`http://192.168.1.9:8000/inventory/sales/${id}/sale_items`)
+      .get(`http://127.0.0.1:8000/inventory/sales/${id}/sale_items`)
       .subscribe((response: any) => {
         this.stocks = response.results;
         console.log(this.stocks);
@@ -203,9 +203,7 @@ export class AllSaleComponent {
   productSale: any[] = [];
   getProductById(warehouseId: number) {
     this.http
-      .get(
-        `http://192.168.1.9:8000/inventory/warehouses/${warehouseId}/stocks/`
-      )
+      .get(`http://127.0.0.1:8000/inventory/warehouses/${warehouseId}/stocks/`)
       .subscribe((resp) => {
         this.productSale = <any>resp;
         console.log(this.productSale);
@@ -325,7 +323,7 @@ export class AllSaleComponent {
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
         this.http
-          .delete('http://192.168.1.9:8000/inventory/sales/' + purchaseId + '/')
+          .delete('http://127.0.0.1:8000/inventory/sales/' + purchaseId + '/')
           .subscribe(
             () => {
               Swal.fire(
@@ -363,7 +361,7 @@ export class AllSaleComponent {
     };
 
     this.http
-      .post<{ id: number }>('http://192.168.1.9:8000/inventory/sales/', payload)
+      .post<{ id: number }>('http://127.0.0.1:8000/inventory/sales/', payload)
       .subscribe((response) => {
         console.log(response);
         const purchaseId = response.id;
@@ -392,7 +390,7 @@ export class AllSaleComponent {
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://192.168.1.9:8000/inventory/sales/${id}/sale_items/`,
+          `http://127.0.0.1:8000/inventory/sales/${id}/sale_items/`,
           product
         )
         .subscribe(
@@ -407,7 +405,7 @@ export class AllSaleComponent {
   //   return new Promise((resolve, reject) => {
   //     this.http
   //       .put(
-  //         `http://192.168.1.9:8000/inventory/sales/${id}/sale_items/`,
+  //         `http://127.0.0.1:8000/inventory/sales/${id}/sale_items/`,
   //         product
   //       )
   //       .subscribe(
@@ -448,7 +446,7 @@ export class AllSaleComponent {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/stocks_purchase/${purchasedId}/stocks/` +
+            `http://127.0.0.1:8000/inventory/sales/${purchasedId}/sale_items/` +
               stockid +
               '/'
           )
@@ -472,5 +470,42 @@ export class AllSaleComponent {
           );
       }
     });
+  }
+  openAddProductModal(content3: any, item: any) {
+    this.update_purchase_id = item.id;
+    this.modalService.open(content3).result.then((result) => {
+      if (result === 'add') {
+        this.addStock(this.purchaseId);
+        // this.addProduct();
+      }
+    });
+  }
+  update_purchase_id: any;
+
+  postUpdateStock(product: any, q: any, p: any, date: any) {
+    // Check if the product is valid and contains the necessary properties
+    if (product && product.id) {
+      const requestBody = {
+        date: date.value,
+        product: product.value,
+        quantity: q.value,
+        price: p.value,
+        amount: p.value * q.value,
+      };
+
+      console.log(requestBody);
+
+      this.http
+        .post(
+          `http://127.0.0.1:8000/inventory/sales/${this.update_purchase_id}/sale_items/`,
+          requestBody
+          // `http://127.0.0.1:8000/inventory/sales/${id}/sale_items/`
+        )
+        .subscribe((response) => {
+          console.log(response);
+        });
+    } else {
+      console.log('Invalid product data');
+    }
   }
 }

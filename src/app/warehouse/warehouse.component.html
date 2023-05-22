@@ -41,7 +41,9 @@
       <tr
         *ngFor="
           let product of products
-            | paginate : { itemsPerPage: 4, currentPage: p};">
+            | paginate : { itemsPerPage: 4, currentPage: p }
+        "
+      >
         <td>{{ product.id }}</td>
         <td>{{ product.name }}</td>
         <td>{{ product.address }}</td>

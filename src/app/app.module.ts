@@ -1,6 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormBuilder, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormsModule,
+  NgModel,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -17,7 +22,6 @@ import { StaffComponent } from './staff/staff.component';
 import { CustomerComponent } from './customer/customer.component';
 import { PurchaseComponent } from './purchase/purchase.component';
 import { AdjustmentComponent } from './adjustment/adjustment.component';
-import { TransferComponent } from './transfer/transfer.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { BrandsComponent } from './brands/brands.component';
 import { UnitsComponent } from './units/units.component';
@@ -26,7 +30,6 @@ import { AllPurchaseComponent } from './all-purchase/all-purchase.component';
 import { PurchaseReturnComponent } from './purchase-return/purchase-return.component';
 import { AllSaleComponent } from './all-sale/all-sale.component';
 import { SaleReturnComponent } from './sale-return/sale-return.component';
-import { TypeComponent } from './type/type.component';
 import { AllExpencesComponent } from './all-expences/all-expences.component';
 import { SupplierPaymentComponent } from './supplier-payment/supplier-payment.component';
 import { CustomerPaymentComponent } from './customer-payment/customer-payment.component';
@@ -45,7 +48,11 @@ import { ReportComponent } from './report/report.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { NgChartsModule } from 'ng2-charts';
 import { SupplierComponent } from './supplier/supplier.component';
-import { NgbActiveModal, NgbModule, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbActiveModal,
+  NgbModule,
+  NgbPaginationModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { PaginationComponent } from './pagination/pagination.component';
 import { WarehouseServiceService } from './warehouse-service.service';
 import { NgxPaginationModule } from 'ngx-pagination';
@@ -69,7 +76,6 @@ import { LoginComponent } from './login/login.component';
     CustomerComponent,
     PurchaseComponent,
     AdjustmentComponent,
-    TransferComponent,
     CategoriesComponent,
     BrandsComponent,
     UnitsComponent,
@@ -78,7 +84,6 @@ import { LoginComponent } from './login/login.component';
     PurchaseReturnComponent,
     AllSaleComponent,
     SaleReturnComponent,
-    TypeComponent,
     AllExpencesComponent,
     SupplierPaymentComponent,
     CustomerPaymentComponent,
@@ -121,9 +126,6 @@ import { LoginComponent } from './login/login.component';
     NgSelectModule,
     ReactiveFormsModule,
     FormsModule,
-    
-  
-    
   ],
   providers: [
     WarehouseServiceService,

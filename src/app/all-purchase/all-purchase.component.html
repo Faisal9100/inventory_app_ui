@@ -81,7 +81,7 @@
             class="btn btn-outline-dark"
             (click)="openAddProductModal(content3, item)"
           >
-            <i class="bi bi-plus-circle"></i>Add Product
+            <i class="bi bi-plus-circle"></i>
           </button>
 
           <button
@@ -389,22 +389,21 @@
   <div class="modal-body">
     <div class="col-sm">
       <label for="selectedProduct" class="py-2">Products*:</label>
-      <ng-select
-        class="form-ng-select"
+      <select
+        class="form-control"
         [(ngModel)]="selectedProduct"
         id="selectedProduct"
-        [bindValue]="'name'"
-        [bindLabel]="'name'"
+        #product
         (change)="isProductSelected = true"
         #update_stock_product
       >
-        <ng-option
-          class="ng-option"
+        <option
+          class="option"
           *ngFor="let value of productData"
           [value]="value.id"
-          >{{ value.name }}</ng-option
+          >{{ value.name }}</option
         >
-      </ng-select>
+      </select>
 
       <label for="" class="p-2">Quantity</label>
       <input
