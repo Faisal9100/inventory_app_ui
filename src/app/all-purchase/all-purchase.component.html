@@ -390,7 +390,7 @@
     <div class="col-sm">
       <label for="selectedProduct" class="py-2">Products*:</label>
       <select
-        class="form-control"
+        class="form-select"
         [(ngModel)]="selectedProduct"
         id="selectedProduct"
         #product
@@ -398,11 +398,12 @@
         #update_stock_product
       >
         <option
-          class="option"
+          class="ng-option"
           *ngFor="let value of productData"
           [value]="value.id"
-          >{{ value.name }}</option
         >
+          {{ value.name }}
+        </option>
       </select>
 
       <label for="" class="p-2">Quantity</label>
@@ -410,6 +411,7 @@
         type="number"
         class="form-control"
         id="quantity"
+        s
         [(ngModel)]="quantity"
         #q
       />

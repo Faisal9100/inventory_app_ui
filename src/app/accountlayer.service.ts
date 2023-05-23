@@ -7,7 +7,6 @@ import { Account } from './accountlayer/accountlayer.component';
   providedIn: 'root',
 })
 export class AccountlayerService {
-
   accountAdded = new EventEmitter<Account>();
   pageSize = 10;
   currentPage = 1;
@@ -15,7 +14,7 @@ export class AccountlayerService {
   pages: number[] = [];
   totalItems: any;
   itemsPerPage: any;
-  public ip_address = '127.0.0.1:8000';
+  public ip_address = '192.168.1.9:8000';
 
   selectedMainLayer: any;
 
@@ -26,7 +25,7 @@ export class AccountlayerService {
   private url_layer1 = 'http://' + this.ip_address + '/inventory/layer1s';
 
   constructor(private http: HttpClient) {}
-  
+
   getAccounts(): Observable<any> {
     let skip = (this.currentPage - 1) * this.pageSize;
 
@@ -37,6 +36,16 @@ export class AccountlayerService {
 
   getLayer1(selectedMainLayer: any): Observable<any> {
     return this.http.get(`${this.url_layer1}?main_layer=${selectedMainLayer}`);
+  }
+  // postAddLayer1(selectedMainLayer: any): Observable<any> {
+  //   return this.http.post(`${this.url_layer1}?main_layer=${selectedMainLayer}`);
+  // }
+  postLayer1(selectedMainLayer: any): Observable<any> {
+    const requestBody = {
+      main_layer: selectedMainLayer
+    };
+  
+    return this.http.post(this.url_layer1, requestBody);
   }
 
   getLayer2(selectedLayer1: any): Observable<any> {

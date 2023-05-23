@@ -18,7 +18,7 @@ export interface Product {
   styleUrls: ['./warehouse.component.css'],
 })
 export class WarehouseComponent {
-  ip_address = '127.0.0.1:8000';
+  ip_address = '192.168.1.9:8000';
   taskToEdit: any;
   currentPage = 1;
   pageSize = 10;
@@ -31,7 +31,11 @@ export class WarehouseComponent {
   public url = 'http://' + this.ip_address + '/inventory/warehouses/';
   totalItems: any;
 
-  constructor(private modalService: NgbModal, public http: HttpClient, public warehouseService:WarehouseService) {
+  constructor(
+    private modalService: NgbModal,
+    public http: HttpClient,
+    public warehouseService: WarehouseService
+  ) {
     this.getwarehouse();
   }
   ngOnInit(): void {
@@ -211,15 +215,14 @@ export class WarehouseComponent {
 
     doc.save('all_warehouses.pdf');
   }
-  p:any;
-  name:any;
+  p: any;
+  name: any;
   Search() {
     if (this.name == '') {
       this.ngOnInit();
     } else {
       this.products = this.products.filter((res) => {
-        return res.name
-          .match(this.name);
+        return res.name.match(this.name);
       });
     }
   }

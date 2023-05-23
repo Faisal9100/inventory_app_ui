@@ -5,10 +5,9 @@ import { BehaviorSubject } from 'rxjs';
 import Swal from 'sweetalert2';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class BasicService {
-
   constructor(private router: Router) {
     let item = localStorage.getItem('size');
     if (!item) {
@@ -33,10 +32,10 @@ export class BasicService {
   // refresh: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   refresh: boolean = true;
   pagination: number = 20;
-  // host: string = 'localhost:8000';
-  // back: string = 'http://localhost:8000/';
-  host: string = '52.221.4.133';
-  back: string = 'http://52.221.4.133/';
+  host: string = '192.168.1.9:8000';
+  back: string = 'http://localhost:8000/';
+  // host: string = '52.221.4.133';
+  // back: string = 'http://52.221.4.133/';
 
   url: string = this.back + 'api/';
   auth: string = this.back + 'auth/';

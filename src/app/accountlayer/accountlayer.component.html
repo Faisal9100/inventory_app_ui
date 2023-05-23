@@ -29,10 +29,28 @@
         {{ item.name }}
       </option>
     </select>
-    <button class="btn btn-primary mt-2" [disabled]="!selectedLayer1">
-      Add/Modify Layer 1
-    </button>
+    <small>
+      <a
+        class="text-dark"
+        data-bs-toggle="modal"
+        data-bs-target="#mainLayerModal"
+        (click)="addLayer_one_new_account(selectedMainLayer,selectedLayer1)"
+      >
+        Add
+      </a>
+    </small>
+    <small>
+      <a
+        class="text-dark"
+        data-bs-toggle="modal"
+        data-bs-target="#mainLayerModal"
+        (click)="update_Layer_one(selectedMainLayer)"
+      >
+        update
+      </a>
+    </small>
   </div>
+  <!-- addLayer_one_new_account() -->
 
   <div class="col">
     <label class="form-label">Layer 2:</label>
@@ -42,12 +60,8 @@
         {{ value.name }}
       </option>
     </select>
-   
-    <button
-      class="btn btn-primary mt-2"
-      [disabled]="!selectedLayer2"
-     
-    >
+
+    <button class="btn btn-primary mt-2" [disabled]="!selectedLayer2">
       Add/Modify Layer 2
     </button>
     <button
@@ -79,7 +93,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let account of accountData | paginate : { itemsPerPage: 4, currentPage: p};">
+      <tr
+        *ngFor="
+          let account of accountData
+            | paginate : { itemsPerPage: 4, currentPage: p }
+        "
+      >
         <td>{{ account.id }}</td>
         <td>{{ account.title }}</td>
         <td>{{ account.contact }}</td>
@@ -101,9 +120,10 @@
         <td>{{ account.email }}</td>
         <td>{{ account.address }}</td>
         <td>
-          <button class="btn btn-outline-primary mx-2"  (click)="updateAccount(account)">
-           
-          
+          <button
+            class="btn btn-outline-primary mx-2"
+            (click)="updateAccount(account)"
+          >
             <i class="bi bi-pencil-square"></i>
           </button>
           <button
@@ -116,10 +136,8 @@
       </tr>
     </tbody>
     <pagination-controls
-        class="my-pagination"
-        (pageChange)="p = $event"
-      ></pagination-controls>
+      class="my-pagination"
+      (pageChange)="p = $event"
+    ></pagination-controls>
   </table>
 </div>
-
-

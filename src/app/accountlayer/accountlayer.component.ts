@@ -21,10 +21,12 @@ export interface Account {
 })
 export class AccountlayerComponent implements OnInit {
   selectedMainLayer?: string;
-  ip_address = '127.0.0.1:8000';
+  ip_address = '192.168.1.9:8000';
 
   public create_account_url =
     'http://' + this.ip_address + '/inventory/layer2s/';
+
+  public addLayer1 = "'http://'thid'/inventory/layer1s/11/?main_layer=assets";
 
   public account_url = 'http://' + this.ip_address + '/inventory/accounts/';
 
@@ -66,7 +68,7 @@ export class AccountlayerComponent implements OnInit {
 
   closeResult: any;
 
-  p:any;
+  p: any;
 
   newAccount = {
     title: '',
@@ -318,7 +320,6 @@ export class AccountlayerComponent implements OnInit {
     });
   }
 
-
   updateAccount(account: Account): void {
     Swal.fire({
       title: 'Update Account',
@@ -388,7 +389,6 @@ export class AccountlayerComponent implements OnInit {
         } else {
           const updatedAccount = {
             title: accountTitle,
-           
           };
           this.http
             .put<Account>(`${this.account_url}${account.id}/`, updatedAccount)
@@ -444,4 +444,144 @@ export class AccountlayerComponent implements OnInit {
     });
     doc.save('all_this.accounts.pdf');
   }
+  openModal() {
+    // if (this.isMainUpdate) {
+    //   this.mainName?.reset();
+    //   this.isMainUpdate = false;
+    // }
+    // if (this.main_layer?.valid) {
+    //   let mainLayer = this.mainlayers.find(
+    //     (ml) => ml.id == this.main_layer?.value
+    //   );
+    //   this.mainName?.setValue(mainLayer?.name);
+    //   this.isMainUpdate = true;
+    // } else {
+    //   this.isMainUpdate = false;
+    // }
+  }
+  newLayerAccount = {
+    name: '',
+  };
+  addLayer_one_new_account(selectedMainLayer: any,selectedLayer1:number) {
+    Swal.fire({
+      title: 'Add Account',
+      html: `
+      <div class="form-group">
+        <label for="Title" class="float-start my-2">Name:</label>
+        <input type="text" id="name" class="form-control" placeholder="Account Title" >
+        </div>
+
+          `,
+      showCancelButton: true,
+      confirmButtonText: 'Add',
+      preConfirm: () => {
+        const accountName = (<HTMLInputElement>document.getElementById('name'))
+          .value;
+        if (!accountName) {
+          Swal.showValidationMessage('Account Name is required');
+        } else {
+          const newLayeraccount = {
+            name: accountName,
+          };
+          this.http
+            // `${this.url_layer1}?main_layer=${selectedMainLayer}`
+            .post<Account>(
+              `http://192.168.1.9:8000/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`,
+              newLayeraccount
+            )
+            .subscribe(() => {
+              this.newLayerAccount = {
+                name: '',
+              };
+              this.getAccountsData();
+
+              Swal.fire('Added!', 'Your Account has been added.', 'success');
+              this.accountLayerservice.accountAdded.emit(this.account);
+            });
+        }
+      },
+    });
+  }
+  // selected_Layer1: any;
+  // update_Layer_one(selectedMainLayer: any) {
+  //   Swal.fire({
+  //     title: 'Add Account',
+  //     html: `
+  //     <div class="form-group">
+  //       <label for="Title" class="float-start my-2">Name:</label>
+  //       <input type="text" class="swal2-input" placeholder="Enter new name" value="${selectedMainLayer.name}">
+  //     </div>
+  //     `,
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Add',
+  //     preConfirm: () => {
+  //       const updatedName = (<HTMLInputElement>(
+  //                 document.querySelector('.swal2-input')
+  //               )).value;
+  //               console.log(updatedName);
+  //         this.http.put<Account>(`http://192.168.1.9:8000/inventory/layer1s/${this.selected_Layer1}/?main_layer=${selectedMainLayer}`,{ name:updatedName}).subscribe(() => {
+  //           this.getAccountsData();
+  //           Swal.fire('Added!', 'Your Account has been added.', 'success');
+  //           this.accountLayerservice.accountAdded.emit(this.account);
+  //         });
+  //       }
+  //     },
+  
+  //   )};
+  selected_Layer1: any;
+
+update_Layer_one(selectedMainLayer: any) {
+  this.selected_Layer1 = this.layer1;
+
+  Swal.fire({
+    title: 'Update Account',
+    html: `
+    <div class="form-group">
+      <label for="Title" class="float-start my-2">Name:</label>
+      <input type="text" class="swal2-input" placeholder="Enter new name" value="${selectedMainLayer.name}">
+    </div>
+    `,
+    showCancelButton: true,
+    confirmButtonText: 'Update',
+    preConfirm: () => {
+      const updatedName = (<HTMLInputElement>(
+        document.querySelector('.swal2-input')
+      )).value;
+      console.log(updatedName);
+
+      this.http.put<Account>(`http://192.168.1.9:8000/inventory/layer1s/${this.selected_Layer1}/?main_layer=${selectedMainLayer}`, { name: updatedName }).subscribe(() => {
+        this.getAccountsData();
+        Swal.fire('Updated!', 'Your Account has been updated.', 'success');
+        this.accountLayerservice.accountAdded.emit(this.account);
+      });
+    },
+  });
+}
+
+
+  // openUpdateModal(product: Product) {
+  //   Swal.fire({
+  //     title: 'Update Product',
+  //     html: `
+  //     <input type="text" class="swal2-input" placeholder="Enter new name" value="${product.name}">
+  //   `,
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Update',
+  //     cancelButtonText: 'Cancel',
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       const updatedName = (<HTMLInputElement>(
+  //         document.querySelector('.swal2-input')
+  //       )).value;
+  //       this.http
+  //         .put(`${this.url}${product.id}/`, { name: updatedName })
+  //         .subscribe(() => {
+  //           console.log(`Product with ID ${product.id} updated successfully!`);
+  //           this.getBrand(this.pageIndex, this.pageSize);
+  //           Swal.fire('Updated!', 'Your product has been updated.', 'success');
+  //         });
+  //     }
+  //   });
+  // }
+  
 }

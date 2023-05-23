@@ -1,6 +1,6 @@
 /* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap"); */
 @import url("https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap");
-body{
+/* body{
 	margin: 0;
 	padding: 0;
 	display: flex;
@@ -9,7 +9,7 @@ body{
 	min-height: 100vh;
 	font-family: 'Jost', sans-serif;
 	background: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
-}
+} */
 .main{
 	width: 350px;
 	height: 500px;
@@ -233,11 +233,11 @@ iframe {
   justify-content: center;
   align-items: center;
   padding: 15px;
-  background: #9053c7;
-  background: -webkit-linear-gradient(-135deg, #c850c0, #4158d0);
+  /* background: #9053c7; */
+  /* background: -webkit-linear-gradient(-135deg, #c850c0, #4158d0);
   background: -o-linear-gradient(-135deg, #c850c0, #4158d0);
   background: -moz-linear-gradient(-135deg, #c850c0, #4158d0);
-  background: linear-gradient(-135deg, #c850c0, #4158d0);
+  background: linear-gradient(-135deg, #c850c0, #4158d0); */
 }
 
 .wrap-login100 {
@@ -270,6 +270,10 @@ iframe {
     [  ]*/
 .login100-form {
   width: 290px;
+  border: 1px solid gray;
+  padding: 30px;
+  justify-content: center;
+  align-items: center;
 }
 
 .login100-form-title {
@@ -318,7 +322,7 @@ iframe {
   width: 100%;
   height: 100%;
   box-shadow: 0px 0px 0px 0px;
-  color: rgba(255, 99, 71, 0.8);
+  color: #071251 !important;;
 }
 
 .input100:focus + .focus-input100 {
@@ -366,7 +370,7 @@ iframe {
 }
 
 .input100:focus + .focus-input100 + .symbol-input100 {
-  color: tomato;
+  color:#071251 !important;;
   padding-left: 28px;
 }
 
@@ -394,7 +398,7 @@ iframe {
   width: 100%;
   height: 50px;
   border-radius: 25px;
-  background: tomato;
+  background: #071251 !important;;
   display: -webkit-box;
   display: -webkit-flex;
   display: -moz-box;
@@ -414,7 +418,7 @@ iframe {
   background: #721011;
 }
 .login100-form-btn:disabled {
-  background-color: rgba(255, 99, 71, 0.726);
+  background-color:#071251 !important;;
   cursor: default;
 }
 

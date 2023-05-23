@@ -15,11 +15,11 @@ export class CategoryService {
   unshift(newCategory: { name: any }) {
     throw new Error('Method not implemented.');
   }
-  public ip_address= "127.0.0.1:8000";
+  public ip_address = '192.168.1.9:8000';
 
-  private url2 = "http://"+ this.ip_address +"/inventory/categories/${id}";
-  public url = "http://"+ this.ip_address +"/inventory/categories/";
- 
+  private url2 = 'http://' + this.ip_address + '/inventory/categories/${id}';
+  public url = 'http://' + this.ip_address + '/inventory/categories/';
+
   constructor(private http: HttpClient) {}
   //  code for categories
   getCategories(pageIndex: number, pageSize: number): Observable<any> {
@@ -28,12 +28,12 @@ export class CategoryService {
   searchCategories(query: string): Observable<any> {
     return this.http.get(`${this.url}?search=${query}`);
   }
-  
+
   addCategory(category: any): Observable<any> {
     return this.http.post<any>(this.url, category);
   }
-  createCategory(id:number, name: string) {
-    const data = { id , name };
+  createCategory(id: number, name: string) {
+    const data = { id, name };
     return this.http.post(this.url, data);
   }
   deleteCategory(id: string): Observable<any> {
@@ -44,8 +44,7 @@ export class CategoryService {
     return this.http.put<any>(url, category);
   }
   // categories code ended
-  public url3 = 'http://127.0.0.1:8000/inventory/products/';
-
+  public url3 = 'http://192.168.1.9:8000/inventory/products/';
 
   getProducts(): Observable<any> {
     return this.http.get<any>(this.url3);

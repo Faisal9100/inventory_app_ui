@@ -6,11 +6,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ProductService {
-  // public ip_address = ' 127.0.0.1:8000 ';
+  // public ip_address = ' 192.168.1.9:8000 ';
 
   constructor(public http: HttpClient) {}
-public ip_address='127.0.0.1:8000'
-  public url = "http://"+this.ip_address+"/inventory/products/";
+  public ip_address = '192.168.1.9:8000';
+  public url = 'http://' + this.ip_address + '/inventory/products/';
 
   getProducts(): Observable<any> {
     return this.http.get<any>(this.url);
@@ -18,7 +18,7 @@ public ip_address='127.0.0.1:8000'
   addProduct(formData: FormData): Observable<any> {
     return this.http.post(this.url, formData);
   }
- 
+
   deleteProduct(id: number): Observable<any> {
     const deleteUrl = `${this.url}${id}`;
     return this.http.delete<any>(deleteUrl);
@@ -27,5 +27,4 @@ public ip_address='127.0.0.1:8000'
     const url = `${this.url}${id}`;
     return this.http.put(url, formData);
   }
-
 }

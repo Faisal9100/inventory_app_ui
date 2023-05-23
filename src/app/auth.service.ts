@@ -9,7 +9,7 @@ import Notify from 'simple-notify';
 import { BehaviorSubject } from 'rxjs';
 import { BasicService } from './basic.service';
 
-import {  HttpHeaders } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 @Injectable({
@@ -17,8 +17,8 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class AuthService {
   private tokenKey = 'auth_token';
-  private apiUrl = 'http://127.0.0.1:8000/auth/jwt/create/';
-  loginFormVisible: boolean=true;
+  private apiUrl = 'http://192.168.1.9:8000/auth/jwt/create/';
+  loginFormVisible: boolean = true;
 
   constructor(
     private basic: BasicService,
@@ -46,7 +46,7 @@ export class AuthService {
   }
   currentUser: any;
   permissions: any = {};
-  isPermissions: boolean=true;
+  isPermissions: boolean = true;
   loader: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   getCurrentUser() {
