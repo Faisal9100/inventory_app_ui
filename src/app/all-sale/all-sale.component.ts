@@ -203,7 +203,9 @@ export class AllSaleComponent {
   productSale: any[] = [];
   getProductById(warehouseId: number) {
     this.http
-      .get(`http://192.168.1.9:8000/inventory/warehouses/${warehouseId}/stocks/`)
+      .get(
+        `http://192.168.1.9:8000/inventory/warehouses/${warehouseId}/stocks/`
+      )
       .subscribe((resp) => {
         this.productSale = <any>resp;
         console.log(this.productSale);
@@ -434,7 +436,7 @@ export class AllSaleComponent {
   //   );
   // }
 
-  deleteStockList(stockid: number, purchasedId: number) {
+  deleteSaleList(stockid: number, stock: number) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to recover this account!',
@@ -446,7 +448,7 @@ export class AllSaleComponent {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/sales/${purchasedId}/sale_items/` +
+            `http://192.168.1.9:8000/inventory/sales/${this.update_purchase_id}/sale_items/` +
               stockid +
               '/'
           )
@@ -458,7 +460,7 @@ export class AllSaleComponent {
                 'success'
               );
 
-              this.getStockList(purchasedId);
+              this.getStockList(stock);
             },
             () => {
               Swal.fire(
@@ -483,7 +485,6 @@ export class AllSaleComponent {
   update_purchase_id: any;
 
   postUpdateStock(product: any, q: any, p: any, date: any) {
-    // Check if the product is valid and contains the necessary properties
     if (product && product.id) {
       const requestBody = {
         date: date.value,
@@ -492,19 +493,17 @@ export class AllSaleComponent {
         price: p.value,
         amount: p.value * q.value,
       };
-
       console.log(requestBody);
 
       this.http
         .post(
           `http://192.168.1.9:8000/inventory/sales/${this.update_purchase_id}/sale_items/`,
           requestBody
-          // `http://192.168.1.9:8000/inventory/sales/${id}/sale_items/`
         )
         .subscribe((response) => {
           console.log(response);
         });
-    } else {
+
       console.log('Invalid product data');
     }
   }

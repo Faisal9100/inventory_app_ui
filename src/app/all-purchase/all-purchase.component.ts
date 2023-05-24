@@ -429,10 +429,8 @@ export class AllPurchaseComponent implements OnInit {
   //     });
   // }
 
-
-
   //   <-----------------------------adding another product-------------------------------------------->
- 
+
   update_purchase_id: any;
   postUpdateStock(product: any, q: any, p: any, date: any) {
     if (product && product.id) {
@@ -453,9 +451,7 @@ export class AllPurchaseComponent implements OnInit {
         )
         .subscribe((response) => {
           console.log(response);
-        
-        }); 
-       
+        });
     } else {
       console.log('Invalid product data');
     }

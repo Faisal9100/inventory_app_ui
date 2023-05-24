@@ -38,6 +38,7 @@
         <th>Transaction_ID</th>
         <th>Quantity</th>
         <th>Amount</th>
+        <th>Sale_Amount</th>
         <th>Date</th>
         <th>Action</th>
       </tr>
@@ -57,6 +58,7 @@
         <td>{{ item.transaction }}</td>
         <td>{{ item.quantity }}</td>
         <td>{{ item.amount }}</td>
+        <td>{{ item.sale_amount }}</td>
         <td>{{ item.date }}</td>
         <td>
           <button
@@ -70,12 +72,12 @@
             <i class="bi bi-pencil-square"></i>
           </button> -->
           <button
-          type="button"
-          class="btn btn-outline-dark"
-          (click)="openAddProductModal(content3, item)"
-        >
-          <i class="bi bi-plus-circle"></i>
-        </button>
+            type="button"
+            class="btn btn-outline-dark"
+            (click)="openAddProductModal(content3, item)"
+          >
+            <i class="bi bi-plus-circle"></i>
+          </button>
 
           <button
             class="btn btn-outline-danger"
@@ -235,6 +237,9 @@
                 [(ngModel)]="row.amount"
                 (input)="updateTotal()"
               />
+              <p>
+                <!-- {{ item.amount}} -->
+              </p>
             </td>
             <td>
               <input
@@ -386,11 +391,10 @@
     </button> -->
 <!-- </div>
 </ng-template> -->
--->
 
 <ng-template #content2 let-c="close" let-d="dismiss">
   <div class="modal-header">
-    <h2 class="modal-title text-center" id="modal-basic-title">Stock List</h2>
+    <h2 class="modal-title text-center" id="modal-basic-title">Sale List</h2>
     <div class="loader">
       <div
         *ngIf="isLoading"
@@ -413,7 +417,9 @@
           <!-- <th>Sale</th> -->
           <th>Product Name</th>
           <th>Quantity</th>
+          <th>Price</th>
           <th>Amount</th>
+          <th>Sale_Amount</th>
           <th>Action</th>
         </tr>
       </thead>
@@ -422,12 +428,14 @@
           <td>{{ stock.id }}</td>
           <td>{{ stock.product_name }}</td>
           <td>{{ stock.quantity }}</td>
+          <td>{{ stock.price }}</td>
           <td>{{ stock.amount }}</td>
+          <td>{{ stock.sale_amount }}</td>
 
           <td>
             <button
               class="btn btn-outline-danger"
-              (click)="deleteStockList(stock.id, stock.stock_purchase)"
+              (click)="deleteSaleList(stock.id, stock)"
             >
               <i class="bi bi-trash3-fill"></i>
             </button>
@@ -442,9 +450,7 @@
 <ng-template #content3 let-c="close" let-d="dismiss">
   <!-- Modal content -->
   <div class="modal-header">
-    <h4 class="modal-title text-center" id="modal-basic-title">
-      Update Purchase!
-    </h4>
+    <h4 class="modal-title text-center" id="modal-basic-title">Update Sale!</h4>
     <button
       type="button"
       class="btn-close"
@@ -454,9 +460,25 @@
   </div>
   <div class="modal-body">
     <div class="col-sm">
+      <label for="warehouse" class="py-2">Warehouse*:</label>
+      <ng-select
+        id="warehouse"
+        class="form-ng-select"
+        [(ngModel)]="selectedWarehouse"
+        (change)="onWarehouseChange(selectedWarehouse)"
+      >
+        <ng-option
+          class=".ng-dropdown-panel"
+          *ngFor="let data of warehouses"
+          [value]="data.id"
+          >{{ data.name }}</ng-option
+        >
+      </ng-select>
+    </div>
+    <div class="col-sm">
       <label for="selectedProduct" class="py-2">Products*:</label>
       <select
-        class="form-control"
+        class="form-select"
         [(ngModel)]="selectedProduct"
         id="selectedProduct"
         #product
@@ -465,10 +487,11 @@
       >
         <option
           class="option"
-          *ngFor="let value of productData"
-          [value]="value.id"
-          >{{ value.name }}</option
+          *ngFor="let product of productSale"
+          [value]="product.product"
         >
+          {{ product.product_name }}
+        </option>
       </select>
 
       <label for="" class="p-2">Quantity</label>

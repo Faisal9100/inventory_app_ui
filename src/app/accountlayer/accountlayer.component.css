@@ -15,4 +15,7 @@ nav#pagination {
     border-radius: 20px;
     margin: 5px;
   }
+  .text-dark{
+    cursor: pointer;
+  }
   
