@@ -33,7 +33,7 @@ export interface Product {
 })
 export class ProductsComponent {
   @Output() updateCategory = new EventEmitter<any>();
-  public ip_address = '192.168.1.9:8000';
+  public ip_address = '127.0.0.1:8000';
   pageIndex: any = 0;
   taskToEdit: any;
   currentPage = 1;

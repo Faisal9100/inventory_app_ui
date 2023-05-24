@@ -47,6 +47,7 @@
         <th>Transaction_ID</th>
         <th>Quantity</th>
         <th>Amount</th>
+        <th>Sale_Amount</th>
         <th>Date</th>
         <th>Action</th>
       </tr>
@@ -67,6 +68,7 @@
         <td>{{ item.transaction }}</td>
         <td>{{ item.quantity }}</td>
         <td>{{ item.amount }}</td>
+        <td>{{ item.sale_amount }}</td>
         <td>{{ item.date }}</td>
         <td>
           <button
@@ -352,7 +354,6 @@
           <td>{{ stock.product }}</td>
           <td>{{ stock.quantity }}</td>
           <td>{{ stock.amount }}</td>
-          <td>{{ stock.vocuher_type }}</td>
           <td>{{ stock.date }}</td>
           <td>{{ stock.account_name }}</td>
           <td>{{ stock.product_name }}</td>

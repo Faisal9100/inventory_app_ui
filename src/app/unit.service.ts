@@ -7,7 +7,7 @@ import { Product } from './units/units.component';
   providedIn: 'root',
 })
 export class UnitService {
-  public ip_address = '192.168.1.9:8000';
+  public ip_address = '127.0.0.1:8000';
   public url = 'http://' + this.ip_address + '/inventory/units/';
   public url2 = 'http://' + this.ip_address + '/inventory/units/${id}';
 

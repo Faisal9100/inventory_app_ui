@@ -92,6 +92,7 @@ export class AllSaleComponent {
 
   quantity: number = 0;
   price: number = 0;
+  amount: number = 0;
   Alltotal: number = 0;
   total1: number = 0;
   total2: number = 0;
@@ -131,10 +132,7 @@ export class AllSaleComponent {
   ngOnInit(): void {
     this.getWarehouse();
     this.getCustomer();
-    // this.getProducts();
     this.getAllPurchase();
-    // this.getStockPurchase();
-    // this.getStockList(this.id);
   }
   getAllPurchase() {
     this.SaleService.getAllPurchase().subscribe((data) => {
@@ -146,7 +144,7 @@ export class AllSaleComponent {
   getStockList(id: number) {
     this.isLoading = true; // Set isLoading to true
     this.http
-      .get(`http://192.168.1.9:8000/inventory/sales/${id}/sale_items`)
+      .get(`http://127.0.0.1:8000/inventory/sales/${id}/sale_items`)
       .subscribe((response: any) => {
         this.stocks = response.results;
         console.log(this.stocks);
@@ -161,33 +159,39 @@ export class AllSaleComponent {
     this.modalService.open(content2, { size: 'xl' });
   }
 
+  // <--------------------------- code for getting suppliers ---------------------------------------------->
+
   getSupplier() {
     this.supplierService.fetchsupplier().subscribe((response) => {
       this.suppliers = <any>response.results;
     });
   }
+
+  // <--------------------------- code for getting customers ---------------------------------------------->
+  
   customers: any[] = [];
   getCustomer() {
     this.customerservice.getAllPurchase().subscribe((response) => {
       this.customers = <any>response.results;
     });
   }
-  // getwarehouse() {
-  //   this.warehouseService.GetWarehouse().subscribe((response) => {
-  //     this.products = <any>response.results;
-  //   });
-  // }
+
   selectedWarehouseId?: number;
+
+  // <------------------------- code for getting warehouse ----------------------------------------------->
+  
   getWarehouse() {
     this.warehouseService.GetWarehouse().subscribe((response) => {
       this.warehouses = <any>response.results;
       if (this.warehouses.length > 0) {
         this.selectedWarehouse = this.warehouses[0]; // Store the first warehouse object
         this.warehouseId = this.selectedWarehouse.id; // Access the ID from the selected warehouse object
-        // console.log(this.warehouseId);
       }
     });
   }
+
+  // <---------- code for getting warehouse by id to get products according to warehouse ID ---------------->
+
   onWarehouseChange(warehouseId: any) {
     const selectedWarehouse = this.warehouses.find(
       (warehouse: any) => warehouse.id === warehouseId
@@ -201,11 +205,12 @@ export class AllSaleComponent {
   warehouses: any[] = [];
   warehouseId: any;
   productSale: any[] = [];
+
+  // <-------------------------- code for getting product according to warehouse ID ---------------------->
+ 
   getProductById(warehouseId: number) {
     this.http
-      .get(
-        `http://192.168.1.9:8000/inventory/warehouses/${warehouseId}/stocks/`
-      )
+      .get(`http://127.0.0.1:8000/inventory/warehouses/${warehouseId}/stocks/`)
       .subscribe((resp) => {
         this.productSale = <any>resp;
         console.log(this.productSale);
@@ -214,13 +219,6 @@ export class AllSaleComponent {
 
   stocks: any[] = [];
 
-  // getProducts() {
-  //   const productStockUrl = `http://  /inventory/warehouses/2/stocks/`;
-
-  //   this.http.get(productStockUrl).subscribe((res) => {
-  //     this.stocks = <any>res;
-  //   });
-  // }
   selectedProduct = <any>{
     id: '',
     name: '',
@@ -230,46 +228,10 @@ export class AllSaleComponent {
   };
 
   productList: any[] = [];
+  displayedQuantity?: number;
 
-  // newProduct = {
-  //   name: this.selectedProduct.name.toString(),
-  //   amount: this.price,
-  //   quantity: this.quantity,
-  //   product: this.selectedProduct.name,
-  //   total: this.total,
-  // };
+  // <------------------------ code for adding product when adding new sale -------------------------------> 
 
-  // Define the addProduct method to add the selected product to the table
-  // addProduct() {
-  //   // Ensure a product is selected
-  //   if (!this.selectedProduct) {
-  //     return;
-  //   }
-
-  //   // Find the selected product in the productData array
-  //   const selectedProduct = this.productSale.find(
-  //     (p) => p.id === this.selectedProduct
-  //   );
-
-  //   // Calculate the total price based on the product price and quantity
-  //   const total = selectedProduct.amount * this.quantity;
-
-  //   // Create a new row object with the selected product and input values
-  //   const newRow: Row = {
-  //     product: selectedProduct,
-  //     product_name: selectedProduct.product_name,
-  //     amount: selectedProduct.amount,
-  //     quantity: this.quantity,
-  //     total: total,
-  //   };
-
-  //   // Add the new row to the array of rows
-  //   this.rows.push(newRow);
-
-  //   // Clear the input fields
-  //   this.selectedProduct = '';
-  //   console.log(newRow);
-  // }
   addProduct() {
     // Ensure a product is selected
     if (!this.selectedProduct) {
@@ -282,8 +244,9 @@ export class AllSaleComponent {
     );
 
     // Calculate the total price based on the product price and quantity
-    const total = selectedProduct.amount * this.quantity;
+    const total = this.amount * this.quantity;
     const amount = 0;
+
     // Create a new row object with the selected product and input values
     const newRow: Row = {
       product: selectedProduct,
@@ -294,27 +257,45 @@ export class AllSaleComponent {
     };
     this.rows.push(newRow);
 
-    //   // Clear the input fields
+    // Clear the input fields
     this.selectedProduct = '';
-    // this.quantity = null;
   }
-  amount = 0;
-  get formattedData(): string {
-    const rowStrings = this.rows.map(
-      (row) => `${row.product.name}: $${row.total.toFixed(2)}`
-    );
 
-    return rowStrings.join('\n');
-  }
+  // <---------------------- code for Removing product when adding new sale ----------------------------->
   removeProduct(index: number) {
     this.rows.splice(index, 1);
     this.updateTotal();
   }
   i: any;
 
-  // __ code for deleting purchase__
+ // <--------------------------------- code for adding Sale ----------------------------------------------->
 
-  deletePurchase(purchaseId: number) {
+  addSale() {
+    const payload: any = {
+      invoice_no: this.purchaseInvoice,
+      date: this.purchaseDate,
+      account: this.selectedCustomer,
+      warehouse: this.selectedWarehouse,
+      amount: this.grandTotal,
+      quantity: this.totalQuantity,
+      remarks: this.remarks,
+      account_customer: this.selectedCustomer,
+    };
+
+    this.http
+      .post<{ id: number }>('http://127.0.0.1:8000/inventory/sales/', payload)
+      .subscribe((response) => {
+        console.log(response);
+        const purchaseId = response.id;
+        this.addStock(purchaseId);
+        this.getAllPurchase();
+      });
+    this.displayedQuantity = this.quantity;
+  }
+
+     // <--------------------------------- code for deleting Sale --------------------------------------->
+
+  deleteSale(purchaseId: number) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to recover this account!',
@@ -325,7 +306,7 @@ export class AllSaleComponent {
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
         this.http
-          .delete('http://192.168.1.9:8000/inventory/sales/' + purchaseId + '/')
+          .delete('http://127.0.0.1:8000/inventory/sales/' + purchaseId + '/')
           .subscribe(
             () => {
               Swal.fire(
@@ -348,31 +329,8 @@ export class AllSaleComponent {
     });
   }
 
-  // __ code for adding purchase__
 
-  addPurchase() {
-    const payload: any = {
-      invoice_no: this.purchaseInvoice,
-      date: this.purchaseDate,
-      account: this.selectedCustomer,
-      warehouse: this.selectedWarehouse,
-      amount: this.grandTotal,
-      quantity: this.totalQuantity,
-      remarks: this.remarks,
-      account_customer: this.selectedCustomer,
-    };
-
-    this.http
-      .post<{ id: number }>('http://192.168.1.9:8000/inventory/sales/', payload)
-      .subscribe((response) => {
-        console.log(response);
-        const purchaseId = response.id;
-        this.addStock(purchaseId);
-        this.getAllPurchase();
-      });
-  }
-
-  // __ code for adding stock purchase__
+           // <-------------------------- code for adding stock to sale --------------------------------->
 
   async addStock(id: any) {
     console.log(id);
@@ -384,6 +342,7 @@ export class AllSaleComponent {
         total: row.quantity * row.amount,
       };
       await this.postOneStock(product, id);
+    
     }
     return true;
   }
@@ -392,7 +351,7 @@ export class AllSaleComponent {
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://192.168.1.9:8000/inventory/sales/${id}/sale_items/`,
+          `http://127.0.0.1:8000/inventory/sales/${id}/sale_items/`,
           product
         )
         .subscribe(
@@ -403,23 +362,12 @@ export class AllSaleComponent {
         );
     });
   }
-  // postUpdateStock(product: any, id: any) {
-  //   return new Promise((resolve, reject) => {
-  //     this.http
-  //       .put(
-  //         `http://192.168.1.9:8000/inventory/sales/${id}/sale_items/`,
-  //         product
-  //       )
-  //       .subscribe(
-  //         (response) => {
-  //           resolve(response);
-  //         },
-  //         (error) => reject(error)
-  //       );
-  //   });
-  // }
+
   warehouse: any;
-  Search() {
+
+       // <---------------------------------- code for search ----------------------------------------->
+  
+       Search() {
     if (this.warehouse == '') {
       this.ngOnInit();
     } else {
@@ -428,13 +376,8 @@ export class AllSaleComponent {
       });
     }
   }
-  // searchTerm = '';
-  // searchedPurchaseData:any[]=[];
-  // onSearchTermChange() {
-  //   this.searchedPurchaseData = this.AllPurchaseData.filter((purchase) =>
-  //     purchase.title.toLowerCase().includes(this.searchTerm.toLowerCase())
-  //   );
-  // }
+
+// <-----------------------code for deleting stock from sale list ------------------------->
 
   deleteSaleList(stockid: number, stock: number) {
     Swal.fire({
@@ -448,7 +391,7 @@ export class AllSaleComponent {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/sales/${this.update_purchase_id}/sale_items/` +
+            `http://127.0.0.1:8000/inventory/sales/${this.update_purchase_id}/sale_items/` +
               stockid +
               '/'
           )
@@ -473,16 +416,20 @@ export class AllSaleComponent {
       }
     });
   }
+
+  // <---------------------------Model for adding another new stock in sale list ------------------------>
+
   openAddProductModal(content3: any, item: any) {
     this.update_purchase_id = item.id;
     this.modalService.open(content3).result.then((result) => {
       if (result === 'add') {
         this.addStock(this.purchaseId);
-        // this.addProduct();
       }
     });
   }
   update_purchase_id: any;
+
+// <--------------------- code for adding new stock in sale list--------------------------->
 
   postUpdateStock(product: any, q: any, p: any, date: any) {
     if (product && product.id) {
@@ -497,14 +444,21 @@ export class AllSaleComponent {
 
       this.http
         .post(
-          `http://192.168.1.9:8000/inventory/sales/${this.update_purchase_id}/sale_items/`,
+          `http://127.0.0.1:8000/inventory/sales/${this.update_purchase_id}/sale_items/`,
           requestBody
         )
         .subscribe((response) => {
           console.log(response);
+          product.value = ''; 
+          q.value = ''; 
+          p.value = '';
+          date.value = '';
         });
 
       console.log('Invalid product data');
     }
   }
 }
+
+
+//  <---------------------------sale all work end here------------------------------------>

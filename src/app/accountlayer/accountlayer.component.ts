@@ -22,7 +22,7 @@ export interface Account {
 })
 export class AccountlayerComponent implements OnInit {
   selectedMainLayer?: string;
-  ip_address = '192.168.1.9:8000';
+  ip_address = '127.0.0.1:8000';
 
   public create_account_url =
     'http://' + this.ip_address + '/inventory/layer2s/';
@@ -485,7 +485,7 @@ export class AccountlayerComponent implements OnInit {
           this.http
             // `${this.url_layer1}?main_layer=${selectedMainLayer}`
             .post<Account>(
-              `http://192.168.1.9:8000/inventory/layer1s/?main_layer=${selectedMainLayer}`,
+              `http://127.0.0.1:8000/inventory/layer1s/?main_layer=${selectedMainLayer}`,
               newLayeraccount
             )
             .subscribe(() => {
@@ -510,7 +510,7 @@ export class AccountlayerComponent implements OnInit {
       preConfirm: () => {
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
+            `http://127.0.0.1:8000/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
           )
           .subscribe(() => {
             this.getAccountsData();
@@ -545,7 +545,7 @@ export class AccountlayerComponent implements OnInit {
           this.http
             // `${this.url_layer1}?main_layer=${selectedMainLayer}`
             .post<Account>(
-              `http://192.168.1.9:8000/inventory/layer1s/${selectedLayer2}/layer2s/`,
+              `http://127.0.0.1:8000/inventory/layer1s/${selectedLayer2}/layer2s/`,
               newLayeraccount
             )
             .subscribe(() => {
@@ -570,7 +570,7 @@ export class AccountlayerComponent implements OnInit {
       preConfirm: () => {
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/layer1s/${this.selectedLayer1}/layer2s/${accountId}`
+            `http://127.0.0.1:8000/inventory/layer1s/${this.selectedLayer1}/layer2s/${accountId}`
           )
           .subscribe(() => {
             this.getAccountsData();
@@ -593,7 +593,7 @@ export class AccountlayerComponent implements OnInit {
   //       const updatedName = (<HTMLInputElement>(
   //         document.getElementById('name')
   //       )).value;
-  //       this.http.put(`http://192.168.1.9:8000/inventory/layer1s/${id}/?main_layer=${this.selectedMainLayer}`, { name: updatedName })
+  //       this.http.put(`http://127.0.0.1:8000/inventory/layer1s/${id}/?main_layer=${this.selectedMainLayer}`, { name: updatedName })
   //         .subscribe(() => {
   //           console.log(`Product with ID ${selectedLayer1} updated successfully!`);
   //           Swal.fire('Updated!', 'Your product has been updated.', 'success');

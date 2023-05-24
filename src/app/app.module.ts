@@ -18,32 +18,19 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { WarehouseComponent } from './warehouse/warehouse.component';
-import { StaffComponent } from './staff/staff.component';
 import { CustomerComponent } from './customer/customer.component';
-import { PurchaseComponent } from './purchase/purchase.component';
-import { AdjustmentComponent } from './adjustment/adjustment.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { BrandsComponent } from './brands/brands.component';
 import { UnitsComponent } from './units/units.component';
 import { ProductsComponent } from './products/products.component';
 import { AllPurchaseComponent } from './all-purchase/all-purchase.component';
-import { PurchaseReturnComponent } from './purchase-return/purchase-return.component';
 import { AllSaleComponent } from './all-sale/all-sale.component';
 import { SaleReturnComponent } from './sale-return/sale-return.component';
-import { AllExpencesComponent } from './all-expences/all-expences.component';
-import { SupplierPaymentComponent } from './supplier-payment/supplier-payment.component';
 import { CustomerPaymentComponent } from './customer-payment/customer-payment.component';
-import { StockReportComponent } from './stock-report/stock-report.component';
 import { SettingComponent } from './setting/setting.component';
-import { SystemConfigurationComponent } from './system-configuration/system-configuration.component';
 import { FaviconComponent } from './logo/favicon/favicon.component';
-import { GlobelTemplateComponent } from './globel-template/globel-template.component';
-import { EmailSettingComponent } from './email-setting/email-setting.component';
 import { SmsSettingComponent } from './sms-setting/sms-setting.component';
-import { NotificationTemplateComponent } from './notification-template/notification-template.component';
-import { ApplicationComponent } from './application/application.component';
 import { ServerComponent } from './server/server.component';
-import { CacheComponent } from './cache/cache.component';
 import { ReportComponent } from './report/report.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { NgChartsModule } from 'ng2-charts';
@@ -72,32 +59,19 @@ import { LoginComponent } from './login/login.component';
     AppComponent,
     DashboardComponent,
     WarehouseComponent,
-    StaffComponent,
     CustomerComponent,
-    PurchaseComponent,
-    AdjustmentComponent,
     CategoriesComponent,
     BrandsComponent,
     UnitsComponent,
     ProductsComponent,
     AllPurchaseComponent,
-    PurchaseReturnComponent,
     AllSaleComponent,
     SaleReturnComponent,
-    AllExpencesComponent,
-    SupplierPaymentComponent,
     CustomerPaymentComponent,
-    StockReportComponent,
     SettingComponent,
-    SystemConfigurationComponent,
     FaviconComponent,
-    GlobelTemplateComponent,
-    EmailSettingComponent,
     SmsSettingComponent,
-    NotificationTemplateComponent,
-    ApplicationComponent,
     ServerComponent,
-    CacheComponent,
     ReportComponent,
     SidebarComponent,
     SupplierComponent,
