@@ -25,12 +25,8 @@ import { UnitsComponent } from './units/units.component';
 import { ProductsComponent } from './products/products.component';
 import { AllPurchaseComponent } from './all-purchase/all-purchase.component';
 import { AllSaleComponent } from './all-sale/all-sale.component';
-import { SaleReturnComponent } from './sale-return/sale-return.component';
-import { CustomerPaymentComponent } from './customer-payment/customer-payment.component';
 import { SettingComponent } from './setting/setting.component';
 import { FaviconComponent } from './logo/favicon/favicon.component';
-import { SmsSettingComponent } from './sms-setting/sms-setting.component';
-import { ServerComponent } from './server/server.component';
 import { ReportComponent } from './report/report.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { NgChartsModule } from 'ng2-charts';
@@ -52,6 +48,7 @@ import { SupplierService } from './supplier.service';
 import { MatSelectModule } from '@angular/material/select';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { LoginComponent } from './login/login.component';
+import { VoucherComponent } from './voucher/voucher.component';
 // import { AuthQuardGuard } from './auth-quard.guard';
 
 @NgModule({
@@ -66,18 +63,15 @@ import { LoginComponent } from './login/login.component';
     ProductsComponent,
     AllPurchaseComponent,
     AllSaleComponent,
-    SaleReturnComponent,
-    CustomerPaymentComponent,
     SettingComponent,
     FaviconComponent,
-    SmsSettingComponent,
-    ServerComponent,
     ReportComponent,
     SidebarComponent,
     SupplierComponent,
     PaginationComponent,
     AccountlayerComponent,
     LoginComponent,
+    VoucherComponent,
   ],
   imports: [
     BrowserAnimationsModule,

@@ -1,7 +1,7 @@
-
-
 <mat-toolbar color="primary">
-  <mat-toolbar-row style="background-color: #071251 !important ;position: sticky;">
+  <mat-toolbar-row
+    style="background-color: #071251 !important ; position: sticky"
+  >
     <i class="bi bi-hdd-stack-fill text-white" (click)="sidenav.toggle()"></i>
     <h1 class="mt-2">Inventary App</h1>
     <div
@@ -29,9 +29,9 @@
           <i class="bi bi-house-gear-fill"></i>
           <span class="sidenav-nav-link-text">Dashboard</span>
         </li>
-        <li class="sidenav-nav-item"  (click)="toggleSubMenu()">
+        <li class="sidenav-nav-item" (click)="toggleSubMenu()">
           <i class="bi bi-file-ppt-fill"></i>
-          <span class="sidenav-nav-link-text" >Manage Product</span>
+          <span class="sidenav-nav-link-text">Manage Product</span>
           <i
             class="bi bi-chevron-down float-end"
             style="
@@ -70,17 +70,18 @@
           </div>
         </li>
         <li class="sidenav-nav-item" routerLink="accounts">
-          <i class="bi bi-house-check-fill"></i>
+          <i class="bi bi-diagram-3-fill"></i>
           <span class="sidenav-nav-link-text">Accounts</span>
         </li>
+        <li class="sidenav-nav-item" routerLink="voucher">
+          <i class="bi bi-diagram-3-fill"></i>
+          <span class="sidenav-nav-link-text">Voucher</span>
+        </li>
         <li class="sidenav-nav-item" routerLink="warehouse">
-          <i class="bi bi-house-check-fill"></i>
+          <i class="bi bi-shop"></i>
           <span class="sidenav-nav-link-text">Warehouse</span>
         </li>
-        <li class="sidenav-nav-item" routerLink="staff">
-          <i class="bi bi-person-fill"></i>
-          <span class="sidenav-nav-link-text">Staff</span>
-        </li>
+
         <li class="sidenav-nav-item" routerLink="customer">
           <i class="bi bi-people"></i>
           <span class="sidenav-nav-link-text">Customer</span>
@@ -90,9 +91,10 @@
           <span class="sidenav-nav-link-text">Supplier</span>
         </li>
         <li class="sidenav-nav-item" routerLink="All-purchase">
-          <i class="bi bi-receipt-cutoff"></i>
+          <i class="bi bi-bag-heart"></i>
           <span class="sidenav-nav-link-text">All Purchase</span>
         </li>
+
         <!-- <li class="sidenav-nav-item" (click)="toggleSubMenu()">
           <i class="bi bi-bag-heart"></i>
           <span class="sidenav-nav-link-text">Purchase</span>
@@ -121,15 +123,15 @@
               </li>
             </div>
           </li> -->
-          <li class="sidenav-nav-item" routerLink="Sale">
-            <i class="bi bi-receipt-cutoff"></i>
-            <span class="sidenav-nav-link-text">All Sale</span>
-          </li>
-          <li class="sidenav-nav-item" routerLink="Sale">
+        <li class="sidenav-nav-item" routerLink="Sale">
+          <i class="bi bi-cash-stack"></i>
+          <span class="sidenav-nav-link-text">All Sale</span>
+        </li>
+        <!-- <li class="sidenav-nav-item" routerLink="Sale">
             <i class="bi bi-receipt-cutoff"></i>
             <span class="sidenav-nav-link-text">Sale Return</span>
-          </li>
-         
+          </li> -->
+
         <!-- <li class="sidenav-nav-item" (click)="toggleSubMenu()">
           <i class="bi bi-cart-plus"></i>
           <span class="sidenav-nav-link-text">Sale</span>
@@ -153,8 +155,8 @@
           </div>
         </li>
          -->
-       
-<!--      
+
+        <!--      
         <li class="sidenav-nav-item" (click)="toggleSubMenu()">
           <i class="bi bi-cart-check-fill"></i>
           <span class="sidenav-nav-link-text">Data Entry Report</span>
@@ -222,7 +224,7 @@
           <i class="bi bi-gear-wide-connected"></i>
           <span class="sidenav-nav-link-text">General Setting</span>
         </li>
-<!--        
+        <!--        
         <li class="sidenav-nav-item">
           <i class="bi bi-image-alt"></i>
           <span class="sidenav-nav-link-text">Logo & Favicon</span>
@@ -243,8 +245,6 @@
   <mat-sidenav-content>
     <div class="p-4" style="height: 100vh">
       <router-outlet></router-outlet>
-      
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
-

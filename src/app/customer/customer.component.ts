@@ -33,7 +33,7 @@ export class CustomerComponent {
   
   totalItems: any;
   itemsPerPage: any;
-  public ip_address = '127.0.0.1:8000';
+  public ip_address = '192.168.1.9:8000';
   public url = 'http://' + this.ip_address + '/inventory/customers/';
   suppliers: any[] = [];
   supplier: Supplier = {
@@ -57,11 +57,13 @@ export class CustomerComponent {
   newsupplier = {
     title: '',
     address: '',
-    balance: '',
     status: '',
     contact: '',
     email: '',
   };
+
+  // <--------------------------------------- code for adding customers ------------------------------------>
+
   addSupplier() {
     Swal.fire({
       title: 'Add Customer',
@@ -77,10 +79,6 @@ export class CustomerComponent {
     </div>
 
     
-    <div class="form-group">
-      <label for="supplierBalance" class="float-start my-2">Balance:</label>
-      <input type="number" id="supplierBalance" class="form-control" placeholder="Customer Balance">
-    </div>
 
     <div class="form-group">
       <label for="supplierStatus" class="float-start my-2">Status:</label> 
@@ -109,9 +107,7 @@ export class CustomerComponent {
         const supplierAddress = (<HTMLInputElement>(
           document.getElementById('supplierAddress')
         )).value;
-        const supplierBalance = (<HTMLInputElement>(
-          document.getElementById('supplierBalance')
-        )).value;
+       
         const supplierStatus = (<HTMLSelectElement>(
           document.getElementById('supplierStatus')
         )).value;
@@ -129,7 +125,6 @@ export class CustomerComponent {
             title: supplierTitle,
             address: supplierAddress,
             status: supplierStatus,
-            balance: supplierBalance,
             email: supplierEmail,
             contact: supplierContact,
           };
@@ -137,7 +132,6 @@ export class CustomerComponent {
             this.newsupplier = {
               title: '',
               address: '',
-              balance: '',
               status: '',
               contact: '',
               email: '',
@@ -150,20 +144,10 @@ export class CustomerComponent {
     });
   }
 
-  // getCustomers() {
-  //   let skip = (this.currentPage - 1) * this.pageSize;
+ 
 
-  //   let limit = 20;
-  //   let url = `${this.url}?skip=${skip}&limit=${limit}`;
+  // <--------------------------------------- code for getting customers ------------------------------------>
 
-  //   this.http.get<any>(url).subscribe((response) => {
-  //     this.suppliers = <any>response.results;
-  //     this.totalPages = Math.ceil(response.count / this.pageSize);
-  //     this.totalItems = response.count;
-
-  //     this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
-  //   });
-  // }
   getCustomers(){
     this.customerservice.getAllPurchase().subscribe(response =>{
       this.suppliers = <any>response.results;
@@ -174,6 +158,9 @@ export class CustomerComponent {
     this.currentPage = event;
     this.getCustomers();
   }
+
+  // <--------------------------------------- code for deleting customers ------------------------------------>
+
   deleteSupplier(id: number) {
     Swal.fire({
       title: 'Are you sure?',
@@ -199,6 +186,8 @@ export class CustomerComponent {
     this.modalService.open(allcontent);
     this.supplierToEdit = newsupplier;
   }
+  // <--------------------------------------- code for updating customers ------------------------------------>
+ 
   openUpdateModal(supplier: Supplier) {
     Swal.fire({
       title: 'Update Customer Detail',
@@ -229,13 +218,13 @@ export class CustomerComponent {
         <div class="form-group row overflow-hidden">
         <div class="col"
         <label for="supplierBalance" class="py-2">Credit:</label>
-        <input type="number"  class="form-control" placeholder="Supplier Balance" disabled=true   value="${
+        <input type="number" id="supplierCredit"  class="form-control" placeholder="Supplier Balance" disabled=true   value="${
           supplier.credit
         }" readonly>
         </div>
         <div class="col"
         <label for="supplierBalance" class="float-start">Debit:</label>
-        <input type="number"  class="form-control" placeholder="Supplier Balance" disabled=true  value="${
+        <input type="number" id="supplierDedit"  class="form-control" placeholder="Supplier Balance" disabled=true  value="${
           supplier.debit
         }" readonly>
         </div>
@@ -283,10 +272,16 @@ export class CustomerComponent {
         const updatedAddress = (<HTMLInputElement>(
           document.querySelector('#supplierAddress')
         )).value;
+        
         const updatedBalance = parseInt(
           (<HTMLInputElement>document.querySelector('#supplierBalance')).value
         );
-
+        const updatedCredit = parseInt(
+          (<HTMLInputElement>document.querySelector('#supplierCredit')).value
+        );
+        const updatedDebit = parseInt(
+          (<HTMLInputElement>document.querySelector('#supplierDedit')).value
+        );
         const updatedContact = (<HTMLInputElement>(
           document.querySelector('#supplierContact')
         )).value;
@@ -304,7 +299,7 @@ export class CustomerComponent {
             address: updatedAddress,
             contact: updatedContact,
             email: updatedEmail,
-            balance: updatedBalance,
+            
             status: updatedStatus,
           })
           .subscribe(() => {
@@ -321,6 +316,8 @@ export class CustomerComponent {
       }
     });
   }
+
+  // <-------------------------------------- code for print Reciept   ---------------------------------------->
 
   generatePDF() {
     const columns2 = { title: 'All Customer List' };

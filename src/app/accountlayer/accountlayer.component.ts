@@ -11,7 +11,8 @@ export interface Account {
   balance: number;
   status: string;
   contact: number;
-
+  credit:number;
+  debit:number;
   email: string;
 }
 
@@ -22,7 +23,7 @@ export interface Account {
 })
 export class AccountlayerComponent implements OnInit {
   selectedMainLayer?: string;
-  ip_address = '127.0.0.1:8000';
+  ip_address = '192.168.1.9:8000';
 
   public create_account_url =
     'http://' + this.ip_address + '/inventory/layer2s/';
@@ -74,7 +75,8 @@ export class AccountlayerComponent implements OnInit {
   newAccount = {
     title: '',
     address: '',
-    balance: '',
+   credit:'',
+   debit:'',
     status: '',
     contact: '',
     email: '',
@@ -85,6 +87,8 @@ export class AccountlayerComponent implements OnInit {
     title: '',
     address: '',
     status: '',
+    credit:0,
+    debit:0,
     balance: 0,
     contact: 0,
     email: '',
@@ -164,20 +168,7 @@ export class AccountlayerComponent implements OnInit {
       console.log(data);
     });
   }
-  // fetchsupplier() {
-  //   let skip = (this.currentPage - 1) * this.pageSize;
-
-  //   let limit = 20;
-  //   let url = `${this.url}?skip=${skip}&limit=${limit}`;
-
-  //   this.http.get<any>(url).subscribe((response) => {
-  //     this.suppliers = <any>response.results;
-  //     this.totalPages = Math.ceil(response.count / this.pageSize);
-  //     this.totalItems = response.count;
-
-  //     this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
-  //   });
-  // }
+ 
 
   // __code for getting Account Data__
 
@@ -227,7 +218,7 @@ export class AccountlayerComponent implements OnInit {
     });
   }
 
-  // __code for adding account__
+  // <------------------------------------ code for adding account ---------------------------------------->
 
   addAccount() {
     Swal.fire({
@@ -243,10 +234,6 @@ export class AccountlayerComponent implements OnInit {
         <input type="text" id="accountAddress" class="form-control" placeholder=" Address" >
       </div>
       
-      <div class="form-group">
-        <label for="Balance:" class="float-start my-2">Balance:</label>
-        <input type="text" id="accountBalance" class="form-control" placeholder=" Balance" >
-      </div>
        
       <div class="form-group">
   <label for="supplierStatus" class="float-start my-2">Status:</label> 
@@ -278,9 +265,7 @@ export class AccountlayerComponent implements OnInit {
         const accountAddress = (<HTMLInputElement>(
           document.getElementById('accountAddress')
         )).value;
-        const accountBalance = (<HTMLInputElement>(
-          document.getElementById('accountBalance')
-        )).value;
+        
         const accountStatus = (<HTMLSelectElement>(
           document.getElementById('accountStatus')
         )).value;
@@ -297,7 +282,6 @@ export class AccountlayerComponent implements OnInit {
           const newaccount = {
             title: accountTitle,
             address:accountAddress,
-            balance:accountBalance,
             status:accountStatus,
             contact:accountContact,
             email:accountEmail
@@ -311,7 +295,8 @@ export class AccountlayerComponent implements OnInit {
               this.newAccount = {
                 title: '',
                 address: '',
-                balance: '',
+                credit:'',
+                debit:'',
                 status: '',
                 contact: '',
                 email: '',
@@ -325,6 +310,8 @@ export class AccountlayerComponent implements OnInit {
       },
     });
   }
+
+  // <------------------------------------ code for updating account ---------------------------------------->
 
   updateAccount(account: Account): void {
     Swal.fire({
@@ -342,10 +329,28 @@ export class AccountlayerComponent implements OnInit {
           account.address
         }">
       
-        <label class="float-start my-2">Balance:</label>
-        <input type="text" id="accountBalance" class="form-control" placeholder=" Balance" value="${
-          account.balance
-        }">
+        <div classs="form-group overflow-hidden">
+        
+        <label for="supplierBalance" class="float-start my-2">Balance:</label>
+          <input type="number" id="supplierBalance" class="form-control" disabled=true  placeholder="Supplier Balance"  value="${
+            account.balance
+          }" readonly>
+          </div><br>
+        <div class="form-group row overflow-hidden">
+        <div class="col"
+        <label for="supplierBalance" class="py-2">Credit:</label>
+        <input type="number" id="supplierCredit"  class="form-control" placeholder="Supplier Balance" disabled=true   value="${
+          account.credit
+        }" readonly>
+        </div>
+        <div class="col"
+        <label for="supplierBalance" class="float-start">Debit:</label>
+        <input type="number" id="supplierDedit"  class="form-control" placeholder="Supplier Balance" disabled=true  value="${
+          account.debit
+        }" readonly>
+        </div>
+        </div><br>
+        
         
         <label class="float-start my-2">Status:</label>
         
@@ -380,6 +385,12 @@ export class AccountlayerComponent implements OnInit {
         const accountBalance = (<HTMLInputElement>(
           document.getElementById('accountBalance')
         )).value;
+        const accountCredit = (<HTMLInputElement>(
+          document.getElementById('accountCredit')
+        )).value;
+        const accountDebit = (<HTMLInputElement>(
+          document.getElementById('accountDebit')
+        )).value;
         const accountStatus = (<HTMLSelectElement>(
           document.getElementById('accountStatus')
         )).value;
@@ -395,11 +406,10 @@ export class AccountlayerComponent implements OnInit {
         } else {
           const updatedAccount = {
             title: accountTitle,
-            address:accountAddress,
-            balance:accountBalance,
-            status:accountStatus,
-            contact:accountContact,
-            email:accountEmail
+            // address:accountAddress,
+            // status:accountStatus,
+            // contact:accountContact,
+            // email:accountEmail
           };
           this.http
             .put<Account>(`${this.account_url}${account.id}/`, updatedAccount)
@@ -417,7 +427,10 @@ export class AccountlayerComponent implements OnInit {
     });
   }
 
-  // __code for print account Details__
+
+  // <------------------------------------ code for print account Details ---------------------------------------->
+
+
 
   generatePDF() {
     const columns2 = { title: 'All Accounts list' };
@@ -485,7 +498,7 @@ export class AccountlayerComponent implements OnInit {
           this.http
             // `${this.url_layer1}?main_layer=${selectedMainLayer}`
             .post<Account>(
-              `http://127.0.0.1:8000/inventory/layer1s/?main_layer=${selectedMainLayer}`,
+              `http://192.168.1.9:8000/inventory/layer1s/?main_layer=${selectedMainLayer}`,
               newLayeraccount
             )
             .subscribe(() => {
@@ -510,7 +523,7 @@ export class AccountlayerComponent implements OnInit {
       preConfirm: () => {
         this.http
           .delete(
-            `http://127.0.0.1:8000/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
+            `http://192.168.1.9:8000/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
           )
           .subscribe(() => {
             this.getAccountsData();
@@ -545,7 +558,7 @@ export class AccountlayerComponent implements OnInit {
           this.http
             // `${this.url_layer1}?main_layer=${selectedMainLayer}`
             .post<Account>(
-              `http://127.0.0.1:8000/inventory/layer1s/${selectedLayer2}/layer2s/`,
+              `http://192.168.1.9:8000/inventory/layer1s/${selectedLayer2}/layer2s/`,
               newLayeraccount
             )
             .subscribe(() => {
@@ -570,7 +583,7 @@ export class AccountlayerComponent implements OnInit {
       preConfirm: () => {
         this.http
           .delete(
-            `http://127.0.0.1:8000/inventory/layer1s/${this.selectedLayer1}/layer2s/${accountId}`
+            `http://192.168.1.9:8000/inventory/layer1s/${this.selectedLayer1}/layer2s/${accountId}`
           )
           .subscribe(() => {
             this.getAccountsData();
@@ -593,7 +606,7 @@ export class AccountlayerComponent implements OnInit {
   //       const updatedName = (<HTMLInputElement>(
   //         document.getElementById('name')
   //       )).value;
-  //       this.http.put(`http://127.0.0.1:8000/inventory/layer1s/${id}/?main_layer=${this.selectedMainLayer}`, { name: updatedName })
+  //       this.http.put(`http://192.168.1.9:8000/inventory/layer1s/${id}/?main_layer=${this.selectedMainLayer}`, { name: updatedName })
   //         .subscribe(() => {
   //           console.log(`Product with ID ${selectedLayer1} updated successfully!`);
   //           Swal.fire('Updated!', 'Your product has been updated.', 'success');

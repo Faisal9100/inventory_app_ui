@@ -46,6 +46,8 @@ interface Row {
   amount: number;
   quantity: number;
   total: number;
+  totalQuantity: number;
+  totalAmount: number;
 }
 @Component({
   selector: 'app-all-sale',
@@ -144,7 +146,7 @@ export class AllSaleComponent {
   getStockList(id: number) {
     this.isLoading = true; // Set isLoading to true
     this.http
-      .get(`http://127.0.0.1:8000/inventory/sales/${id}/sale_items`)
+      .get(`http://192.168.1.9:8000/inventory/sales/${id}/sale_items`)
       .subscribe((response: any) => {
         this.stocks = response.results;
         console.log(this.stocks);
@@ -168,7 +170,7 @@ export class AllSaleComponent {
   }
 
   // <--------------------------- code for getting customers ---------------------------------------------->
-  
+
   customers: any[] = [];
   getCustomer() {
     this.customerservice.getAllPurchase().subscribe((response) => {
@@ -179,7 +181,7 @@ export class AllSaleComponent {
   selectedWarehouseId?: number;
 
   // <------------------------- code for getting warehouse ----------------------------------------------->
-  
+
   getWarehouse() {
     this.warehouseService.GetWarehouse().subscribe((response) => {
       this.warehouses = <any>response.results;
@@ -207,12 +209,14 @@ export class AllSaleComponent {
   productSale: any[] = [];
 
   // <-------------------------- code for getting product according to warehouse ID ---------------------->
- 
+
   getProductById(warehouseId: number) {
     this.http
-      .get(`http://127.0.0.1:8000/inventory/warehouses/${warehouseId}/stocks/`)
-      .subscribe((resp) => {
-        this.productSale = <any>resp;
+      .get(
+        `http://192.168.1.9:8000/inventory/warehouses/${warehouseId}/stocks/`
+      )
+      .subscribe((resp: any) => {
+        this.productSale = resp['results'];
         console.log(this.productSale);
       });
   }
@@ -230,8 +234,9 @@ export class AllSaleComponent {
   productList: any[] = [];
   displayedQuantity?: number;
 
-  // <------------------------ code for adding product when adding new sale -------------------------------> 
+  // <------------------------ code for adding product when adding new sale ------------------------------->
 
+  product_name: any;
   addProduct() {
     // Ensure a product is selected
     if (!this.selectedProduct) {
@@ -239,24 +244,38 @@ export class AllSaleComponent {
     }
 
     // Find the selected product in the productData array
+    console.log(this.selectedProduct);
+    console.log(this.productSale);
     const selectedProduct = this.productSale.find(
-      (p) => p.id === this.selectedProduct
+      (p) => p.product_id == this.selectedProduct
     );
 
+    // Calculate the total quantity based on the selected product quantity and input quantity
+
+    const totalQuantity = selectedProduct ? selectedProduct.quantity : 0;
+    const totalAmount = selectedProduct ? selectedProduct.amount : 0;
+
+    if (this.quantity > totalQuantity) {
+      // Show an error message or perform appropriate actions
+      console.log('Entered quantity exceeds total quantity');
+      return;
+    }
     // Calculate the total price based on the product price and quantity
     const total = this.amount * this.quantity;
     const amount = 0;
 
     // Create a new row object with the selected product and input values
-    const newRow: Row = {
+    const newRow = {
       product: selectedProduct,
       product_name: selectedProduct.product_name,
       amount: amount,
       quantity: this.quantity,
       total: total,
+      totalQuantity: totalQuantity, // Add totalQuantity property
+      totalAmount: totalAmount,
     };
     this.rows.push(newRow);
-
+    console.log(newRow);
     // Clear the input fields
     this.selectedProduct = '';
   }
@@ -268,11 +287,33 @@ export class AllSaleComponent {
   }
   i: any;
 
- // <--------------------------------- code for adding Sale ----------------------------------------------->
+  // <--------------------------------- code for adding Sale ----------------------------------------------->
+
+  // addSale() {
+  //   const payload: any = {
+  //     invoice_no: this.purchaseInvoice,
+  //     date: this.purchaseDate,
+  //     account: this.selectedCustomer,
+  //     warehouse: this.selectedWarehouse,
+  //     amount: this.grandTotal,
+  //     quantity: this.totalQuantity,
+  //     remarks: this.remarks,
+  //     account_customer: this.selectedCustomer,
+  //   };
+
+  //   this.http
+  //     .post<{ id: number }>('http://192.168.1.9:8000/inventory/sales/', payload)
+  //     .subscribe((response) => {
+  //       console.log(response);
+  //       const purchaseId = response.id;
+  //       this.addStock(purchaseId);
+  //       this.getAllPurchase();
+  //     });
+  //   this.displayedQuantity = this.quantity;
+  // }
 
   addSale() {
     const payload: any = {
-      invoice_no: this.purchaseInvoice,
       date: this.purchaseDate,
       account: this.selectedCustomer,
       warehouse: this.selectedWarehouse,
@@ -283,17 +324,27 @@ export class AllSaleComponent {
     };
 
     this.http
-      .post<{ id: number }>('http://127.0.0.1:8000/inventory/sales/', payload)
-      .subscribe((response) => {
-        console.log(response);
-        const purchaseId = response.id;
-        this.addStock(purchaseId);
-        this.getAllPurchase();
-      });
-    this.displayedQuantity = this.quantity;
+      .post<{ id: number }>('http://192.168.1.9:8000/inventory/sales/', payload)
+      .subscribe(
+        (response) => {
+          console.log(response);
+          const purchaseId = response.id;
+          this.addStock(purchaseId);
+          this.getAllPurchase();
+          this.addProduct();
+        },
+        (error) => {
+          console.error('An error occurred:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while adding the sale.',
+          });
+        }
+      );
   }
 
-     // <--------------------------------- code for deleting Sale --------------------------------------->
+  // <--------------------------------- code for deleting Sale --------------------------------------->
 
   deleteSale(purchaseId: number) {
     Swal.fire({
@@ -306,7 +357,7 @@ export class AllSaleComponent {
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
         this.http
-          .delete('http://127.0.0.1:8000/inventory/sales/' + purchaseId + '/')
+          .delete('http://192.168.1.9:8000/inventory/sales/' + purchaseId + '/')
           .subscribe(
             () => {
               Swal.fire(
@@ -329,8 +380,7 @@ export class AllSaleComponent {
     });
   }
 
-
-           // <-------------------------- code for adding stock to sale --------------------------------->
+  // <-------------------------- code for adding stock to sale --------------------------------->
 
   async addStock(id: any) {
     console.log(id);
@@ -342,7 +392,6 @@ export class AllSaleComponent {
         total: row.quantity * row.amount,
       };
       await this.postOneStock(product, id);
-    
     }
     return true;
   }
@@ -351,7 +400,7 @@ export class AllSaleComponent {
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://127.0.0.1:8000/inventory/sales/${id}/sale_items/`,
+          `http://192.168.1.9:8000/inventory/sales/${id}/sale_items/`,
           product
         )
         .subscribe(
@@ -365,9 +414,9 @@ export class AllSaleComponent {
 
   warehouse: any;
 
-       // <---------------------------------- code for search ----------------------------------------->
-  
-       Search() {
+  // <---------------------------------- code for search ----------------------------------------->
+
+  Search() {
     if (this.warehouse == '') {
       this.ngOnInit();
     } else {
@@ -377,7 +426,7 @@ export class AllSaleComponent {
     }
   }
 
-// <-----------------------code for deleting stock from sale list ------------------------->
+  // <-----------------------code for deleting stock from sale list ------------------------->
 
   deleteSaleList(stockid: number, stock: number) {
     Swal.fire({
@@ -391,7 +440,7 @@ export class AllSaleComponent {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://127.0.0.1:8000/inventory/sales/${this.update_purchase_id}/sale_items/` +
+            `http://192.168.1.9:8000/inventory/sales/${this.update_purchase_id}/sale_items/` +
               stockid +
               '/'
           )
@@ -429,7 +478,7 @@ export class AllSaleComponent {
   }
   update_purchase_id: any;
 
-// <--------------------- code for adding new stock in sale list--------------------------->
+  // <--------------------- code for adding new stock in sale list--------------------------->
 
   postUpdateStock(product: any, q: any, p: any, date: any) {
     if (product && product.id) {
@@ -444,13 +493,13 @@ export class AllSaleComponent {
 
       this.http
         .post(
-          `http://127.0.0.1:8000/inventory/sales/${this.update_purchase_id}/sale_items/`,
+          `http://192.168.1.9:8000/inventory/sales/${this.update_purchase_id}/sale_items/`,
           requestBody
         )
         .subscribe((response) => {
           console.log(response);
-          product.value = ''; 
-          q.value = ''; 
+          product.value = '';
+          q.value = '';
           p.value = '';
           date.value = '';
         });
@@ -458,7 +507,12 @@ export class AllSaleComponent {
       console.log('Invalid product data');
     }
   }
+  getTotalQuantity(row: any): number {
+    const selectedProduct = this.productSale.find(
+      (product) => product.id === row.id
+    );
+    return selectedProduct ? selectedProduct.quantity : 0;
+  }
 }
-
 
 //  <---------------------------sale all work end here------------------------------------>

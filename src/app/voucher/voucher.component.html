@@ -1,0 +1,181 @@
+<!-- <ng-container *ngIf="!isComplete">
+    <div class="d-flex my-2 justify-content-between">
+      <div class="h4">Account Vouchar</div>
+    </div>
+  
+    <form [formGroup]="form">
+      <div class="row">
+        <div class="form-group col-2">
+          <label for="date">Transition Date</label>
+          <input
+            type="date"
+            id="date"
+            class="form-control sm"
+            [class.ng-invalid]="false"
+            formControlName="date"
+          />
+        </div>
+        <div class="form-group col-2">
+          <label>Vouchar Type</label>
+          <ng-select
+            class="sm"
+            formControlName="vouchar_type"
+            [class.ng-invalid]="false"
+          >
+            <ng-option [value]="item[0]" *ngFor="let item of api.VOUCHAR_TYPE">
+              {{ item[1] }}
+            </ng-option>
+          </ng-select>
+        </div>
+      </div>
+      <div class="row">
+        <div class="form-group col-2">
+          <label>Account</label>
+          <ng-select
+            class="sm"
+            formControlName="account"
+            [class.ng-invalid]="false"
+          >
+            <ng-option [value]="item.id" *ngFor="let item of accounts">
+              {{ item.name }}
+            </ng-option>
+          </ng-select>
+        </div>
+        <div class="form-group col-4">
+          <label for="narration">narration</label>
+          <input
+            type="text"
+            id="narration"
+            class="form-control sm"
+            [class.ng-invalid]="false"
+            formControlName="narration"
+          />
+        </div>
+        <div class="form-group col-2">
+          <label for="amount">amount</label>
+          <input
+            type="number"
+            max="9999999"
+            id="amount"
+            class="form-control sm"
+            [class.ng-invalid]="false"
+            formControlName="amount"
+          />
+        </div>
+        <div class="form-group col-2">
+          <label for="debit">debit amount</label>
+          <input
+            type="number"
+            id="debit"
+            class="form-control sm"
+            [class.ng-invalid]="false"
+            disabled
+            [value]="debit"
+          />
+        </div>
+        <div class="form-group col-2">
+          <label for="credit">credit amount</label>
+          <input
+            type="number"
+            id="credit"
+            class="form-control sm"
+            [class.ng-invalid]="false"
+            disabled
+            [value]="credit"
+          />
+        </div>
+      </div>
+      <div class="d-flex justify-content-end pt-3">
+        <button
+          class="btn save_button"
+          [disabled]="
+            amount?.invalid ||
+            account?.invalid ||
+            narration?.invalid ||
+            !vouchar_type?.value
+          "
+          (click)="addTransaction()"
+        >
+          <i class="bi bi-plus-lg"></i> Add Transaction
+        </button>
+      </div>
+    </form>
+  
+    <div class="py-4">
+      <table class="site-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Account Id</th>
+            <th>Account Name</th>
+            <th>Vouchar</th>
+            <th class="col-5">Detail Narration</th>
+            <th>Debit</th>
+            <th>Credit</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of transactions">
+            <td>{{ item.id }}</td>
+            <td>{{ item.account }}</td>
+            <td>{{ item.account_name }}</td>
+            <td>{{ item.vouchar_type[1] }}</td>
+            <td>{{ item.narration }}</td>
+            <td>{{ item.debit }}</td>
+            <td>{{ item.credit }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <div class="d-flex justify-content-end">
+      <div class="d-flex align-center">
+        <button class="button mx-3" (click)="basic.reloadCurrentRoute()">
+          <i class="bi bi-arrow-clockwise"></i>
+          Reload
+        </button>
+        <button
+          class="button"
+          [disabled]="transactions.length < 1"
+          (click)="saveVouchar()"
+        >
+          <i class="bi bi-check2"></i> Save Vouchar
+        </button>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="isComplete">
+    <div class="py-3">
+      <table class="site-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Account Id</th>
+            <th>Account Name</th>
+            <th>Narration</th>
+            <th>Debit</th>
+            <th>Credit</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of transaction_order_res['transactions']">
+            <td>{{ item.id }}</td>
+            <td>{{ item.account }}</td>
+            <td>{{ item.account_name }}</td>
+            <td>{{ item.narration }}</td>
+            <td>{{ item.debit }}</td>
+            <td>{{ item.credit }}</td>
+            <td>{{ item.transaction_date }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="d-flex justify-content-end">
+      <button class="button mx-3" (click)="basic.reloadCurrentRoute()">
+        <i class="bi bi-arrow-clockwise"></i>
+        Reload
+      </button>
+    </div>
+  </ng-container>
+   -->

@@ -32,7 +32,7 @@ export class BasicService {
   // refresh: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   refresh: boolean = true;
   pagination: number = 20;
-  host: string = '127.0.0.1:8000';
+  host: string = '192.168.1.9:8000';
   back: string = 'http://localhost:8000/';
   // host: string = '52.221.4.133';
   // back: string = 'http://52.221.4.133/';

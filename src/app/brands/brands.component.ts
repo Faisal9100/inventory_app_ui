@@ -24,7 +24,7 @@ export interface Product {
 })
 export class BrandsComponent {
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
-  public ip_address="127.0.0.1:8000";
+  public ip_address = '192.168.1.9:8000';
   brands: any[] = [];
   newCategory: any = {};
   modalService: any;
@@ -34,9 +34,13 @@ export class BrandsComponent {
   searchQuery: string = '';
   pageIndex: any = 0;
   selectedCategory: any;
-  productData:any;
+  productData: any;
 
-  constructor(private brandService: BrandService, private http: HttpClient,public productService:ProductService) {}
+  constructor(
+    private brandService: BrandService,
+    private http: HttpClient,
+    public productService: ProductService
+  ) {}
 
   ngOnInit() {
     this.getProducts();
@@ -46,7 +50,6 @@ export class BrandsComponent {
     this.brandService.getProducts().subscribe((data) => {
       this.productData = data.results;
     });
-   
   }
   searchBrand(): void {
     this.pageIndex = 0;
@@ -142,7 +145,7 @@ export class BrandsComponent {
   }
   taskToEdit: any;
 
-  public url = "http://" + this.ip_address +"/inventory/brands/";
+  public url = 'http://' + this.ip_address + '/inventory/brands/';
 
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);

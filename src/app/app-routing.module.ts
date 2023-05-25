@@ -8,7 +8,6 @@ import { CustomerComponent } from './customer/customer.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProductsComponent } from './products/products.component';
 import { ReportComponent } from './report/report.component';
-import { SaleReturnComponent } from './sale-return/sale-return.component';
 import { SupplierComponent } from './supplier/supplier.component';
 import { UnitsComponent } from './units/units.component';
 import { WarehouseComponent } from './warehouse/warehouse.component';
@@ -17,6 +16,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './login/authQuard';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { MainGuard } from './main.guard';
+import { VoucherComponent } from './voucher/voucher.component';
 const routes: Routes = [
   { path: 'sidebar', component: SidebarComponent },
   { path: 'login', component: LoginComponent },
@@ -28,13 +28,13 @@ const routes: Routes = [
   { path: 'purchase', component: AllPurchaseComponent },
   { path: 'categories', component: CategoriesComponent },
   { path: 'report', component: ReportComponent },
-  { path: 'sale-return', component: SaleReturnComponent },
   { path: 'All-sale', component: AllSaleComponent },
   { path: 'warehouse', component: WarehouseComponent },
   { path: 'units', component: UnitsComponent },
   { path: 'customer', component: CustomerComponent },
   { path: 'supplier', component: SupplierComponent },
   { path: 'accounts', component: AccountlayerComponent },
+  { path: 'voucher', component: VoucherComponent },
   { path: 'All-purchase', component: AllPurchaseComponent },
   { path: 'Sale', component: AllSaleComponent },
 ];

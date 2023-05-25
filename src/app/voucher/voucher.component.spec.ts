@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SmsSettingComponent } from './sms-setting.component';
+import { VoucherComponent } from './voucher.component';
 
-describe('SmsSettingComponent', () => {
-  let component: SmsSettingComponent;
-  let fixture: ComponentFixture<SmsSettingComponent>;
+describe('VoucherComponent', () => {
+  let component: VoucherComponent;
+  let fixture: ComponentFixture<VoucherComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SmsSettingComponent ]
+      declarations: [ VoucherComponent ]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(SmsSettingComponent);
+    fixture = TestBed.createComponent(VoucherComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

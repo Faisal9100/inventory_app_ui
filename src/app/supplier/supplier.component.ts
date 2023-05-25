@@ -22,7 +22,7 @@ export interface Supplier {
   styleUrls: ['./supplier.component.css'],
 })
 export class SupplierComponent {
-  ip_address = '127.0.0.1:8000';
+  ip_address = '192.168.1.9:8000';
   supplierToEdit: any;
   pageSize = 10;
   currentPage = 1;
@@ -60,7 +60,6 @@ export class SupplierComponent {
   newsupplier = {
     title: '',
     address: '',
-    balance: '',
     status: '',
     contact: '',
     email: '',
@@ -150,10 +149,6 @@ export class SupplierComponent {
         <input type="text" id="supplierAddress" class="form-control" placeholder="Supplier Address" >
       </div>
       
-      <div class="form-group">
-        <label for="supplierBalance" class="float-start my-2">Balance:</label>
-        <input type="number" id="supplierBalance" class="form-control" placeholder="Supplier Balance">
-      </div>
   
       <div class="form-group">
         <label for="supplierStatus" class="float-start my-2">Status:</label> 
@@ -182,9 +177,6 @@ export class SupplierComponent {
         const supplierAddress = (<HTMLInputElement>(
           document.getElementById('supplierAddress')
         )).value;
-        const supplierBalance = (<HTMLInputElement>(
-          document.getElementById('supplierBalance')
-        )).value;
         const supplierStatus = (<HTMLSelectElement>(
           document.getElementById('supplierStatus')
         )).value;
@@ -210,7 +202,6 @@ export class SupplierComponent {
             this.newsupplier = {
               title: '',
               address: '',
-              balance: '',
               status: '',
               contact: '',
               email: '',
@@ -511,16 +502,15 @@ export class SupplierComponent {
     });
     doc.save('all_suppliers.pdf');
   }
-  p:any;
-  title:any;
+  p: any;
+  title: any;
   Search() {
-  if (this.title == '') {
-    this.ngOnInit();
-  } else {
-    this.suppliers = this.suppliers.filter((res) => {
-      return res.title
-        .match(this.title);
-    });
+    if (this.title == '') {
+      this.ngOnInit();
+    } else {
+      this.suppliers = this.suppliers.filter((res) => {
+        return res.title.match(this.title);
+      });
+    }
   }
-}
 }
