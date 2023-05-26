@@ -386,10 +386,10 @@ export class AllSaleComponent {
     console.log(id);
     for (let row of this.rows) {
       let product = {
-        product: row.product.id,
+        product: row.product,
         quantity: row.quantity,
         amount: row.amount,
-        total: row.quantity * row.amount,
+        price: row.quantity * row.amount,
       };
       await this.postOneStock(product, id);
     }
@@ -398,6 +398,8 @@ export class AllSaleComponent {
 
   postOneStock(product: any, id: any) {
     return new Promise((resolve, reject) => {
+      const productId = product.id;
+      delete product.id;
       this.http
         .post(
           `http://192.168.1.9:8000/inventory/sales/${id}/sale_items/`,
@@ -428,7 +430,7 @@ export class AllSaleComponent {
 
   // <-----------------------code for deleting stock from sale list ------------------------->
 
-  deleteSaleList(stockid: number, stock: number) {
+  deleteSaleList(purchaseId: number, stock: number) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to recover this account!',
@@ -440,8 +442,8 @@ export class AllSaleComponent {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/sales/${this.update_purchase_id}/sale_items/` +
-              stockid +
+            `http://192.168.1.9:8000/inventory/sales/${purchaseId}/sale_items/` +
+              stock +
               '/'
           )
           .subscribe(
@@ -451,8 +453,6 @@ export class AllSaleComponent {
                 'Your product has been deleted.',
                 'success'
               );
-
-              this.getStockList(stock);
             },
             () => {
               Swal.fire(

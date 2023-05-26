@@ -161,7 +161,7 @@
       <br />
       <div class="col-sm">
         <label for="selectedProduct" class="py-2">Products*:</label>
-        <ng-select class="form-ng-select" [(ngModel)]="selectedProduct">
+        <ng-select class="form-ng-select" #prd [(ngModel)]="selectedProduct">
           <ng-option
             class="ng-option"
             *ngFor="let product of productSale"
@@ -184,6 +184,7 @@
             <th>Name</th>
             <th>Quantity</th>
             <th>Amount</th>
+            <th>Price</th>
             <th>Total</th>
             <th>Action</th>
           </tr>
@@ -193,13 +194,14 @@
             class="text-center m-auto justify-content-center"
             *ngFor="let row of rows"
           >
-            <td class="text-center my-3">{{ row.product_name }}</td>
+            <td class="text-center my-3" #prn>{{ row.product_name }}</td>
             <td>
               <input
                 class="form-control"
                 type="number"
                 [(ngModel)]="row.quantity"
                 (input)="updateTotal()"
+                #qq
               />
               <!-- <p>
                 You have total
@@ -218,6 +220,7 @@
                 type="number"
                 [(ngModel)]="row.amount"
                 (input)="updateTotal()"
+                #am
               />
               <p>
                 Custom Amount
@@ -229,6 +232,7 @@
               <input
                 class="form-control"
                 type="number"
+                #pr
                 [(ngModel)]="row.quantity * row.amount"
                 (input)="updateTotal()"
               />

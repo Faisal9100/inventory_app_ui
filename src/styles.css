@@ -10,9 +10,21 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
-.mat-drawer-inner-container {
+/* .mat-drawer-inner-container {
   background-color: black;
-}
+} */
 .swal2-html-container {
   overflow: hidden;
+}
+
+*::-webkit-scrollbar {
+  width: 4px;
+}
+*::-webkit-scrollbar-track {
+  width: 4px;
+  background-color: lightgray;
+}
+*::-webkit-scrollbar-thumb {
+  width: 4px;
+  background-color: gray;
 }
