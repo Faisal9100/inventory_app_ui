@@ -41,6 +41,7 @@ interface Product {
 // Define a row interface to represent a row in the table
 
 interface Row {
+  product_id: any;
   product: Product;
   product_name: string;
   amount: number;
@@ -101,18 +102,22 @@ export class AllSaleComponent {
   discount: number = 0;
   grandTotal: number = 0;
   totalQuantity: number = 0;
+  totalAmount: number = 0;
   remarks: any;
   account_customer: any;
 
   updateTotal() {
     let total = 0;
     let quantityTotal = 0;
+    let amountTotal = 0;
     for (let row of this.rows) {
       total += row.amount * row.quantity;
       quantityTotal += row.quantity;
+      amountTotal += row.amount;
     }
     this.grandTotal = total - this.discount;
     this.totalQuantity = quantityTotal;
+    this.totalAmount = amountTotal;
   }
 
   constructor(
@@ -129,6 +134,7 @@ export class AllSaleComponent {
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
+    this.currentDate = this.getCurrentDate();
   }
 
   ngOnInit(): void {
@@ -137,8 +143,10 @@ export class AllSaleComponent {
     this.getAllPurchase();
   }
   getAllPurchase() {
+    this.isLoading = true;
     this.SaleService.getAllPurchase().subscribe((data) => {
       this.AllPurchaseData = data.results;
+      this.isLoading = false;
     });
   }
 
@@ -243,15 +251,27 @@ export class AllSaleComponent {
       return;
     }
 
+    // Check if the product is already added
+    const isProductAdded = this.rows.some(
+      (row) => row.product_id === this.selectedProduct
+    );
+
+    // If the product is already added, show an error message or perform appropriate actions
+    if (isProductAdded) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Product Already Added.',
+      });
+      return;
+    }
+
     // Find the selected product in the productData array
-    console.log(this.selectedProduct);
-    console.log(this.productSale);
     const selectedProduct = this.productSale.find(
       (p) => p.product_id == this.selectedProduct
     );
 
     // Calculate the total quantity based on the selected product quantity and input quantity
-
     const totalQuantity = selectedProduct ? selectedProduct.quantity : 0;
     const totalAmount = selectedProduct ? selectedProduct.amount : 0;
 
@@ -260,6 +280,7 @@ export class AllSaleComponent {
       console.log('Entered quantity exceeds total quantity');
       return;
     }
+
     // Calculate the total price based on the product price and quantity
     const total = this.amount * this.quantity;
     const amount = 0;
@@ -268,19 +289,21 @@ export class AllSaleComponent {
     const newRow = {
       product: selectedProduct,
       product_name: selectedProduct.product_name,
+      product_id: selectedProduct.product_id,
       amount: amount,
       quantity: this.quantity,
       total: total,
-      totalQuantity: totalQuantity, // Add totalQuantity property
+      totalQuantity: totalQuantity,
       totalAmount: totalAmount,
     };
     this.rows.push(newRow);
-    console.log(newRow);
+
     // Clear the input fields
     this.selectedProduct = '';
   }
 
   // <---------------------- code for Removing product when adding new sale ----------------------------->
+
   removeProduct(index: number) {
     this.rows.splice(index, 1);
     this.updateTotal();
@@ -288,29 +311,6 @@ export class AllSaleComponent {
   i: any;
 
   // <--------------------------------- code for adding Sale ----------------------------------------------->
-
-  // addSale() {
-  //   const payload: any = {
-  //     invoice_no: this.purchaseInvoice,
-  //     date: this.purchaseDate,
-  //     account: this.selectedCustomer,
-  //     warehouse: this.selectedWarehouse,
-  //     amount: this.grandTotal,
-  //     quantity: this.totalQuantity,
-  //     remarks: this.remarks,
-  //     account_customer: this.selectedCustomer,
-  //   };
-
-  //   this.http
-  //     .post<{ id: number }>('http://192.168.1.9:8000/inventory/sales/', payload)
-  //     .subscribe((response) => {
-  //       console.log(response);
-  //       const purchaseId = response.id;
-  //       this.addStock(purchaseId);
-  //       this.getAllPurchase();
-  //     });
-  //   this.displayedQuantity = this.quantity;
-  // }
 
   addSale() {
     const payload: any = {
@@ -332,6 +332,7 @@ export class AllSaleComponent {
           this.addStock(purchaseId);
           this.getAllPurchase();
           this.addProduct();
+          this.handleQuantityChange(this.productData);
         },
         (error) => {
           console.error('An error occurred:', error);
@@ -386,10 +387,12 @@ export class AllSaleComponent {
     console.log(id);
     for (let row of this.rows) {
       let product = {
-        product: row.product,
+        product: row.product_id,
         quantity: row.quantity,
-        amount: row.amount,
-        price: row.quantity * row.amount,
+        amount: row.quantity * row.amount,
+        price:  row.amount,
+        product_id: row.product_id,
+        product_name: row.product_name,
       };
       await this.postOneStock(product, id);
     }
@@ -398,8 +401,6 @@ export class AllSaleComponent {
 
   postOneStock(product: any, id: any) {
     return new Promise((resolve, reject) => {
-      const productId = product.id;
-      delete product.id;
       this.http
         .post(
           `http://192.168.1.9:8000/inventory/sales/${id}/sale_items/`,
@@ -413,7 +414,6 @@ export class AllSaleComponent {
         );
     });
   }
-
   warehouse: any;
 
   // <---------------------------------- code for search ----------------------------------------->
@@ -428,9 +428,9 @@ export class AllSaleComponent {
     }
   }
 
-  // <-----------------------code for deleting stock from sale list ------------------------->
-
-  deleteSaleList(purchaseId: number, stock: number) {
+  // <----------------------------- code for deleting stock from sale list ------------------------------------------->
+stock_list_id:any;
+  deleteSaleList(purchaseId: number) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to recover this account!',
@@ -442,9 +442,7 @@ export class AllSaleComponent {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/sales/${purchaseId}/sale_items/` +
-              stock +
-              '/'
+            `http://192.168.1.9:8000/inventory/sales/${purchaseId}/sale_items/${this.stock_list_id}` 
           )
           .subscribe(
             () => {
@@ -466,7 +464,7 @@ export class AllSaleComponent {
     });
   }
 
-  // <---------------------------Model for adding another new stock in sale list ------------------------>
+  // <------------------------------ MODEL FOR ADDING NEW STOCK IN SALE LIST ----------------------------------->
 
   openAddProductModal(content3: any, item: any) {
     this.update_purchase_id = item.id;
@@ -478,12 +476,13 @@ export class AllSaleComponent {
   }
   update_purchase_id: any;
 
-  // <--------------------- code for adding new stock in sale list--------------------------->
+  // <-------------------------- CODE FOR UPDATING STOCK IN SALE LIST---------------------------------------------->
 
   postUpdateStock(product: any, q: any, p: any, date: any) {
     if (product && product.id) {
+      const currentDate = new Date().toISOString().split('T')[0];
       const requestBody = {
-        date: date.value,
+        date: currentDate,
         product: product.value,
         quantity: q.value,
         price: p.value,
@@ -507,12 +506,68 @@ export class AllSaleComponent {
       console.log('Invalid product data');
     }
   }
+
+  //  <--------------------------- CODE FOR GETTING TOTAL QUANTITY ------------------------------------>
+
   getTotalQuantity(row: any): number {
     const selectedProduct = this.productSale.find(
       (product) => product.id === row.id
     );
     return selectedProduct ? selectedProduct.quantity : 0;
+    return selectedProduct ? selectedProduct.amount : 0;
   }
+
+  //  <--------------------------- CODE FOR GETTING TOTOL AMOUNT ------------------------------------>
+
+  getTotalAmount(row: any): number {
+    const selectedProduct = this.productSale.find(
+      (product) => product.id === row.id
+    );
+
+    return selectedProduct ? selectedProduct.amount : 0;
+  }
+
+  //  <--------------------------- CODE FOR GETTING CURRENT DATE ------------------------------------>
+
+  currentDate?: string;
+  getCurrentDate(): string {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = ('0' + (today.getMonth() + 1)).slice(-2);
+    const day = ('0' + today.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
+  }
+
+  //  <--------------------------- CODE FOR CHECKING QUANTITY------------------------------------>
+
+  handleQuantityChange(row: any) {
+    if (row.quantity > row.totalQuantity) {
+      // Handle the case where the entered quantity exceeds the total quantity
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Quantity cannot exceed available quantity.',
+      });
+      // Reset the quantity to the previous valid value or any desired action
+      row.quantity = row.totalQuantity;
+    } else {
+      this.updateTotal();
+    }
+  }
+
+//  <--------------------------- CODE FOR CHECKING PRICE------------------------------------>
+
+  handlePriceChange(row: any) {
+    if (row.amount <= row.product.price) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Quantity cannot exceed available quantity.',
+      });
+      row.amount = row.product.price; // Reset the amount to the available amount
+    }
+  }
+  
 }
 
-//  <---------------------------sale all work end here------------------------------------>
+//  <---------------------------SALE ALL WORK END HERE------------------------------------>

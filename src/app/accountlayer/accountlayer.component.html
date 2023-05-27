@@ -1,5 +1,4 @@
 <h1>Charts Of Accounts</h1>
-
 <div class="form-group row mt-3">
   <div class="col">
     <label class="form-label">Main Layer:</label>
@@ -56,6 +55,7 @@
     </button>
   </div>
   <!-- addLayer_one_new_account() -->
+
   <div class="col">
     <label class="form-label">Layer 2:</label>
     <select name="layer2" class="form-select" [(ngModel)]="selectedLayer2">
@@ -81,6 +81,13 @@
       (click)="DeleteLayer_two_new_account(item)"
     >
       <i class="bi bi-trash3-fill"></i>
+    </button>
+    <button
+      class="btn btn-primary mt-2 float-end"
+      [disabled]="!selectedLayer2"
+      (click)="addAccount()"
+    >
+      <i class="bi bi-plus-circle-fill"></i> Add Account
     </button>
   </div>
 </div>
@@ -113,7 +120,7 @@
         <td>{{ account.id }}</td>
         <td>{{ account.title }}</td>
         <td>{{ account.contact }}</td>
-
+      
         <td>
           <button
             class="btn btn-outline-success"

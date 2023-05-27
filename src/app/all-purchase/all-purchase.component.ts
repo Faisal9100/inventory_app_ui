@@ -407,26 +407,7 @@ export class AllPurchaseComponent implements OnInit {
         );
     });
   }
-  // postUpdateStock(product: any, q: any, p: any, date: any) {
-  //   const requestBody = {
-  //     date: date.value,
-  //     product: Number(product.id), // Use the appropriate primary key field here
-  //     quantity: q.value,
-  //     price: p.value,
-  //     amount: p.value * q.value,
-  //   };
 
-  //   console.log(requestBody);
-
-  //   this.http
-  //     .post(
-  //       `http://192.168.1.9:8000/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
-  //       requestBody
-  //     )
-  //     .subscribe((response) => {
-  //       console.log(response);
-  //     });
-  // }
 
   //   <-----------------------------adding another product-------------------------------------------->
 

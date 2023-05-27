@@ -1,5 +1,12 @@
 <h1 class="fs-2">All Sale</h1>
-
+<div
+  *ngIf="isLoading"
+  class="spinner-border text-primary my-1 spinneer"
+  role="status"
+>
+  <span class="visually-hidden">Loading...</span>
+</div>
+<br />
 <div class="add-categories">
   <div class="input-group mb-3">
     <input
@@ -68,9 +75,6 @@
           >
             <i class="bi bi-eye-fill"></i>
           </button>
-          <!-- <button class="btn btn-outline-primary mx-2" (click)="updatePurchase(item,id)">
-            <i class="bi bi-pencil-square"></i>
-          </button> -->
           <button
             type="button"
             class="btn btn-outline-dark"
@@ -106,18 +110,6 @@
   <div class="modal-body">
     <div class="update_form">
       <div class="form-group row">
-        <!-- <div class="col-sm">
-          <label for="purchaseInvoice" class="float-start my-2"
-            >Invoice No:</label
-          >
-          <input
-            type="number"
-            id="purchaseInvoice"
-            class="form-control"
-            placeholder="Invoice Number"
-            [(ngModel)]="purchaseInvoice"
-          />
-        </div> -->
         <div class="col-sm">
           <label for="supplierContact" class="py-2">Customers*:</label>
           <ng-select
@@ -183,7 +175,7 @@
           <tr>
             <th>Name</th>
             <th>Quantity</th>
-            <th>Amount</th>
+
             <th>Price</th>
             <th>Total</th>
             <th>Action</th>
@@ -201,17 +193,19 @@
                 type="number"
                 [(ngModel)]="row.quantity"
                 (input)="updateTotal()"
-                #qq
+                (change)="handleQuantityChange(row)"
+                [ngClass]="{ 'is-invalid': row.quantity > row.totalQuantity }"
               />
-              <!-- <p>
-                You have total
-                <span style="color: tomato">{{ product.quantity | number }}</span>
-                Quantity in Stock
-              </p> -->
               <p>
-                Available Quantity
+                Available Quantity:
                 <span style="color: tomato"> {{ row.totalQuantity }}</span>
               </p>
+              <div
+                *ngIf="row.quantity > row.totalQuantity"
+                class="invalid-feedback"
+              >
+                Quantity cannot exceed available quantity.
+              </div>
             </td>
 
             <td>
@@ -220,14 +214,22 @@
                 type="number"
                 [(ngModel)]="row.amount"
                 (input)="updateTotal()"
+                (change)="handlePriceChange(row)"
+                [ngClass]="{ 'is-invalid': row.amount <= row.product.price }"
                 #am
               />
-              <p>
-                Custom Amount
-                <span style="color: tomato"> {{ row.totalAmount }}</span>
-              
+              <p class="">
+                Default Purchase Price:
+                <span style="color: tomato"> {{ row.product.price }}</span>
               </p>
+              <div
+                *ngIf="row.amount <= row.product.price"
+                class="invalid-feedback"
+              >
+                Price must not be equal or less than Default Purchase Price.
+              </div>
             </td>
+
             <td>
               <input
                 class="form-control"
@@ -237,6 +239,7 @@
                 (input)="updateTotal()"
               />
             </td>
+
             <td>
               <button class="btn btn-outline-danger" (click)="removeProduct(i)">
                 Remove
@@ -297,12 +300,6 @@
               readonly
             />
           </div>
-          <!-- <label class="my-1">Quantity</label>
-          <div class="input-group col-sm">
-            <span class="input-group-text">$</span>
-            <input class="form-control" type="number" [(ngModel)]="totalQuantity" />
-
-          </div> -->
         </div>
       </div>
     </div>
@@ -319,6 +316,8 @@
     </button>
   </div>
 </ng-template>
+
+<!-- <---------------------------------------- code for displaying sale product list -------------------------------------->
 
 <ng-template #content2 let-c="close" let-d="dismiss">
   <div class="modal-header">
@@ -363,7 +362,7 @@
           <td>
             <button
               class="btn btn-outline-danger"
-              (click)="deleteSaleList(stock.id, stock)"
+              (click)="deleteSaleList(stock.id)"
             >
               <i class="bi bi-trash3-fill"></i>
             </button>
@@ -375,6 +374,9 @@
 
   <div class="modal-footer"></div>
 </ng-template>
+
+<!-- <---------------------------------------- code for Adding aditional sale product -------------------------------------->
+
 <ng-template #content3 let-c="close" let-d="dismiss">
   <!-- Modal content -->
   <div class="modal-header">
@@ -436,7 +438,12 @@
 
       <label for="" class="p-2">date</label>
 
-      <input type="date" class="form-control" #update_stock_date />
+      <input
+        type="date"
+        class="form-control"
+        #update_stock_date
+        [value]="currentDate"
+      />
     </div>
   </div>
 
