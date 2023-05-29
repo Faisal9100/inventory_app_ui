@@ -49,6 +49,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { LoginComponent } from './login/login.component';
 import { VoucherComponent } from './voucher/voucher.component';
+import { TransactionsComponent } from './transactions/transactions.component';
 // import { AuthQuardGuard } from './auth-quard.guard';
 
 @NgModule({
@@ -72,6 +73,7 @@ import { VoucherComponent } from './voucher/voucher.component';
     AccountlayerComponent,
     LoginComponent,
     VoucherComponent,
+    TransactionsComponent,
   ],
   imports: [
     BrowserAnimationsModule,

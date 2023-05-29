@@ -17,6 +17,7 @@ import { AuthGuard } from './login/authQuard';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { MainGuard } from './main.guard';
 import { VoucherComponent } from './voucher/voucher.component';
+import { TransactionsComponent } from './transactions/transactions.component';
 const routes: Routes = [
   { path: 'sidebar', component: SidebarComponent },
   { path: 'login', component: LoginComponent },
@@ -37,6 +38,7 @@ const routes: Routes = [
   { path: 'voucher', component: VoucherComponent },
   { path: 'All-purchase', component: AllPurchaseComponent },
   { path: 'Sale', component: AllSaleComponent },
+  { path: 'transaction', component: TransactionsComponent },
 ];
 
 @NgModule({

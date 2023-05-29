@@ -1,0 +1,176 @@
+<div class="d-flex my-2 justify-content-between">
+  <div class="h4">Account Transaction History</div>
+</div>
+
+<form [formGroup]="form" (submit)="submitForm()">
+  <div class="row">
+    <div class="col-3">
+      <label for="from">From Date</label>
+      <input
+        type="date"
+        id="from"
+        class="form-control sm"
+        formControlName="fromDate"
+      />
+    </div>
+    <div class="col-3">
+      <label for="to">To Date</label>
+      <input
+        type="date"
+        id="to"
+        class="form-control sm"
+        formControlName="toDate"
+      />
+    </div>
+    <div class="col-4">
+      <label>Ledger Of</label>
+      <ng-select class="sm" formControlName="accountId">
+        <ng-option *ngFor="let account of accountData" [value]="account.id">
+          {{ account.title }}
+        </ng-option>
+      </ng-select>
+    </div>
+    <div class="col">
+      <label class="invisible">Reload</label>
+      <button type="submit" class="btn btn-dark button sm d-block">
+        <i class="bi bi-arrow-clockwise"></i> add
+      </button>
+    </div>
+  </div>
+</form>
+<br /><br />
+<table class="table table-striped text-center table-bordered table-hover">
+  <thead class="table-head">
+    <tr>
+      <th>#</th>
+      <th>Trans Date</th>
+      <th>Transaction_Order</th>
+      <th>Voucher_Type</th>
+      <th>Description</th>
+      <th>Debit</th>
+      <th>Credit</th>
+      <th>Balance</th>
+      <th>Options</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="data_table_row" *ngFor="let item of transactions">
+      <td>{{ item.id }}</td>
+      <td>{{ item.transaction_date }}</td>
+      <td>{{ item.transaction_order }}</td>
+      <td>{{ item.vocuher_type }}</td>
+      <td>{{ item.description }}</td>
+      <td>{{ item.debit }}</td>
+      <td>{{ item.credit }}</td>
+      <td></td>
+      <td>
+        <button
+          class="btn btn-dark"
+          (click)="open(content3)"
+          (click)="get_Stock_trans_details(item.transaction_order)"
+        >
+          View
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- <---------------------------  Model For Showing Stock And transaction Details -------------------------->
+
+<ng-template #content3 let-c="close" let-d="dismiss">
+  <!-- Modal content -->
+  <div class="modal-header">
+    <h4 class="modal-title text-center" id="modal-basic-title"></h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="row" >
+      <div class="item mb-3 col-4">
+        <div class="title fw-bold">Transaction Id</div>
+        <div class="value">{{transactionData?.transaction_id}}</div>
+      </div>
+      <div class="item mb-3 col-4">
+        <div class="title fw-bold">Transaction Date</div>
+        <div class="value">{{ transactionData?.transaction_date }}</div>
+      </div>
+      <div class="item mb-3 col-4">
+        <div class="title fw-bold">Vouchar Type</div>
+        <div class="value">{{ transactionData?.vocuher_type }}</div>
+      </div>
+      <div class="item mb-3 col-4">
+        <div class="title fw-bold">Created</div>
+        <div class="value">{{ transactionData?.created }}</div>
+      </div>
+      <div class="item mb-3 col-4">
+        <div class="title fw-bold">Last Changes</div>
+        <div class="value">{{ transactionData?.last_changes}}</div>
+      </div>
+    </div>
+
+    <!-- ------------------------------------- Displaying Stocks ------------------------------------- -->
+
+    <ng-container>
+      <ng-container>
+        <ng-container>
+          <hr />
+          <div class="h4">Stocks</div>
+          <table class="table table-striped">
+            <thead class="table-head">
+              <tr>
+                <th>Product_Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let stock of stocks">
+                <td>{{ stock.product_name }}</td>
+                <td>{{ stock.price }}</td>
+                <td>{{ stock.quantity }}</td>
+                <td>{{ stock.amount }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <hr />
+        </ng-container>
+      </ng-container>
+    </ng-container>
+
+    <!--------------------------------------- Displaying Transactions ------------------------------------------>
+
+    <div class="h4">Transactions</div>
+    <table class="table text-center">
+      <thead class="table-head">
+        <tr>
+          <th>#</th>
+          <th>Account Name</th>
+          <th>Description</th>
+          <th>Debit</th>
+          <th>Credit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of transaction_data">
+          <td>{{ item.id }}</td>
+          <td>{{ item.account_name }}</td>
+          <td>{{ item.description }}</td>
+          <td>{{ item.debit }}</td>
+          <td>{{ item.credit }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="c('close')">
+      Close
+    </button>
+  </div>
+</ng-template>
