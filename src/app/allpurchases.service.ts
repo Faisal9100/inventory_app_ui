@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 })
 export class AllpurchasesService {
   constructor(public http: HttpClient) {}
-  // public ip_address='192.168.1.9:8000'
-  ip_address = '192.168.1.9:8000';
+  // public ip_address='127.0.0.1:8000'
+  ip_address = '127.0.0.1:8000';
   public supplier_url = 'http://' + this.ip_address + '/inventory/Suppliers/';
 
   public url = 'http://' + this.ip_address + '/inventory/stocks_purchase';
@@ -18,7 +18,7 @@ export class AllpurchasesService {
     this.ip_address +
     'inventory/stocks_purchase/${purchaseId}/stocks';
 
-  public warehouse_url = 'http://192.168.1.9:8000/inventory/warehouses/';
+  public warehouse_url = 'http://127.0.0.1:8000/inventory/warehouses/';
 
   public product_url = 'http://' + this.ip_address + '/inventory/products/';
 

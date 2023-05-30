@@ -1,0 +1,232 @@
+<div class="d-flex my-2 justify-content-between">
+    <div class="h4">Account Transaction History</div>
+  </div>
+  
+  <form [formGroup]="form">
+    <div class="row">
+      <div class="form-group col-3">
+        <label for="from">From Date</label>
+        <input
+          type="date"
+          id="from"
+          class="form-control sm"
+          formControlName="from"
+          [class.ng-invalid]="false"
+        />
+        <!-- [value]="date | date : 'yyyy-MM-dd'" -->
+      </div>
+      <div class="form-group col-3">
+        <label for="to">To Date</label>
+        <input
+          type="date"
+          id="to"
+          class="form-control sm"
+          formControlName="to"
+          [class.ng-invalid]="false"
+        />
+      </div>
+      <div class="form-group col-4">
+        <label>Ledger Of</label>
+        <ng-select
+          class="sm"
+          formControlName="account"
+          [class.ng-invalid]="false"
+          (change)="accountChange()"
+        >
+          <ng-option>
+            
+          </ng-option>
+        </ng-select>
+      </div>
+      <div class="form-group col">
+        <label class="invisible">Reload</label>
+        <button class="button sm d-block" (click)="accountChange()">
+          <i class="bi bi-arrow-clockwise"></i>Load
+        </button>
+      </div>
+    </div>
+  </form>
+  
+  <!-- ---------------------------- Result ---------------------------- -->
+  <div>
+    <div class="d-flex justify-content-between my-4">
+      <div class="form-group show-group">
+        <label for="show">Display</label>
+        <select
+          #page
+          id="show"
+          class="show-input"
+          >
+          <!-- (change)="api.changeSize(page.value, name, name)" -->
+          <option value="1" [selected]="basic.pagination == 1">1</option>
+          <option value="5" [selected]="basic.pagination == 5">5</option>
+          <option value="10" [selected]="basic.pagination == 10">10</option>
+          <option value="20" [selected]="basic.pagination == 20">20</option>
+          <option value="50" [selected]="basic.pagination == 50">50</option>
+          <option value="100" [selected]="basic.pagination == 100">100</option>
+        </select>
+        {{ title }}
+      </div>
+    </div>
+    <table class="site-table">
+      <thead>
+        <tr>
+          <!-- <th *ngFor="let item of headers">{{ item }}</th> -->
+          <th>#</th>
+          <th>Trans Date</th>
+          <th>Trans Id</th>
+          <th>Type</th>
+          <th class="col-5">Detail</th>
+          <th>Debit</th>
+          <th>Credit</th>
+          <th>Balance</th>
+          <th>Options</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          
+          class="data_table_row"
+        >
+          <td *ngFor="let name of titles">{{ transaction[name] }}</td>
+          <td></td>
+          <td>
+            <button
+              class="btn save_button"
+              data-bs-toggle="modal"
+              data-bs-target="#transaction_modal"
+              (click)="getTransaction(transaction.transaction_order)"
+            >
+              View
+            </button>
+          </td>
+        </tr>
+      </tbody>
+      <thead>
+        <tr>
+          <th colspan="5" class="text-center">Total</th>
+          <th>{{ _account?.debit }}</th>
+          <th>{{ _account?.credit }}</th>
+          <th>{{ _account?.balance }}</th>
+          <th></th>
+        </tr>
+      </thead>
+    </table>
+  
+    <!-- <data-footer [name]="name" [search]="null"></data-footer> -->
+  </div>
+  
+  <!-- --------------------------------- Transaction Modal --------------------------------- -->
+  <div class="modal fade" id="transaction_modal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Account Genteral Ledger Detail
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="item mb-3 col-4">
+              <div class="title fw-bold">Transaction Id</div>
+              <div class="value">{{ transaction?.id }}</div>
+            </div>
+            <div class="item mb-3 col-4">
+              <div class="title fw-bold">Transaction Date</div>
+              <div class="value">{{ transaction?.transaction_date }}</div>
+            </div>
+            <div class="item mb-3 col-4">
+              <div class="title fw-bold">Vouchar Type</div>
+              <div class="value">{{ transaction?.vouchar_type_name }}</div>
+            </div>
+            <div class="item mb-3 col-4">
+              <div class="title fw-bold">Created</div>
+              <div class="value">{{ transaction?.created }}</div>
+            </div>
+            <div class="item mb-3 col-4">
+              <div class="title fw-bold">Last Changes</div>
+              <div class="value">{{ transaction?.updated }}</div>
+            </div>
+          </div>
+  
+          <!-- ------------------------------------- Stocks ------------------------------------- -->
+          <ng-container *ngIf="transaction?.vouchar_type == 5">
+            <ng-container *ngFor="let item of transaction?.transactions">
+              <ng-container *ngIf="item.stock_purchase?.stocks.length">
+                <hr />
+                <div class="h4">Stocks</div>
+                <table class="site-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Product</th>
+                      <th>Rate $</th>
+                      <th>Qty (kg)</th>
+                      <th>Amount $</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let stock of item.stock_purchase.stocks">
+                      <td>{{ stock.id }}</td>
+                      <td>{{ stock.product_name }}</td>
+                      <td>{{ stock.rate }}</td>
+                      <td>{{ stock.qty }}</td>
+                      <td>{{ stock.amount }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <hr />
+              </ng-container>
+            </ng-container>
+          </ng-container>
+          <!-- ------------------------------------- Stocks ------------------------------------- -->
+          <div class="h4">Transactions</div>
+          <table class="site-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Account</th>
+                <th>Narration</th>
+                <th>Debit</th>
+                <th>Credit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of transaction?.transactions">
+                <td>{{ item.id }}</td>
+                <td>{{ item.account_name }}</td>
+                <td>{{ item.narration }}</td>
+                <td>{{ item.debit }}</td>
+                <td>{{ item.credit }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn cancel_button"
+            data-bs-dismiss="modal"
+            id="transaction_order_modal_close_button"
+          >
+            Close
+          </button>
+        </div>
+        <div class="simple_loader" *ngIf="detail_loader | async">
+          <div class="lds-ring">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- --------------------------------- Transaction Modal --------------------------------- -->
+  

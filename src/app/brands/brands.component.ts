@@ -24,7 +24,7 @@ export interface Product {
 })
 export class BrandsComponent {
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
-  public ip_address = '192.168.1.9:8000';
+  public ip_address = '127.0.0.1:8000';
   brands: any[] = [];
   newCategory: any = {};
   modalService: any;
@@ -74,6 +74,7 @@ export class BrandsComponent {
     this.getBrand(pageIndex, pageSize);
   }
 
+
   addBrand() {
     Swal.fire({
       title: 'Add New Brand',
@@ -84,29 +85,44 @@ export class BrandsComponent {
       showLoaderOnConfirm: true,
       preConfirm: (name) => {
         return new Promise((resolve, reject) => {
-          const newCategory = { name: name };
-          this.brandService.addBrand(newCategory).subscribe(
-            (response) => {
-              resolve(response);
-              this.getBrand(this.pageIndex, this.pageSize);
-            },
-            (error) => {
-              reject(error);
-            }
-          );
+          if (!name) {
+            // Check if Brand name is empty
+            reject('Brand name cannot be empty.'); // Reject the promise with an error message
+          } else {
+            const newCategory = { name: name };
+            this.brandService.addBrand(newCategory).subscribe(
+              (response) => {
+                resolve(response);
+                this.getBrand(this.pageIndex, this.pageSize);
+              },
+              (error) => {
+                reject(error);
+              }
+            );
+          }
         });
       },
-    }).then((result) => {
-      if (result.isConfirmed) {
+    })
+      .then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Brand Added!',
+            text: `The Brand has been added.`,
+            showConfirmButton: true,
+            timer: 1500,
+          });
+        }
+      })
+      .catch((error) => {
+        // Catch any error from the promise rejection
         Swal.fire({
-          icon: 'success',
-          title: 'Category Added!',
-          text: `The brand has been added.`,
+          icon: 'error',
+          title: 'Error',
+          text: error, // Display the error message
           showConfirmButton: true,
-          timer: 1500,
         });
-      }
-    });
+      });
   }
 
   deleteBrand(categoryId: string) {

@@ -9,4 +9,15 @@ export class AppComponent {
   title = 'inventery-app';
 
   isLoggedIn = false;
+  showSubMenu: boolean = false;
+
+  toggleSubMenu() {
+    this.showSubMenu = !this.showSubMenu;
+    
+  }
+  loginFormVisible: boolean = true;
+  
+  showLoginForm(): void {
+    this.loginFormVisible = false;
+  }
 }

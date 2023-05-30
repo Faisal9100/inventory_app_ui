@@ -125,7 +125,7 @@ export class AllPurchaseComponent implements OnInit {
     this.getProducts();
     this.getAllPurchaseData();
   }
-  ip_address = '192.168.1.9:8000';
+  ip_address = '127.0.0.1:8000';
   stocks: any;
 
   //  __code for getting AllPurchase__
@@ -146,7 +146,7 @@ export class AllPurchaseComponent implements OnInit {
   getStockList(id: number) {
     this.isLoading = true; // Set isLoading to true
     this.http
-      .get(`http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`)
+      .get(`http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`)
       .subscribe((response: any) => {
         this.stocks = response;
         this.isLoading = false; // Set isLoading to true
@@ -167,7 +167,7 @@ export class AllPurchaseComponent implements OnInit {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/stocks_purchase/${purchasedId}/stocks/` +
+            `http://127.0.0.1:8000/inventory/stocks_purchase/${purchasedId}/stocks/` +
               stockid +
               '/'
           )
@@ -313,7 +313,7 @@ export class AllPurchaseComponent implements OnInit {
       if (result.isConfirmed) {
         this.http
           .delete(
-            'http://192.168.1.9:8000/inventory/stocks_purchase/' +
+            'http://127.0.0.1:8000/inventory/stocks_purchase/' +
               purchaseId +
               '/'
           )
@@ -354,7 +354,7 @@ export class AllPurchaseComponent implements OnInit {
 
     this.http
       .post<{ id: number }>(
-        'http://192.168.1.9:8000/inventory/stocks_purchase/',
+        'http://127.0.0.1:8000/inventory/stocks_purchase/',
         payload
       )
       .subscribe((response) => {
@@ -396,7 +396,7 @@ export class AllPurchaseComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`,
+          `http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`,
           product
         )
         .subscribe(
@@ -426,7 +426,7 @@ export class AllPurchaseComponent implements OnInit {
 
       this.http
         .post(
-          `http://192.168.1.9:8000/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
+          `http://127.0.0.1:8000/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
           requestBody
         )
         .subscribe((response) => {
@@ -457,7 +457,7 @@ export class AllPurchaseComponent implements OnInit {
   }
   getStock(id: any) {
     return this.http.get(
-      `http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`
+      `http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`
     );
   }
   openStockModal(productId: any) {

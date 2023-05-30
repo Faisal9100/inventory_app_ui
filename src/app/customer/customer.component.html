@@ -30,21 +30,21 @@
   <table class="table table-striped text-center table-bordered table-hover">
     <thead class="table-head">
       <tr>
-        <th>S.N</th>
-        <th>Title</th>
-        <th>Address</th>
-        <th>Balance</th>
-        <th>Status</th>
-        <th>Email</th>
-        <th>Contact</th>
-        <th>Action</th>
+        <th style="width: 25%">S.N</th>
+        <th style="width: 25%">Title</th>
+        <th style="width: 25%">Address</th>
+        <th style="width: 25%">Balance</th>
+        <th style="width: 25%">Status</th>
+        <th style="width: 25%">Email</th>
+        <th style="width: 25%">Contact</th>
+        <th style="width: 25%">Action</th>
       </tr>
     </thead>
     <tbody>
       <tr
         *ngFor="
           let supplier of suppliers
-          | paginate : { itemsPerPage: 4, currentPage: p};
+            | paginate : { itemsPerPage: 4, currentPage: p }
         "
       >
         <td>{{ supplier.id }}</td>
@@ -69,7 +69,7 @@
         <td>{{ supplier.contact }}</td>
         <td>
           <button
-            class="btn btn-outline-primary mx-2"
+            class="btn btn-outline-primary mx-2 my-1"
             (click)="openUpdateModal(supplier)"
           >
             <i class="bi bi-pencil-square"></i>
@@ -85,7 +85,7 @@
     </tbody>
   </table>
   <pagination-controls
-  class="my-pagination"
-  (pageChange)="p = $event"
-></pagination-controls>
+    class="my-pagination"
+    (pageChange)="p = $event"
+  ></pagination-controls>
 </div>

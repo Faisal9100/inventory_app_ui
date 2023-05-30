@@ -11,8 +11,8 @@ export interface Account {
   balance: number;
   status: string;
   contact: number;
-  credit:number;
-  debit:number;
+  credit: number;
+  debit: number;
   email: string;
 }
 
@@ -23,7 +23,7 @@ export interface Account {
 })
 export class AccountlayerComponent implements OnInit {
   selectedMainLayer?: string;
-  ip_address = '192.168.1.9:8000';
+  ip_address = '127.0.0.1:8000';
 
   public create_account_url =
     'http://' + this.ip_address + '/inventory/layer2s/';
@@ -75,8 +75,8 @@ export class AccountlayerComponent implements OnInit {
   newAccount = {
     title: '',
     address: '',
-   credit:'',
-   debit:'',
+    credit: '',
+    debit: '',
     status: '',
     contact: '',
     email: '',
@@ -87,8 +87,8 @@ export class AccountlayerComponent implements OnInit {
     title: '',
     address: '',
     status: '',
-    credit:0,
-    debit:0,
+    credit: 0,
+    debit: 0,
     balance: 0,
     contact: 0,
     email: '',
@@ -168,7 +168,6 @@ export class AccountlayerComponent implements OnInit {
       console.log(data);
     });
   }
- 
 
   // __code for getting Account Data__
 
@@ -265,7 +264,7 @@ export class AccountlayerComponent implements OnInit {
         const accountAddress = (<HTMLInputElement>(
           document.getElementById('accountAddress')
         )).value;
-        
+
         const accountStatus = (<HTMLSelectElement>(
           document.getElementById('accountStatus')
         )).value;
@@ -281,10 +280,10 @@ export class AccountlayerComponent implements OnInit {
         } else {
           const newaccount = {
             title: accountTitle,
-            address:accountAddress,
-            status:accountStatus,
-            contact:accountContact,
-            email:accountEmail
+            address: accountAddress,
+            status: accountStatus,
+            contact: accountContact,
+            email: accountEmail,
           };
           this.http
             .post<Account>(
@@ -295,8 +294,8 @@ export class AccountlayerComponent implements OnInit {
               this.newAccount = {
                 title: '',
                 address: '',
-                credit:'',
-                debit:'',
+                credit: '',
+                debit: '',
                 status: '',
                 contact: '',
                 email: '',
@@ -383,13 +382,13 @@ export class AccountlayerComponent implements OnInit {
           document.getElementById('accountAddress')
         )).value;
         const accountBalance = (<HTMLInputElement>(
-          document.getElementById('accountBalance')
+          document.getElementById('supplierBalance')
         )).value;
         const accountCredit = (<HTMLInputElement>(
-          document.getElementById('accountCredit')
+          document.getElementById('supplierCredit')
         )).value;
         const accountDebit = (<HTMLInputElement>(
-          document.getElementById('accountDebit')
+          document.getElementById('supplierDedit')
         )).value;
         const accountStatus = (<HTMLSelectElement>(
           document.getElementById('accountStatus')
@@ -406,10 +405,10 @@ export class AccountlayerComponent implements OnInit {
         } else {
           const updatedAccount = {
             title: accountTitle,
-            // address:accountAddress,
-            // status:accountStatus,
-            // contact:accountContact,
-            // email:accountEmail
+            address:accountAddress,
+            status:accountStatus,
+            contact:accountContact,
+            email:accountEmail
           };
           this.http
             .put<Account>(`${this.account_url}${account.id}/`, updatedAccount)
@@ -427,10 +426,7 @@ export class AccountlayerComponent implements OnInit {
     });
   }
 
-
   // <------------------------------------ code for print account Details ---------------------------------------->
-
-
 
   generatePDF() {
     const columns2 = { title: 'All Accounts list' };
@@ -498,7 +494,7 @@ export class AccountlayerComponent implements OnInit {
           this.http
             // `${this.url_layer1}?main_layer=${selectedMainLayer}`
             .post<Account>(
-              `http://192.168.1.9:8000/inventory/layer1s/?main_layer=${selectedMainLayer}`,
+              `http://127.0.0.1:8000/inventory/layer1s/?main_layer=${selectedMainLayer}`,
               newLayeraccount
             )
             .subscribe(() => {
@@ -523,7 +519,7 @@ export class AccountlayerComponent implements OnInit {
       preConfirm: () => {
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
+            `http://127.0.0.1:8000/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
           )
           .subscribe(() => {
             this.getAccountsData();
@@ -558,7 +554,7 @@ export class AccountlayerComponent implements OnInit {
           this.http
             // `${this.url_layer1}?main_layer=${selectedMainLayer}`
             .post<Account>(
-              `http://192.168.1.9:8000/inventory/layer1s/${selectedLayer2}/layer2s/`,
+              `http://127.0.0.1:8000/inventory/layer1s/${selectedLayer2}/layer2s/`,
               newLayeraccount
             )
             .subscribe(() => {
@@ -574,7 +570,7 @@ export class AccountlayerComponent implements OnInit {
       },
     });
   }
-  DeleteLayer_two_new_account( accountId: number) {
+  DeleteLayer_two_new_account(accountId: number) {
     Swal.fire({
       title: 'Delete Account',
       text: 'Are you sure you want to delete this account?',
@@ -583,7 +579,7 @@ export class AccountlayerComponent implements OnInit {
       preConfirm: () => {
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/layer1s/${this.selectedLayer1}/layer2s/${accountId}`
+            `http://127.0.0.1:8000/inventory/layer1s/${this.selectedLayer1}/layer2s/${accountId}`
           )
           .subscribe(() => {
             this.getAccountsData();
@@ -606,7 +602,7 @@ export class AccountlayerComponent implements OnInit {
   //       const updatedName = (<HTMLInputElement>(
   //         document.getElementById('name')
   //       )).value;
-  //       this.http.put(`http://192.168.1.9:8000/inventory/layer1s/${id}/?main_layer=${this.selectedMainLayer}`, { name: updatedName })
+  //       this.http.put(`http://127.0.0.1:8000/inventory/layer1s/${id}/?main_layer=${this.selectedMainLayer}`, { name: updatedName })
   //         .subscribe(() => {
   //           console.log(`Product with ID ${selectedLayer1} updated successfully!`);
   //           Swal.fire('Updated!', 'Your product has been updated.', 'success');

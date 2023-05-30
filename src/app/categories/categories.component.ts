@@ -20,7 +20,7 @@ export interface Product {
 })
 export class CategoriesComponent {
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
-  public ip_address="192.168.1.9:8000";
+  public ip_address="127.0.0.1:8000";
   categories: any[] = [];
   newCategory: any = {};
   modalService: any;
@@ -85,16 +85,20 @@ export class CategoriesComponent {
       showLoaderOnConfirm: true,
       preConfirm: (name) => {
         return new Promise((resolve, reject) => {
-          const newCategory = { name: name };
-          this.categoryService.addCategory(newCategory).subscribe(
-            (response) => {
-              resolve(response);
-              this.getCategories(this.pageIndex, this.pageSize);
-            },
-            (error) => {
-              reject(error);
-            }
-          );
+          if (!name) { // Check if category name is empty
+            reject('Category name cannot be empty.'); // Reject the promise with an error message
+          } else {
+            const newCategory = { name: name };
+            this.categoryService.addCategory(newCategory).subscribe(
+              (response) => {
+                resolve(response);
+                this.getCategories(this.pageIndex, this.pageSize);
+              },
+              (error) => {
+                reject(error);
+              }
+            );
+          }
         });
       },
     }).then((result) => {
@@ -107,8 +111,16 @@ export class CategoriesComponent {
           timer: 1500,
         });
       }
+    }).catch((error) => { // Catch any error from the promise rejection
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error, // Display the error message
+        showConfirmButton: true,
+      });
     });
   }
+  
 
   deleteCategory(categoryId: string) {
     Swal.fire({

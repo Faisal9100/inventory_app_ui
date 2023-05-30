@@ -74,6 +74,40 @@ export class UnitsComponent implements OnInit {
     this.getUnit();
   }
   pages: number[] = [];
+  // addUnit() {
+  //   Swal.fire({
+  //     title: 'Add New Unit',
+  //     input: 'text',
+  //     inputPlaceholder: 'Unit Name',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Add',
+  //     showLoaderOnConfirm: true,
+  //     preConfirm: (name) => {
+  //       return new Promise((resolve, reject) => {
+  //         const newCategory = { name: name };
+  //         this.unitService.addUnit(newCategory).subscribe(
+  //           (response) => {
+  //             resolve(response);
+  //             this.getUnit();
+  //           },
+  //           (error) => {
+  //             reject(error);
+  //           }
+  //         );
+  //       });
+  //     },
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       Swal.fire({
+  //         icon: 'success',
+  //         title: 'Unit Added!',
+  //         text: `The Unit has been added.`,
+  //         showConfirmButton: true,
+  //         timer: 1500,
+  //       });
+  //     }
+  //   });
+  // }
   addUnit() {
     Swal.fire({
       title: 'Add New Unit',
@@ -84,29 +118,44 @@ export class UnitsComponent implements OnInit {
       showLoaderOnConfirm: true,
       preConfirm: (name) => {
         return new Promise((resolve, reject) => {
-          const newCategory = { name: name };
-          this.unitService.addUnit(newCategory).subscribe(
-            (response) => {
-              resolve(response);
-              this.getUnit();
-            },
-            (error) => {
-              reject(error);
-            }
-          );
+          if (!name) {
+            // Check if Brand name is empty
+            reject('unit name cannot be empty.'); // Reject the promise with an error message
+          } else {
+            const newCategory = { name: name };
+            this.unitService.addUnit(newCategory).subscribe(
+              (response) => {
+                resolve(response);
+                this.getUnit();
+              },
+              (error) => {
+                reject(error);
+              }
+            );
+          }
         });
       },
-    }).then((result) => {
-      if (result.isConfirmed) {
+    })
+      .then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Unit Added!',
+            text: `The Unit has been added.`,
+            showConfirmButton: true,
+            timer: 1500,
+          });
+        }
+      })
+      .catch((error) => {
+        // Catch any error from the promise rejection
         Swal.fire({
-          icon: 'success',
-          title: 'Unit Added!',
-          text: `The Unit has been added.`,
+          icon: 'error',
+          title: 'Error',
+          text: error, // Display the error message
           showConfirmButton: true,
-          timer: 1500,
         });
-      }
-    });
+      });
   }
 
   deleteUnit(categoryId: string) {
@@ -144,7 +193,7 @@ export class UnitsComponent implements OnInit {
       });
   }
   taskToEdit: any;
-  public ip_address = '192.168.1.9:8000';
+  public ip_address = '127.0.0.1:8000';
   public url = 'http://' + this.ip_address + '/inventory/Units/';
 
   openmodel(allcontent: any, newProduct: any) {

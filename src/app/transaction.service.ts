@@ -6,13 +6,13 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class TransactionService {
-  public ip_address = '192.168.1.9:8000';
+  public ip_address = '127.0.0.1:8000';
 
   public url = 'http://' + this.ip_address + '/inventory/accounts';
   constructor(private http: HttpClient) {}
 
   getTransactions(fromDate: string, toDate: string, accountId: string) {
-    const url = `http://192.168.1.9:8000/inventory/transactions/?from_date=${fromDate}&to_date=${toDate}&account_id=${accountId}`;
+    const url = `http://127.0.0.1:8000/inventory/transactions/?from_date=${fromDate}&to_date=${toDate}&account_id=${accountId}`;
     return this.http.get(url);
   }
   getAccounts(): Observable<any> {
@@ -20,7 +20,7 @@ export class TransactionService {
     return this.http.get(account_url);
   }
   // getStock_trans_detail(id: any) {
-  //   const url = `http://192.168.1.9:8000/inventory/transactions_order/${id}/details/`;
+  //   const url = `http://127.0.0.1:8000/inventory/transactions_order/${id}/details/`;
   //   return this.http.get(url);
   // }
 }

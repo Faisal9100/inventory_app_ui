@@ -3,13 +3,13 @@
 <div class="add-categories">
   <div class="input-group mb-3">
     <input
-    type="text"
-    class="form-control w-25"
-    placeholder="Search Unit"
-    name="name"
-    [(ngModel)]="name"
-    (ngModelChange)="Search()"
-  />
+      type="text"
+      class="form-control w-25"
+      placeholder="Search Unit"
+      name="name"
+      [(ngModel)]="name"
+      (ngModelChange)="Search()"
+    />
     <button class="btn btn-primary" (click)="searchUnits()">
       <i class="bi bi-search"></i>
     </button>
@@ -24,22 +24,29 @@
 </div>
 
 <div class="top-sellling">
-  <table class="table table-striped text-center table-bordered table-hover">
+  <table
+    class="table table-striped text-center table-bordered table-hover"
+    style="table-layout: fixed"
+  >
     <thead class="table-head">
       <tr>
-        <th>S.N</th>
-        <th>Name</th>
-        <th>Product</th>
-        <th>Action</th>
+        <th style="width: 25%">S.N</th>
+        <th style="width: 25%">Name</th>
+        <th style="width: 25%">Product</th>
+        <th style="width: 25%">Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let unit of Units| paginate : { itemsPerPage: 2, currentPage: p}; let i = index">
-        <td>{{ unit.id }}</td>
-        <td>{{ unit.name }}</td>
-        <td>{{ productData?.[i]?.quantity ?? 0 }}</td>
-
-        <td>
+      <tr
+        *ngFor="
+          let unit of Units | paginate : { itemsPerPage: 9, currentPage: p };
+          let i = index
+        "
+      >
+        <td style="width: 25%">{{ unit.id }}</td>
+        <td style="width: 25%">{{ unit.name }}</td>
+        <td style="width: 25%">{{ productData?.[i]?.quantity ?? 0 }}</td>
+        <td style="width: 25%">
           <button
             class="btn btn-outline-primary mx-2"
             (click)="openUpdateModal(unit)"
@@ -52,10 +59,9 @@
         </td>
       </tr>
     </tbody>
-    <pagination-controls
+  </table>
+  <pagination-controls
     class="my-pagination"
     (pageChange)="p = $event"
   ></pagination-controls>
-  </table>
 </div>
-

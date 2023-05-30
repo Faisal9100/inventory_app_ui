@@ -154,7 +154,7 @@ export class AllSaleComponent {
   getStockList(id: number) {
     this.isLoading = true; // Set isLoading to true
     this.http
-      .get(`http://192.168.1.9:8000/inventory/sales/${id}/sale_items`)
+      .get(`http://127.0.0.1:8000/inventory/sales/${id}/sale_items`)
       .subscribe((response: any) => {
         this.stocks = response.results;
         console.log(this.stocks);
@@ -221,7 +221,7 @@ export class AllSaleComponent {
   getProductById(warehouseId: number) {
     this.http
       .get(
-        `http://192.168.1.9:8000/inventory/warehouses/${warehouseId}/stocks/`
+        `http://127.0.0.1:8000/inventory/warehouses/${warehouseId}/stocks/`
       )
       .subscribe((resp: any) => {
         this.productSale = resp['results'];
@@ -324,7 +324,7 @@ export class AllSaleComponent {
     };
 
     this.http
-      .post<{ id: number }>('http://192.168.1.9:8000/inventory/sales/', payload)
+      .post<{ id: number }>('http://127.0.0.1:8000/inventory/sales/', payload)
       .subscribe(
         (response) => {
           console.log(response);
@@ -358,7 +358,7 @@ export class AllSaleComponent {
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
         this.http
-          .delete('http://192.168.1.9:8000/inventory/sales/' + purchaseId + '/')
+          .delete('http://127.0.0.1:8000/inventory/sales/' + purchaseId + '/')
           .subscribe(
             () => {
               Swal.fire(
@@ -403,7 +403,7 @@ export class AllSaleComponent {
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://192.168.1.9:8000/inventory/sales/${id}/sale_items/`,
+          `http://127.0.0.1:8000/inventory/sales/${id}/sale_items/`,
           product
         )
         .subscribe(
@@ -442,7 +442,7 @@ stock_list_id:any;
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/sales/${purchaseId}/sale_items/${this.stock_list_id}` 
+            `http://127.0.0.1:8000/inventory/sales/${purchaseId}/sale_items/${this.stock_list_id}` 
           )
           .subscribe(
             () => {
@@ -492,7 +492,7 @@ stock_list_id:any;
 
       this.http
         .post(
-          `http://192.168.1.9:8000/inventory/sales/${this.update_purchase_id}/sale_items/`,
+          `http://127.0.0.1:8000/inventory/sales/${this.update_purchase_id}/sale_items/`,
           requestBody
         )
         .subscribe((response) => {
