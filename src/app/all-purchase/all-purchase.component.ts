@@ -11,6 +11,7 @@ import { WarehouseService } from '../warehouse.service';
 import { SupplierService } from '../supplier.service';
 import { ProductService } from '../product.service';
 import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
 
 export interface PurchaseData {
   id: number;
@@ -125,35 +126,35 @@ export class AllPurchaseComponent implements OnInit {
     this.getProducts();
     this.getAllPurchaseData();
   }
-  ip_address = '127.0.0.1:8000';
+  ip_address = '192.168.1.9:8000';
   stocks: any;
 
-  //  __code for getting AllPurchase__
+  // <----------------------------- code for getting AllPurchase ---------------------------------->
 
   getAllPurchaseData() {
-    this.isLoading = true; // Set isLoading to true
+    this.isLoading = true;
 
     this.allpurchasesService.getAllPurchase().subscribe((data) => {
       this.AllPurchaseData = data.results;
       this.searchedPurchaseData = this.AllPurchaseData;
 
-      this.isLoading = false; // Set isLoading to false
+      this.isLoading = false;
     });
   }
 
-  //  __code for getting StockList__
+  // <------------------------------ code for getting StockList ------------------------------------->
 
   getStockList(id: number) {
-    this.isLoading = true; // Set isLoading to true
+    this.isLoading = true;
     this.http
-      .get(`http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`)
+      .get(`http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`)
       .subscribe((response: any) => {
         this.stocks = response;
-        this.isLoading = false; // Set isLoading to true
+        this.isLoading = false;
       });
   }
 
-  //  __code for deleting StockList__
+  //  <------------------------------code for deleting StockList ----------------------------------->
 
   deleteStockList(stockid: number, purchasedId: number) {
     Swal.fire({
@@ -167,7 +168,7 @@ export class AllPurchaseComponent implements OnInit {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://127.0.0.1:8000/inventory/stocks_purchase/${purchasedId}/stocks/` +
+            `http://192.168.1.9:8000/inventory/stocks_purchase/${purchasedId}/stocks/` +
               stockid +
               '/'
           )
@@ -193,24 +194,25 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-  //  __code for opening model one for adding purchase__
+  // <-------------------- code for opening model one for adding purchase ---------------------------------->
 
   openXl(content: any) {
     this.modalService.open(content, { size: 'xl' });
   }
 
-  //  __code for opening model one for adding StockList__
+  //  <-------------------- code for opening model one for adding StockList ------------------------------->
 
   openXl2(content2: any) {
     this.modalService.open(content2, { size: 'xl' });
   }
 
-  // __code for opening model for adding product in stock__
+  // <-------------------- code for opening model for adding product in stock ----------------------------->
+
   openXl3(content3: any) {
     this.modalService.open(content3);
   }
 
-  //  __code for getting warehouse Data__
+  //  <------------------------------ code for getting warehouse Data ------------------------------------->
 
   getwarehouse() {
     this.warehouseService.GetWarehouse().subscribe((response) => {
@@ -218,7 +220,7 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-  //  __code for getting supplier Data__
+  //  <-------------------------------- code for getting supplier Data ------------------------------------>
 
   getSupplier() {
     this.supplierService.fetchsupplier().subscribe((response) => {
@@ -226,7 +228,7 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-  //  __code for getting Product Data__
+  //  <---------------------------- code for getting Product Data ------------------------------------------>
 
   getProducts() {
     this.productService.getProducts().subscribe((Response) => {
@@ -291,7 +293,7 @@ export class AllPurchaseComponent implements OnInit {
     return rowStrings.join('\n');
   }
 
-  // __code for removing product from the table__
+  // <------------------------code for removing product from the table ------------------------------------->
 
   removeProduct(index: number) {
     this.rows.splice(index, 1);
@@ -299,7 +301,7 @@ export class AllPurchaseComponent implements OnInit {
   }
   i: any;
 
-  // __ code for deleting purchase__
+  // <----------------------------- code for deleting stock purchase ---------------------------------------->
 
   deletePurchase(purchaseId: number) {
     Swal.fire({
@@ -313,7 +315,7 @@ export class AllPurchaseComponent implements OnInit {
       if (result.isConfirmed) {
         this.http
           .delete(
-            'http://127.0.0.1:8000/inventory/stocks_purchase/' +
+            'http://192.168.1.9:8000/inventory/stocks_purchase/' +
               purchaseId +
               '/'
           )
@@ -339,10 +341,21 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-  // __ code for adding purchase__
+  // <------------------------------- code for adding stock purchase ----------------------------------->
 
-  // this.isLoading = true;
   addPurchase() {
+    if (
+      !this.purchaseDate ||
+      !this.selectedSupplier ||
+      !this.selectedWarehouse
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please fill in all the required fields.',
+      });
+      return; // Stop the execution if the form is empty
+    }
     const payload: any = {
       date: this.purchaseDate,
       account: this.selectedSupplier,
@@ -354,7 +367,7 @@ export class AllPurchaseComponent implements OnInit {
 
     this.http
       .post<{ id: number }>(
-        'http://127.0.0.1:8000/inventory/stocks_purchase/',
+        'http://192.168.1.9:8000/inventory/stocks_purchase/',
         payload
       )
       .subscribe((response) => {
@@ -376,7 +389,7 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-  // __ code for adding stock purchase__
+  // <---------------------------- code for adding stock purchase ------------------------------------------->
 
   async addStock(id: any) {
     for (let row of this.rows) {
@@ -396,7 +409,7 @@ export class AllPurchaseComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`,
+          `http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`,
           product
         )
         .subscribe(
@@ -408,11 +421,18 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-
   //   <-----------------------------adding another product-------------------------------------------->
 
   update_purchase_id: any;
   postUpdateStock(product: any, q: any, p: any, date: any) {
+    if (!product.value || !q.value || !p.value || !date.value) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please fill in all the required fields.',
+      });
+      return;
+    }
     if (product && product.id) {
       const requestBody = {
         date: date.value,
@@ -426,7 +446,7 @@ export class AllPurchaseComponent implements OnInit {
 
       this.http
         .post(
-          `http://127.0.0.1:8000/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
+          `http://192.168.1.9:8000/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
           requestBody
         )
         .subscribe((response) => {
@@ -437,15 +457,16 @@ export class AllPurchaseComponent implements OnInit {
     }
   }
 
-  // Assuming you have the necessary imports and dependencies
   updatedStock: any;
-
   p: any;
   count: number = 0;
   page: number = 1;
   tableSize: number = 10;
   tableSizes: any = [5, 10, 25, 100];
   title: any;
+
+  // <---------------------------------- code for search input field -------------------------------------------->
+
   Search() {
     if (this.title == '') {
       this.ngOnInit();
@@ -455,27 +476,79 @@ export class AllPurchaseComponent implements OnInit {
       });
     }
   }
+
+  // <----------- code for getting stock data for a particular product in a particular purchase id -------------->
+
   getStock(id: any) {
     return this.http.get(
-      `http://127.0.0.1:8000/inventory/stocks_purchase/${id}/stocks/`
+      `http://192.168.1.9:8000/inventory/stocks_purchase/${id}/stocks/`
     );
   }
-  openStockModal(productId: any) {
-    // Open your modal here
 
+  // <----------------- model for opening stock model for a particular product in a particular purchase id -------->
+
+  openStockModal(productId: any) {
     this.getStock(productId).subscribe(
       (response) => {
-        // Populate the form fields in the modal with the retrieved data
-        const stockData = response; // Assuming the API response is a JSON object representing the stock data
-        // Assign the stock data to your form fields in the modal
+        const stockData = response;
+
         this.stockForm.patchValue(stockData);
       },
       (error) => {
         console.error(error);
-        // Handle error if necessary
       }
     );
   }
   invoiceNumber?: number;
   stockData: any[] = [];
+
+  // <------------------------------------ code for refreshing page -------------------------------------------->
+
+  refreshPage() {
+    window.location.reload();
+  }
+
+  // <-------------------------------------- code for print Reciept   ---------------------------------------->
+
+  generatePDF() {
+    const columns2 = { title: 'All Purchase List' };
+
+    const columns = [
+      { title: '#', dataKey: '#' },
+      { title: 'Invoice No', dataKey: 'invoice_no' },
+      { title: 'Title', dataKey: 'title' },
+      { title: 'Account Name', dataKey: 'account_name' },
+      { title: 'Warehouse', dataKey: 'warehouse' },
+      { title: 'Transaction_ID', dataKey: 'transaction' },
+      { title: 'Quantity', dataKey: 'quantity' },
+      { title: 'Amount', dataKey: 'amount' },
+      { title: 'date', dataKey: 'date' },
+    ];
+
+    const data = this.AllPurchaseData.map((item, index) => ({
+      sn: index + 1,
+      id: item.id,
+      ivoiceNo: item.invoice_no,
+      title: item.title,
+      accountName: item.account_name,
+      warehouse: item.warehouse_name,
+      transaction: item.transaction,
+      quantity: item.quantity,
+      amount: item.amount,
+      date: item.date,
+    }));
+
+    const doc = new jsPDF();
+
+    doc.text(columns2.title, 86, 8);
+    doc.setFontSize(22);
+    // doc.setTextColor('red');
+    doc.setFontSize(16);
+
+    (doc as any).autoTable({
+      columns: columns,
+      body: data,
+    });
+    doc.save('All-Purshase.pdf');
+  }
 }

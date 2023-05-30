@@ -22,7 +22,7 @@
     </button>
     <button
       type="button"
-      class="btn btn-outline-primary mx-2"
+      class="btn btn-outline-primary mx-1"
       (click)="openXl(content)"
     >
       <i class="bi bi-plus-circle"></i> Add new
@@ -30,6 +30,7 @@
     <button class="btn btn-outline-danger">
       <i class="bi bi-arrow-down-circle"></i> PDF
     </button>
+    <button class="btn btn-outline-dark mx-1" (click)="refreshPage()"><i class="bi bi-arrow-clockwise"></i>Load</button>
   </div>
 </div>
 
@@ -69,7 +70,7 @@
         <td>{{ item.date }}</td>
         <td>
           <button
-            class="btn btn-outline-success mx-2"
+            class="btn btn-outline-success mx-1"
             (click)="openXl2(content2)"
             (click)="getStockList(item.id)"
           >
@@ -362,7 +363,7 @@
           <td>
             <button
               class="btn btn-outline-danger"
-              (click)="deleteSaleList(stock.id)"
+              (click)="deleteSaleList(stock.id, stockid)"
             >
               <i class="bi bi-trash3-fill"></i>
             </button>
@@ -432,19 +433,26 @@
         [(ngModel)]="quantity"
         #q
       />
+      <p class="">
+        Default Purchase Price:
+        <span style="color: tomato"></span>
+      </p>
 
       <label for="" class="p-2">Price</label>
       <input type="number" class="form-control" #p />
-
-      <label for="" class="p-2">date</label>
-
-      <input
-        type="date"
-        class="form-control"
-        #update_stock_date
-        [value]="currentDate"
-      />
+      <p class="">
+        Default Purchase Price:
+        <span style="color: tomato"></span>
+      </p>
     </div>
+    <label for="" class="p-2">date</label>
+
+    <input
+      type="date"
+      class="form-control"
+      #update_stock_date
+      [value]="currentDate"
+    />
   </div>
 
   <div class="modal-footer">

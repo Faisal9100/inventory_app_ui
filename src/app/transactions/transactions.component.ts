@@ -66,7 +66,7 @@ export class TransactionsComponent {
 
   get_Stock_trans_details(item: number) {
     this.http
-      .get(`http://127.0.0.1:8000/inventory/transactions_order/${item}/details/`)
+      .get(`http://192.168.1.9:8000/inventory/transactions_order/${item}/details/`)
       .subscribe((resp: any) => {
         const { data, transactions, stocks } = resp;
   

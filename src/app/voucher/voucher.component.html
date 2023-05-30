@@ -36,7 +36,7 @@
           "
         >
           <!-- <option value="" disabled selected>Select Voucher Type</option> -->
-          <option    *ngFor="let item of voucherTypes">
+          <option *ngFor="let item of voucherTypes">
             {{ item.value }}
           </option>
         </select>
@@ -59,7 +59,6 @@
           class="sm form-select"
           formControlName="account"
           [class.invalid]="false"
-          
         >
           <option *ngFor="let account of accountData">
             {{ account.title }}
@@ -67,13 +66,13 @@
         </select>
       </div>
       <div class="form-group col-4">
-        <label for="narration">narration</label>
+        <label for="description">Description</label>
         <input
           type="text"
-          id="narration"
+          id="description"
           class="form-control sm"
           [class.ng-invalid]="false"
-          formControlName="narration"
+          formControlName="description"
         />
       </div>
       <div class="form-group col-2">
@@ -127,26 +126,25 @@
       <thead class="table-head">
         <tr>
           <th>#</th>
-          <th>Account_Name</th>
-
-          <th>Vouchar</th>
-          <th class="col-5">Detail Narration</th>
+          <th>Account Name</th>
+          <th>Voucher</th>
+          <th class="col-5">Detail Description</th>
           <th>Debit</th>
           <th>Credit</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of transactions">
-          <td>{{ item.id }}</td>
+        <tr *ngFor="let item of transactions; let i = index">
+          <td>{{ i + 1 }}</td>
           <td>{{ item.account }}</td>
-          <td>{{ getVoucherTypeText(item.vouchar_type) }}</td>
-          <!-- <td>{{ item.vouchar_type[1] }}</td> -->
-          <td>{{ item.narration }}</td>
-          <td>{{ item.amount }}</td>
+          <td>{{ getVoucherTypeText(item.voucher_type) }}</td>
+          <td>{{ item.description }}</td>
+          <td>{{ item.debit }}</td>
           <td>{{ item.credit }}</td>
         </tr>
       </tbody>
     </table>
+    
   </div>
 
   <div class="d-flex justify-content-end">
@@ -169,7 +167,7 @@
           <th>#</th>
           <th>Account Id</th>
           <th>Account Name</th>
-          <th>Narration</th>
+          <th>Description</th>
           <th>Debit</th>
           <th>Credit</th>
           <th>Date</th>

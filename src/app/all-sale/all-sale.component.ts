@@ -1,3 +1,4 @@
+import { Account } from './../accountlayer/accountlayer.component';
 import { SaleService } from './../sale.service';
 
 import { AllpurchasesService } from './../allpurchases.service';
@@ -154,7 +155,7 @@ export class AllSaleComponent {
   getStockList(id: number) {
     this.isLoading = true; // Set isLoading to true
     this.http
-      .get(`http://127.0.0.1:8000/inventory/sales/${id}/sale_items`)
+      .get(`http://192.168.1.9:8000/inventory/sales/${id}/sale_items`)
       .subscribe((response: any) => {
         this.stocks = response.results;
         console.log(this.stocks);
@@ -221,7 +222,7 @@ export class AllSaleComponent {
   getProductById(warehouseId: number) {
     this.http
       .get(
-        `http://127.0.0.1:8000/inventory/warehouses/${warehouseId}/stocks/`
+        `http://192.168.1.9:8000/inventory/warehouses/${warehouseId}/stocks/`
       )
       .subscribe((resp: any) => {
         this.productSale = resp['results'];
@@ -312,7 +313,17 @@ export class AllSaleComponent {
 
   // <--------------------------------- code for adding Sale ----------------------------------------------->
 
+
   addSale() {
+    if (!this.purchaseDate || !this.selectedCustomer || !this.selectedWarehouse) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please fill in all the required fields.',
+      });
+      return; // Stop the execution if the form is empty
+    }
+  
     const payload: any = {
       date: this.purchaseDate,
       account: this.selectedCustomer,
@@ -322,9 +333,9 @@ export class AllSaleComponent {
       remarks: this.remarks,
       account_customer: this.selectedCustomer,
     };
-
+  
     this.http
-      .post<{ id: number }>('http://127.0.0.1:8000/inventory/sales/', payload)
+      .post<{ id: number }>('http://192.168.1.9:8000/inventory/sales/', payload)
       .subscribe(
         (response) => {
           console.log(response);
@@ -345,6 +356,7 @@ export class AllSaleComponent {
       );
   }
 
+
   // <--------------------------------- code for deleting Sale --------------------------------------->
 
   deleteSale(purchaseId: number) {
@@ -358,7 +370,7 @@ export class AllSaleComponent {
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
         this.http
-          .delete('http://127.0.0.1:8000/inventory/sales/' + purchaseId + '/')
+          .delete('http://192.168.1.9:8000/inventory/sales/' + purchaseId + '/')
           .subscribe(
             () => {
               Swal.fire(
@@ -390,7 +402,7 @@ export class AllSaleComponent {
         product: row.product_id,
         quantity: row.quantity,
         amount: row.quantity * row.amount,
-        price:  row.amount,
+        price: row.amount,
         product_id: row.product_id,
         product_name: row.product_name,
       };
@@ -403,7 +415,7 @@ export class AllSaleComponent {
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://127.0.0.1:8000/inventory/sales/${id}/sale_items/`,
+          `http://192.168.1.9:8000/inventory/sales/${id}/sale_items/`,
           product
         )
         .subscribe(
@@ -429,8 +441,9 @@ export class AllSaleComponent {
   }
 
   // <----------------------------- code for deleting stock from sale list ------------------------------------------->
-stock_list_id:any;
-  deleteSaleList(purchaseId: number) {
+  stock_list_id: any;
+  stockid: any;
+  deleteSaleList(purchasedId: number, stockid: number) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to recover this account!',
@@ -440,9 +453,12 @@ stock_list_id:any;
       cancelButtonText: 'No, cancel',
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
+        this.stockid = stockid;
         this.http
           .delete(
-            `http://127.0.0.1:8000/inventory/sales/${purchaseId}/sale_items/${this.stock_list_id}` 
+            `http://192.168.1.9:8000/inventory/sales/${purchasedId}/sale_items/` +
+              stockid +
+              '/'
           )
           .subscribe(
             () => {
@@ -479,6 +495,14 @@ stock_list_id:any;
   // <-------------------------- CODE FOR UPDATING STOCK IN SALE LIST---------------------------------------------->
 
   postUpdateStock(product: any, q: any, p: any, date: any) {
+    if (!product.value || !q.value || !p.value || !date.value) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Please fill in all the required fields.',
+      });
+      return; // Stop the execution if any field is empty
+    }
     if (product && product.id) {
       const currentDate = new Date().toISOString().split('T')[0];
       const requestBody = {
@@ -492,7 +516,7 @@ stock_list_id:any;
 
       this.http
         .post(
-          `http://127.0.0.1:8000/inventory/sales/${this.update_purchase_id}/sale_items/`,
+          `http://192.168.1.9:8000/inventory/sales/${this.update_purchase_id}/sale_items/`,
           requestBody
         )
         .subscribe((response) => {
@@ -555,7 +579,7 @@ stock_list_id:any;
     }
   }
 
-//  <--------------------------- CODE FOR CHECKING PRICE------------------------------------>
+  //  <--------------------------- CODE FOR CHECKING PRICE------------------------------------>
 
   handlePriceChange(row: any) {
     if (row.amount <= row.product.price) {
@@ -566,6 +590,9 @@ stock_list_id:any;
       });
       row.amount = row.product.price; // Reset the amount to the available amount
     }
+  }
+  refreshPage() {
+    window.location.reload();
   }
   
 }

@@ -29,9 +29,10 @@
     >
       <i class="bi bi-plus-circle"></i> Add new
     </button>
-    <button class="btn btn-outline-danger">
+    <button class="btn btn-outline-danger" (click)="generatePDF()">
       <i class="bi bi-arrow-down-circle"></i> PDF
     </button>
+    <button class="btn btn-outline-dark mx-1" (click)="refreshPage()"><i class="bi bi-arrow-clockwise"></i>Load</button>
   </div>
 </div>
 
@@ -47,7 +48,7 @@
         <th>Transaction_ID</th>
         <th>Quantity</th>
         <th>Amount</th>
-        <th>Sale_Amount</th>
+       
         <th>Date</th>
         <th>Action</th>
       </tr>
@@ -68,7 +69,6 @@
         <td>{{ item.transaction }}</td>
         <td>{{ item.quantity }}</td>
         <td>{{ item.amount }}</td>
-        <td>{{ item.sale_amount }}</td>
         <td>{{ item.date }}</td>
         <td>
           <button

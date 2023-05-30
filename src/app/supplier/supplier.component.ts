@@ -22,7 +22,7 @@ export interface Supplier {
   styleUrls: ['./supplier.component.css'],
 })
 export class SupplierComponent {
-  ip_address = '127.0.0.1:8000';
+  ip_address = '192.168.1.9:8000';
   supplierToEdit: any;
   pageSize = 10;
   currentPage = 1;

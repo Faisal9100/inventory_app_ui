@@ -26,6 +26,7 @@ export interface Product {
   note: string;
 }
 
+
 @Component({
   selector: 'app-products,ngbd-modal-content',
   templateUrl: './products.component.html',
@@ -33,7 +34,7 @@ export interface Product {
 })
 export class ProductsComponent {
   @Output() updateCategory = new EventEmitter<any>();
-  public ip_address = '127.0.0.1:8000';
+  public ip_address = '192.168.1.9:8000';
   pageIndex: any = 0;
   taskToEdit: any;
   currentPage = 1;
@@ -99,7 +100,7 @@ export class ProductsComponent {
       .subscribe((units) => (this.units = units.results));
   }
 
-  //  __ code for getting brands from brand component__
+  // <-------------------------------------- CODE FOR GETTING BRAND ------------------------------------->
 
   getBrand() {
     this.brandService
@@ -109,17 +110,15 @@ export class ProductsComponent {
       });
   }
 
-  //  __ code for getting unit from unit component__
+  // <-------------------------------------- CODE FOR GETTING UNIT ------------------------------------->
 
   getUnit() {
-    this.unitService
-      .getUnit()
-      .subscribe((data) => {
-        this.units = data.results;
-      });
+    this.unitService.getUnit().subscribe((data) => {
+      this.units = data.results;
+    });
   }
 
-  //  __ code for getting category from category component__
+  // <-------------------------------------- CODE FOR GETTING CATEGORY ------------------------------------->
 
   getCategories() {
     this.categoryService
@@ -129,7 +128,7 @@ export class ProductsComponent {
       });
   }
 
-  //  __ code for getting product__
+  // <-------------------------------------- CODE FOR GETTING PRODUCTS ------------------------------------->
 
   getProducts() {
     this.productService.getProducts().subscribe((data) => {
@@ -140,7 +139,6 @@ export class ProductsComponent {
   formData = {
     name: '',
     note: '',
-    
     unit: '',
     brand: '',
     category: '',
@@ -148,9 +146,31 @@ export class ProductsComponent {
   };
 
   productData!: {
-    map(arg0: (product: { image: any; name: any; quantity: any; category: any; note: any; brand: any; unit: any; }, index: number) => { sn: number; title: any; address: any; balance: any; status: any; contact: any; email: any; unit: any; }): unknown;
+    map(
+      arg0: (
+        product: {
+          image: any;
+          name: any;
+          quantity: any;
+          category: any;
+          note: any;
+          brand: any;
+          unit: any;
+        },
+        index: number
+      ) => {
+        sn: number;
+        title: any;
+        address: any;
+        balance: any;
+        status: any;
+        contact: any;
+        email: any;
+        unit: any;
+      }
+    ): unknown;
     name: any;
-    
+
     note: any;
     brand: any;
     unit: any;
@@ -170,13 +190,12 @@ export class ProductsComponent {
     this.modalService.open(content);
   }
 
-
-  //  __ code for adding products__
+  // <-------------------------------------- CODE FOR ADDING PRODUCTS ------------------------------------->
 
   addProduct() {
     const productData = {
       name: this.productForm.get('name')?.value,
-     
+
       note: this.productForm.get('note')?.value,
       brand: this.productForm.get('brand')?.value,
       unit: this.productForm.get('unit')?.value,
@@ -185,7 +204,7 @@ export class ProductsComponent {
 
     const formData = new FormData();
     formData.append('name', this.productForm.get('name')?.value);
-   
+
     formData.append('note', this.productForm.get('note')?.value);
     formData.append('brand', this.productForm.get('brand')?.value);
     formData.append('unit', this.productForm.get('unit')?.value);
@@ -199,7 +218,7 @@ export class ProductsComponent {
       (response) => {
         const formData = {
           name: '',
-         
+
           note: '',
           brand: '',
           unit: '',
@@ -220,7 +239,7 @@ export class ProductsComponent {
     );
   }
 
-  //  __ code for deleteing  products__
+  // <-------------------------------------- CODE FOR DELETING PRODUCTS ------------------------------------->
 
   deleteProduct(id: number) {
     Swal.fire({
@@ -250,7 +269,7 @@ export class ProductsComponent {
   //     <input type="text" id="productName" class="swal2-input swal1" placeholder="Name"  value="${
   //       product.name
   //     }">
-     
+
   //     <br><label>Note:</label>
   //     <input type="text" id="productNote" class="swal2-input swal3" placeholder="Note"  value="${
   //       product.note
@@ -282,9 +301,7 @@ export class ProductsComponent {
   //           }>${category.name}</option>`
   //       )}
   //     </select>
-    
-   
-      
+
   //   `,
   //     showCancelButton: true,
   //     confirmButtonText: 'Update',
@@ -307,8 +324,7 @@ export class ProductsComponent {
   //       const updatedCategory = (<HTMLSelectElement>(
   //         document.querySelector('#productCategory')
   //       )).value;
-       
-     
+
   //       this.http
   //         .put(`${this.url}${product.id}/`, {
   //           name: updatedName,
@@ -338,7 +354,7 @@ export class ProductsComponent {
   //     <input type="text" id="productName" class="form-control swal1" placeholder="Name"  value="${
   //       product.name
   //     }">
-     
+
   //     <input type="text" id="productBrand" class="form-select swal3" placeholder="Brand" value="${
   //       product.brand
   //     }">
@@ -357,7 +373,7 @@ export class ProductsComponent {
   //     <br><label>Image:</label>
   //     <input type="file" class="form-control id="productImage" accept="image/*">
   //     <br><br><img src="${product.image}" alt="Product Image" height="50" width="50">
-      
+
   //   `,
   //     showCancelButton: true,
   //     confirmButtonText: 'Update',
@@ -408,102 +424,148 @@ export class ProductsComponent {
   //     }
   //   });
   // }
-  openUpdateModal(product: Product) {
-    Swal.fire({
-      title: 'Update Product',
-      html: `
-      <label class="float-start my-1">Name:</label>
-      <input type="text" id="productName" class="form-control swal1" placeholder="Name"  value="${
-        product.name
-      }">
-     
-      <br><label class="float-start my-1">Note:</label>
-      <input type="text" id="productNote" class="form-control swal3" placeholder="Note"  value="${
-        product.note
-      }">
-      <br><label class="float-start my-1">Brand:</label>
-      <select id="productBrand" class="form-select">
-        ${this.brands.map(
-          (brand) =>
-            `<option value="${brand.id}" ${
-              brand.id === product.brand ? 'selected' : ''
-            }>${brand.name}</option>`
-        )}
-      </select>
-      <br><label class="float-start my-1">Unit:</label>
-      <select id="productUnit" class="form-select">
-        ${this.units.map(
-          (unit) =>
-            `<option value="${unit.id}" ${
-              unit.id === product.unit ? 'selected' : ''
-            }>${unit.name}</option>`
-        )}
-      </select>
-      <br><label class="float-start my-1">Category:</label>
-      <select id="productCategory" class="form-select">
-        ${this.categories.map(
-          (category) =>
-            `<option value="${category.id}" ${
-              category.id === product.category ? 'selected' : ''
-            }>${category.name}</option>`
-        )}
-      </select>
 
-      <br><label class="float-start my-1">Image:</label>
-          <input type="file" id="productImage" accept="image/*" (change)="onFileSelected($event)">
-          <br><br><img src="${product.image}" alt="Product Image" height="50" width="50">
+  // <-------------------------------------- CODE FOR UPDATING PRODUCTS ------------------------------------->
+  // openUpdateModal(product: Product) {
+  //   Swal.fire({
+  //     title: 'Update Product',
+  //     html: `
+  //     <label class="float-start my-1">Name:</label>
+  //     <input type="text" id="productName" class="form-control swal1" placeholder="Name"  value="${
+  //       product.name
+  //     }">
+     
+  //     <br><label class="float-start my-1">Note:</label>
+  //     <input type="text" id="productNote" class="form-control swal3" placeholder="Note"  value="${
+  //       product.note
+  //     }">
+  //     <br><label class="float-start my-1">Brand:</label>
+  //     <select id="productBrand" class="form-select">
+  //       ${this.brands.map(
+  //         (brand) =>
+  //           `<option value="${brand.id}" ${
+  //             brand.id === product.brand ? 'selected' : ''
+  //           }>${brand.name}</option>`
+  //       )}
+  //     </select>
+  //     <br><label class="float-start my-1">Unit:</label>
+  //     <select id="productUnit" class="form-select">
+  //       ${this.units.map(
+  //         (unit) =>
+  //           `<option value="${unit.id}" ${
+  //             unit.id === product.unit ? 'selected' : ''
+  //           }>${unit.name}</option>`
+  //       )}
+  //     </select>
+  //     <br><label class="float-start my-1">Category:</label>
+  //     <select id="productCategory" class="form-select">
+  //       ${this.categories.map(
+  //         (category) =>
+  //           `<option value="${category.id}" ${
+  //             category.id === product.category ? 'selected' : ''
+  //           }>${category.name}</option>`
+  //       )}
+  //     </select>
+
+  //     <br><label class="float-start my-1">Image:</label>
+  //         <input type="file" id="productImage" accept="image/*" (change)="onFileSelected($event)">
+  //         <br><br><img src="${
+  //           product.image
+  //         }" alt="Product Image" height="50" width="50">
     
    
       
-    `,
-      showCancelButton: true,
-      confirmButtonText: 'Update',
-      cancelButtonText: 'Cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const updatedName = (<HTMLInputElement>document.querySelector('.swal1'))
-          .value;
-        const updatedNote = (<HTMLInputElement>document.querySelector('.swal3'))
-          .value;
-        const updatedBrand = (<HTMLSelectElement>(
-          document.querySelector('#productBrand')
-        )).value;
-        const updatedUnit = (<HTMLSelectElement>(
-          document.querySelector('#productUnit')
-        )).value;
-        const updatedCategory = (<HTMLSelectElement>(
-          document.querySelector('#productCategory')
-        )).value;
-        
-        const UpdatedImage = new FormData();
-        UpdatedImage.append('image', this.selectedFile, this.selectedFile.name);
-     
-        this.http
-          .put(`${this.url}${product.id}/`, {
-            name: updatedName,
-            // quantity: updatedQuantity,
-            unit: updatedUnit,
-            note: updatedNote,
-            brand: updatedBrand,
-            category: updatedCategory,
-            image:UpdatedImage,
-           
-          })
-          .subscribe(() => {
-            console.log(`Product with ID ${product.id} updated successfully!`);
-            this.getProducts();
-            Swal.fire(
-              'Updated!',
-              'Your warehouse has been updated.',
-              'success'
-            );
-          });
-      }
-    });
+  //   `,
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Update',
+  //     cancelButtonText: 'Cancel',
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //       const updatedName = (<HTMLInputElement>document.querySelector('.swal1'))
+  //         .value;
+  //       const updatedNote = (<HTMLInputElement>document.querySelector('.swal3'))
+  //         .value;
+  //       const updatedBrand = (<HTMLSelectElement>(
+  //         document.querySelector('#productBrand')
+  //       )).value;
+  //       const updatedUnit = (<HTMLSelectElement>(
+  //         document.querySelector('#productUnit')
+  //       )).value;
+  //       const updatedCategory = (<HTMLSelectElement>(
+  //         document.querySelector('#productCategory')
+  //       )).value;
+
+  //       const UpdatedImage = new FormData();
+  //       UpdatedImage.append('image', this.selectedFile, this.selectedFile.name);
+
+  //       this.http
+  //         .put(`${this.url}${product.id}/`, {
+  //           name: updatedName,
+  //           // quantity: updatedQuantity,
+  //           unit: updatedUnit,
+  //           note: updatedNote,
+  //           brand: updatedBrand,
+  //           category: updatedCategory,
+  //           image: UpdatedImage,
+  //         })
+  //         .subscribe(() => {
+  //           console.log(`Product with ID ${product.id} updated successfully!`);
+  //           this.getProducts();
+  //           Swal.fire(
+  //             'Updated!',
+  //             'Your warehouse has been updated.',
+  //             'success'
+  //           );
+  //         });
+  //     }
+  //   });
+  // }
+  updateProduct() {
+    if (this.productForm.invalid) {
+      // Validate the form and display an error message if it's invalid
+      return;
+    }
+  
+    const formData = new FormData();
+    formData.append('name', this.productForm.value.name);
+    formData.append('brand', this.productForm.value.brand);
+    formData.append('unit', this.productForm.value.unit);
+    formData.append('category', this.productForm.value.category);
+    formData.append('note', this.productForm.value.note);
+    formData.append('image', this.productForm.value.image);
+  
+    this.http
+      .put('http://your-api-endpoint', formData)
+      .subscribe(
+        (response) => {
+          console.log('Product updated successfully:', response);
+          // Handle success scenario (e.g., display success message, redirect, etc.)
+        },
+        (error) => {
+          console.error('An error occurred while updating the product:', error);
+          // Handle error scenario (e.g., display error message, handle specific errors, etc.)
+        }
+      );
   }
+  open3(content3:any){
+//     {product: Product = new Product();
+// // Assign existing data to the product model
+// this.product.id = existingProductId;
+// this.product.name = existingProductName;
+// this.product.image = existingProductImage;
+// this.product.brand = existingProductBrand;
+// this.product.unit = existingProductUnit;
+// this.product.category = existingProductCategory;
+// this.product.note = existingProductNote;}
+// this.modalService.open(content3)
+
+
+
+  }
+
   generatePDF() {
     const columns2 = { title: 'All Products List' };
-    
+
     const columns = [
       { title: 'S.N', dataKey: 'sn' },
       { title: 'image', dataKey: 'image' },
@@ -515,19 +577,32 @@ export class ProductsComponent {
       { title: 'Unit', dataKey: 'unit' },
     ];
 
-    const data = this.productData.map((product: { image: any; name: any; quantity: any; category: any; note: any; brand: any; unit: any; }, index: number) => ({
-      sn: index + 1,
-      title: product.image,
-      address: product.name,
-      balance: product.quantity, 
-      status: product.category,
-      contact: product.note,
-      email: product.brand,
-      unit: product.unit,
-    }));
-    
+    const data = this.productData.map(
+      (
+        product: {
+          image: any;
+          name: any;
+          quantity: any;
+          category: any;
+          note: any;
+          brand: any;
+          unit: any;
+        },
+        index: number
+      ) => ({
+        sn: index + 1,
+        title: product.image,
+        address: product.name,
+        balance: product.quantity,
+        status: product.category,
+        contact: product.note,
+        email: product.brand,
+        unit: product.unit,
+      })
+    );
+
     const doc = new jsPDF();
-    
+
     doc.text(columns2.title, 86, 8);
     doc.setFontSize(22);
     // doc.setTextColor('red');
@@ -538,6 +613,5 @@ export class ProductsComponent {
       body: data,
     });
     doc.save('all_products.pdf');
-  }  
-
+  }
 }

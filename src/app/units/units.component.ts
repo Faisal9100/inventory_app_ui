@@ -193,7 +193,7 @@ export class UnitsComponent implements OnInit {
       });
   }
   taskToEdit: any;
-  public ip_address = '127.0.0.1:8000';
+  public ip_address = '192.168.1.9:8000';
   public url = 'http://' + this.ip_address + '/inventory/Units/';
 
   openmodel(allcontent: any, newProduct: any) {
