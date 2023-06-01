@@ -30,7 +30,9 @@
     <button class="btn btn-outline-danger">
       <i class="bi bi-arrow-down-circle"></i> PDF
     </button>
-    <button class="btn btn-outline-dark mx-1" (click)="refreshPage()"><i class="bi bi-arrow-clockwise"></i>Load</button>
+    <button class="btn btn-outline-dark mx-1" (click)="refreshPage()">
+      <i class="bi bi-arrow-clockwise"></i>Load
+    </button>
   </div>
 </div>
 
@@ -40,7 +42,7 @@
       <tr>
         <th>#</th>
         <th>Invoice No.</th>
-        <th>Title</th>
+        <th>Remarks</th>
         <th>Customer</th>
         <th>Warehouse</th>
         <th>Transaction_ID</th>
@@ -60,7 +62,7 @@
       >
         <td>{{ item.id }}</td>
         <td>{{ item.invoice_no }}</td>
-        <td>{{ item.title }}</td>
+        <td>{{ item.remarks }}</td>
         <td>{{ item.account_customer }}</td>
         <td>{{ item.warehouse_name }}</td>
         <td>{{ item.transaction }}</td>

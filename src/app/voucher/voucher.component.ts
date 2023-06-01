@@ -3,6 +3,7 @@ import { VoucherService } from '../voucher.service';
 import { AccountlayerService } from '../accountlayer.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-voucher',
@@ -14,9 +15,10 @@ export class VoucherComponent implements OnInit {
   transactions: any[] = [];
   debit: number = 0;
   credit: number = 0;
+  basic: any;
   ngOnInit(): void {
     this.getAccount();
-    this.getVoucher();
+    // this.getVoucher();
   }
   constructor(
     public voucher: VoucherService,
@@ -28,16 +30,18 @@ export class VoucherComponent implements OnInit {
       this.accountData = data.results;
     });
   }
-  getVoucher() {
-    this.http
-      .get('http://192.168.1.9:8000/inventory/vouchar/')
-      .subscribe((data: any) => {
-        console.log(data);
-      });
-  }
+
+  // getVoucher() {
+  //   this.http
+  //     .get('http://192.168.1.9:8000/inventory/vouchar/')
+  //     .subscribe((data: any) => {
+  //       this.transactionsData = data.results;
+  //       console.log(data);
+  //     });
+  // }
   form = new FormGroup({
     date: new FormControl('', Validators.required),
-    vouchar_type: new FormControl('', Validators.required),
+    voucher_type: new FormControl('', Validators.required),
     account: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
     amount: new FormControl('', Validators.required),
@@ -45,8 +49,8 @@ export class VoucherComponent implements OnInit {
   get date() {
     return this.form.get('date');
   }
-  get vouchar_type() {
-    return this.form.get('vouchar_type');
+  get voucher_type() {
+    return this.form.get('voucher_type');
   }
   get accounts() {
     return this.form.get('account');
@@ -63,123 +67,101 @@ export class VoucherComponent implements OnInit {
     { value: 'Cash Receipt', label: 'Cash Receipt' },
     { value: 'Bank Receipt', label: 'Bank Receipt' },
   ];
+  transactionCount: number = 0;
+
   getVoucherTypeText(value: any): string {
     const voucherType = this.voucherTypes.find((type) => type.value === value);
     return voucherType ? voucherType.label : '';
   }
 
-  // addTransaction() {
-  //   if (this.form.valid) {
-  //     const data: any = {};
-  //     data['date'] = this.form.value.date;
-  //     data['vouchar_type'] = this.form.value.vouchar_type;
-  //     data['account'] = this.form.value.account;
-  //     data['description'] = this.form.value.description;
-  //     data['amount'] = this.form.value.amount;
-
-  //     if (this.form.value.vouchar_type === 'Bank Payment' || this.form.value.vouchar_type === 'Cash Payment') {
-  //       data['debit'] = this.credit > 0 ? this.form.value.amount : 0;
-  //       data['credit'] = this.debit > 0 ? 0 : this.form.value.amount;
-  //     } else {
-  //       data['debit'] = this.debit > 0 ? 0 : this.form.value.amount;
-  //       data['credit'] = this.credit > 0 ? this.form.value.amount : 0;
-  //     }
-
-  //     this.transactions.push(data);
-  //     this.form.reset();
-
-  //     // Update debit and credit
-  //     this.debit += data['debit'];
-  //     this.credit += data['credit'];
-  //     this.form.get('vouchar_type')?.disable();
-  //     this.form.get('date')?.disable();
-  //   }
-
-  //   this.getVoucherTypeText(this.form.value.vouchar_type);
-  // }
   addTransaction() {
     if (this.form.valid) {
       const data: any = {};
       data['date'] = this.form.value.date;
-      data['vouchar_type'] = this.form.value.vouchar_type;
+      data['voucher_type'] = this.form.value.voucher_type;
       data['account'] = this.form.value.account;
       data['description'] = this.form.value.description;
       data['amount'] = this.form.value.amount;
 
-      if (
-        this.form.value.vouchar_type === 'Bank Payment' ||
-        this.form.value.vouchar_type === 'Cash Payment'
+      // Check transaction count and voucher type to determine debit or credit
+      if (this.transactionCount === 0) {
+        data['debit'] = this.form.value.amount;
+        data['credit'] = 0;
+      } else if (this.transactionCount === 1) {
+        data['debit'] = 0;
+        data['credit'] = this.form.value.amount;
+        this.debit = 0;
+        // Assign date and voucher type from the first transaction
+        data['date'] = this.transactions[0]['date'];
+        data['voucher_type'] = this.transactions[0]['voucher_type'];
+      } else if (
+        (this.form.value.voucher_type === 'Bank reciept' ||
+          this.form.value.voucher_type === 'Cash reciept') &&
+        this.transactionCount % 2 === 0
       ) {
-        if (
-          this.transactions.length === 0 ||
-          this.transactions.length % 2 === 0
-        ) {
-          data['debit'] = this.form.value.amount;
-          data['credit'] = 0;
-        } else {
-          data['debit'] = 0;
-          data['credit'] = this.form.value.amount;
-        }
+        data['credit'] = this.form.value.amount;
+        data['debit'] = 0;
       } else {
-        if (
-          this.transactions.length === 0 ||
-          this.transactions.length % 2 === 0
-        ) {
-          data['debit'] = 0;
-          data['credit'] = this.form.value.amount;
-        } else {
-          data['debit'] = this.form.value.amount;
-          data['credit'] = 0;
-        }
+        data['credit'] = 0;
+        data['debit'] = this.form.value.amount;
       }
 
       this.transactions.push(data);
-      this.form.reset();
+      this.transactionCount++;
+
+      // Reset the form
+      // this.form.reset();
 
       // Update debit and credit
-      this.debit = this.transactions.reduce(
-        (total, transaction) => total + transaction.debit,
-        0
-      );
-      this.credit = this.transactions.reduce(
-        (total, transaction) => total + transaction.credit,
-        0
-      );
-
-      this.form.get('vouchar_type')?.disable();
+      this.debit += data['debit'];
+      this.credit += data['credit'];
+      this.form.get('voucher_type')?.disable();
       this.form.get('date')?.disable();
-    }
 
-    this.getVoucherTypeText(this.form.value.vouchar_type);
+      // Send data to API
+    }
+  }
+  transactionsData: any[] = [];
+  sendDataToAPI(data: any) {
+    // console.log(this.voucher_type);
+    console.log(this.voucher_type?.value);
+    const transactions = this.transactions.map((transaction) => {
+      return {
+        description: transaction.description,
+        account: transaction.account,
+        vocuher_type: transaction.voucher_type,
+        debit: transaction.debit,
+        credit: transaction.credit,
+      };
+    });
+
+    // console.log(this.voucher_type?.value);
+    const requestBody = {
+      transaction_date: this.date?.value,
+      transactions: transactions,
+      vocuher_type: this.voucher_type?.value,
+    };
+
+    const apiUrl = 'http://192.168.1.9:8000/inventory/vouchar/';
+
+    console.log(JSON.stringify(requestBody));
+    this.http.post(apiUrl, requestBody).subscribe(
+      (response: any) => {
+        this.transactionsData = response;
+        console.log('Data sent successfully:', response);
+      },
+      (error: any) => {
+        console.error('Error occurred while sending data:', error);
+      }
+    );
   }
 
   isComplete: boolean = false;
   transaction_order_res: any[] = [];
-  // saveVouchar() {
-  //   if (this.vouchar_type?.value && this.transactions.length >= 1) {
-  //     this.basic.loader.next(true);
+  // <------------------------------------ code for refreshing page -------------------------------------------->
 
-  //     let data: any = {
-  //       vouchar_type: <any>this.vouchar_type?.value,
-  //       transactions: JSON.stringify(this.transactions),
-  //     };
-  //     if (this.date?.value) data['transaction_date'] = <any>this.date?.value;
-
-  //     this.api
-  //       .postItem(
-  //         'transaction_orders',
-  //         'Transaction Order',
-  //         <any>data,
-  //         true,
-  //         true,
-  //         false
-  //       )
-  //       .then((res) => {
-  //         this.isComplete = true;
-  //         this.transaction_order_res = <any>res;
-  //         this.basic.loader.next(false);
-  //       })
-  //       .catch((error) => this.basic.loader.next(false));
-  //   }
-  // }
+  refreshPage() {
+    window.location.reload();
+  }
+  
 }

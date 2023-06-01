@@ -7,7 +7,7 @@
   <form [formGroup]="form">
     <div class="row">
       <div class="form-group col-2">
-        <label for="date">Transition Date</label>
+        <label for="date">Transaction Date</label>
         <input
           type="date"
           id="date"
@@ -26,24 +26,17 @@
       </div>
       <div class="form-group col-2">
         <label>Voucher Type</label>
-        <select
-          class="sm form-select"
-          formControlName="vouchar_type"
-          [disabled]="!form.valid"
-          [class.ng-invalid]="
-            form.controls.vouchar_type.invalid &&
-            form.controls.vouchar_type.touched
-          "
-        >
+        <select class="sm form-select" formControlName="voucher_type">
           <!-- <option value="" disabled selected>Select Voucher Type</option> -->
-          <option *ngFor="let item of voucherTypes">
+          <option>Select Payment</option>
+          <option *ngFor="let item of voucherTypes" [value]="item.value">
             {{ item.value }}
           </option>
         </select>
         <div
           *ngIf="
-            form.controls.vouchar_type.invalid &&
-            form.controls.vouchar_type.touched
+            form.controls.voucher_type.invalid &&
+            form.controls.voucher_type.touched
           "
           class="error-message"
         >
@@ -58,10 +51,12 @@
         <select
           class="sm form-select"
           formControlName="account"
-          [class.invalid]="false"
+          value="account.id"
         >
+          <option>Select Account</option>
           <option *ngFor="let account of accountData">
             {{ account.title }}
+            {{ account.id }}
           </option>
         </select>
       </div>
@@ -84,28 +79,6 @@
           class="form-control sm"
           [class.ng-invalid]="false"
           formControlName="amount"
-        />
-      </div>
-      <div class="form-group col-2">
-        <label for="debit">debit amount</label>
-        <input
-          type="number"
-          id="debit"
-          class="form-control sm"
-          [class.ng-invalid]="false"
-          disabled
-          [value]="debit"
-        />
-      </div>
-      <div class="form-group col-2">
-        <label for="credit">credit amount</label>
-        <input
-          type="number"
-          id="credit"
-          class="form-control sm"
-          [class.ng-invalid]="false"
-          disabled
-          [value]="credit"
         />
       </div>
     </div>
@@ -139,21 +112,20 @@
           <td>{{ item.account }}</td>
           <td>{{ getVoucherTypeText(item.voucher_type) }}</td>
           <td>{{ item.description }}</td>
-          <td>{{ item.debit }}</td>
-          <td>{{ item.credit }}</td>
+          <td>{{ item.debit > 0 ? item.amount : "" }}</td>
+          <td>{{ item.credit > 0 ? item.amount : "" }}</td>
         </tr>
       </tbody>
     </table>
-    
   </div>
 
   <div class="d-flex justify-content-end">
     <div class="d-flex align-center">
-      <!-- <button class="button mx-3">
-          <i class="bi bi-arrow-clockwise"></i>
-          Reload
-        </button> -->
-      <button class="btn btn-primary">
+      <button class="btn btn-dark mx-1" (click)="refreshPage()">
+        <i class="bi bi-arrow-clockwise"></i>
+        Reload
+      </button>
+      <button class="btn btn-primary" (click)="sendDataToAPI(transactions)">
         <i class="bi bi-check2"></i> Save Vouchar
       </button>
     </div>
@@ -164,33 +136,27 @@
     <table class="table table-striped text-center table-bordered table-hover">
       <thead class="table-head">
         <tr>
-          <th>#</th>
-          <th>Account Id</th>
+          <th>Transaction Id</th>
           <th>Account Name</th>
+          <th>Voucher Type</th>
           <th>Description</th>
+          <th>Transaction Date</th>
           <th>Debit</th>
           <th>Credit</th>
-          <th>Date</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td></td>
-          <!-- <td>{{ item.id }}</td>
-            <td>{{ item.account }}</td>
-            <td>{{ item.account_name }}</td>
-            <td>{{ item.narration }}</td>
-            <td>{{ item.debit }}</td>
-            <td>{{ item.credit }}</td>
-            <td>{{ item.transaction_date }}</td> -->
+        <tr *ngFor="let transaction of transactionsData; let i = index">
+          <td>{{ transaction.id }}</td>
+          <td>{{ transaction.account_name }}</td>
+          <td>{{ transaction.vocuher_type }}</td>
+          <td>{{ transaction.description }}</td>
+          <td>{{ transaction.transaction_date }}</td>
+          <td>{{ transaction.debit }}</td>
+          <td>{{ transaction.credit }}</td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div class="d-flex justify-content-end">
-    <!-- <button class="button mx-3">
-        <i class="bi bi-arrow-clockwise"></i>
-        Reload
-      </button> -->
-  </div>
+  <div class="d-flex justify-content-end"></div>
 </ng-container>
