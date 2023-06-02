@@ -54,16 +54,27 @@ export class UnitsComponent implements OnInit {
       this.Units = response.results;
     });
   }
+
+  p: any;
+  name: any;
+
+  Search() {
+    if (this.name == '') {
+      this.ngOnInit();
+    } else {
+      this.Units = this.Units.filter((res) => {
+        return res.name.match(this.name);
+      });
+    }
+  }
+
   getProducts() {
     this.productService.getProducts().subscribe((data) => {
       this.productData = data.results;
     });
     console.log(this.productData);
   }
-  searchUnits(): void {
-    this.pageIndex = 0;
-    this.getUnit();
-  }
+
   getUnit() {
     this.unitService.getUnit().subscribe((response) => {
       this.Units = response.results;
@@ -74,40 +85,7 @@ export class UnitsComponent implements OnInit {
     this.getUnit();
   }
   pages: number[] = [];
-  // addUnit() {
-  //   Swal.fire({
-  //     title: 'Add New Unit',
-  //     input: 'text',
-  //     inputPlaceholder: 'Unit Name',
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Add',
-  //     showLoaderOnConfirm: true,
-  //     preConfirm: (name) => {
-  //       return new Promise((resolve, reject) => {
-  //         const newCategory = { name: name };
-  //         this.unitService.addUnit(newCategory).subscribe(
-  //           (response) => {
-  //             resolve(response);
-  //             this.getUnit();
-  //           },
-  //           (error) => {
-  //             reject(error);
-  //           }
-  //         );
-  //       });
-  //     },
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       Swal.fire({
-  //         icon: 'success',
-  //         title: 'Unit Added!',
-  //         text: `The Unit has been added.`,
-  //         showConfirmButton: true,
-  //         timer: 1500,
-  //       });
-  //     }
-  //   });
-  // }
+
   addUnit() {
     Swal.fire({
       title: 'Add New Unit',
@@ -222,17 +200,5 @@ export class UnitsComponent implements OnInit {
         });
       }
     });
-  }
-
-  p: any;
-  name: any;
-  Search() {
-    if (this.name == '') {
-      this.ngOnInit();
-    } else {
-      this.products = this.products.filter((res) => {
-        return res.name.match(this.name);
-      });
-    }
   }
 }

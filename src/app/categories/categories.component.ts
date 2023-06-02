@@ -31,6 +31,7 @@ export class CategoriesComponent {
   pageIndex: any = 0;
   selectedCategory: any;
   productData: any;
+  title?: string;
 
   constructor(
     private categoryService: CategoryService,
@@ -47,9 +48,19 @@ export class CategoriesComponent {
       this.productData = data.results;
     });
   }
-  searchCategories(): void {
-    this.pageIndex = 0;
-    this.getCategories(this.pageIndex, this.pageSize);
+  // searchCategories(): void {
+  //   this.pageIndex = 0;
+  //   this.getCategories(this.pageIndex, this.pageSize);
+  // }
+  name: any;
+  Search() {
+    if (this.name == '') {
+      this.ngOnInit();
+    } else {
+      this.categories = this.categories.filter((res) => {
+        return res.name.match(this.name);
+      });
+    }
   }
   getCategories(pageIndex: number, pageSize: number) {
     if (this.searchQuery.trim() === '') {

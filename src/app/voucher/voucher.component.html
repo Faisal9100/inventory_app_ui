@@ -54,9 +54,9 @@
           value="account.id"
         >
           <option>Select Account</option>
-          <option *ngFor="let account of accountData">
+          <option [value]="account.id" *ngFor="let account of accountData">
             {{ account.title }}
-            {{ account.id }}
+            <!-- {{ account.id }} -->
           </option>
         </select>
       </div>
@@ -99,7 +99,7 @@
       <thead class="table-head">
         <tr>
           <th>#</th>
-          <th>Account Name</th>
+          <th>Account_id</th>
           <th>Voucher</th>
           <th class="col-5">Detail Description</th>
           <th>Debit</th>
@@ -109,11 +109,11 @@
       <tbody>
         <tr *ngFor="let item of transactions; let i = index">
           <td>{{ i + 1 }}</td>
-          <td>{{ item.account }}</td>
-          <td>{{ getVoucherTypeText(item.voucher_type) }}</td>
+          <td>{{ item.account_ }}</td>
+          <td>{{ item.voucher_type }}</td>
           <td>{{ item.description }}</td>
-          <td>{{ item.debit > 0 ? item.amount : "" }}</td>
-          <td>{{ item.credit > 0 ? item.amount : "" }}</td>
+          <td>{{ item.debit }}</td>
+          <td>{{ item.credit }}</td>
         </tr>
       </tbody>
     </table>

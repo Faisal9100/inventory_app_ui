@@ -313,9 +313,12 @@ export class AllSaleComponent {
 
   // <--------------------------------- code for adding Sale ----------------------------------------------->
 
-
   addSale() {
-    if (!this.purchaseDate || !this.selectedCustomer || !this.selectedWarehouse) {
+    if (
+      !this.purchaseDate ||
+      !this.selectedCustomer ||
+      !this.selectedWarehouse
+    ) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -323,7 +326,7 @@ export class AllSaleComponent {
       });
       return; // Stop the execution if the form is empty
     }
-  
+
     const payload: any = {
       date: this.purchaseDate,
       account: this.selectedCustomer,
@@ -333,7 +336,7 @@ export class AllSaleComponent {
       remarks: this.remarks,
       account_customer: this.selectedCustomer,
     };
-  
+
     this.http
       .post<{ id: number }>('http://192.168.1.9:8000/inventory/sales/', payload)
       .subscribe(
@@ -355,7 +358,6 @@ export class AllSaleComponent {
         }
       );
   }
-
 
   // <--------------------------------- code for deleting Sale --------------------------------------->
 
@@ -443,7 +445,7 @@ export class AllSaleComponent {
   // <----------------------------- code for deleting stock from sale list ------------------------------------------->
   stock_list_id: any;
   stockid: any;
-  deleteSaleList(purchasedId: number, stockid: number) {
+  deleteSaleList(stock_list_id: number, stockid: number) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to recover this account!',
@@ -456,9 +458,7 @@ export class AllSaleComponent {
         this.stockid = stockid;
         this.http
           .delete(
-            `http://192.168.1.9:8000/inventory/sales/${purchasedId}/sale_items/` +
-              stockid +
-              '/'
+            `http://192.168.1.9:8000/inventory/sales/${stock_list_id}/sale_items/${stockid}/`
           )
           .subscribe(
             () => {
@@ -594,7 +594,6 @@ export class AllSaleComponent {
   refreshPage() {
     window.location.reload();
   }
-  
 }
 
 //  <---------------------------SALE ALL WORK END HERE------------------------------------>

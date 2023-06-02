@@ -7,6 +7,9 @@ import { Account } from './accountlayer/accountlayer.component';
   providedIn: 'root',
 })
 export class AccountlayerService {
+  filter(arg0: (account: { sub_layer_keyword: string; }) => boolean): AccountlayerService {
+    throw new Error('Method not implemented.');
+  }
   accountAdded = new EventEmitter<Account>();
   pageSize = 10;
   currentPage = 1;

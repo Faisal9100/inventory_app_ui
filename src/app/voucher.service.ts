@@ -4,15 +4,12 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class VoucherService {
+  [x: string]: any;
   VOUCHAR_TYPE = [
-    ['Bank Payment', 'Bank Payment'],
+    [1, 'Bank Payment'],
     [2, 'Bank Receipt'],
-    ['Cash Payment', 'Cash Payment'],
-    ['Cash Receipt', 'Cash Receipt'],
+    [3, 'Cash Payment'],
+    [4, 'Cash Receipt'],
   ];
-  // ('Cash Payment', 'Cash Payment'),
-  //       ('Bank Payment', 'Bank Payment'),
-  //       ('Cash Receipt', 'Cash Receipt'),
-  //       ('Bank Receipt', 'Bank Receipt'),
   constructor() { }
 }

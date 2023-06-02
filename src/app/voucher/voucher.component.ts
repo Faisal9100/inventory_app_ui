@@ -74,17 +74,90 @@ export class VoucherComponent implements OnInit {
     return voucherType ? voucherType.label : '';
   }
 
+  // addTransaction() {
+  //   if (this.form.valid) {
+  //     const data: any = {};
+  //     data['date'] = this.form.value.date;
+  //     data['voucher_type'] = this.form.value.voucher_type;
+  //     data['account'] = this.form.value.account;
+  //     data['description'] = this.form.value.description;
+  //     data['amount'] = this.form.value.amount;
+
+  //     // Check transaction count and voucher type to determine debit or credit
+  //     if (
+  //       (this.form.value.voucher_type === 'Cash Payment' ||
+  //         this.form.value.voucher_type === 'Bank Payment') &&
+  //       this.transactionCount === 0
+  //     ) {
+  //       data['debit'] = this.form.value.amount;
+  //       data['credit'] = 0;
+  //     } else if (this.transactionCount === 1) {
+  //       data['debit'] = 0;
+  //       data['credit'] = this.form.value.amount;
+  //       this.debit = 0;
+  //       // Assign date and voucher type from the first transaction
+  //       data['date'] = this.transactions[0]['date'];
+  //       data['voucher_type'] = this.transactions[0]['voucher_type'];
+  //     } else if (
+  //       (this.form.value.voucher_type === 'Cash Receipt' ||
+  //         this.form.value.voucher_type === 'Bank Receipt') &&
+  //       this.transactionCount === 0
+  //     ) {
+  //       data['credit'] = this.form.value.amount;
+  //       data['debit'] = 0;
+  //     } else {
+  //       data['credit'] = 0;
+  //       data['debit'] = this.form.value.amount;
+  //     }
+
+  //     this.transactions.push(data);
+  //     this.transactionCount++;
+
+  //     this.form.get('account')?.setValue('');
+  //     this.form.get('description')?.setValue('');
+  //     this.form.get('amount')?.setValue('');
+
+  //     // Update debit and credit
+  //     this.debit += data['debit'];
+  //     this.credit += data['credit'];
+
+  //     this.form.get('voucher_type')?.disable();
+  //     this.form.get('date')?.disable();
+  //   }
+  // }
+
   addTransaction() {
     if (this.form.valid) {
+      // if (
+      //   this.form.value.voucher_type === 'Bank Payment' ||
+      //   this.form.value.voucher_type === 'Bank Receipt'
+      // ) {
+      //   this.accountData = this.accountData.filter(
+      //     (account: { sub_layer_keyword: string }) =>
+      //       account.sub_layer_keyword === 'bank'
+      //   );
+      // } else if (
+      //   this.form.value.voucher_type === 'Cash Receipt' ||
+      //   this.form.value.voucher_type === 'Cash Payment'
+      // ) {
+      //   this.accountData = this.accountData.filter(
+      //     (account: { sub_layer_keyword: string }) =>
+      //       account.sub_layer_keyword === 'cashinhand'
+      //   );
+      // }
       const data: any = {};
       data['date'] = this.form.value.date;
       data['voucher_type'] = this.form.value.voucher_type;
       data['account'] = this.form.value.account;
       data['description'] = this.form.value.description;
       data['amount'] = this.form.value.amount;
-
+      console.log(data);
       // Check transaction count and voucher type to determine debit or credit
-      if (this.transactionCount === 0) {
+      if (
+        (this.form.value.voucher_type === 'Cash Payment' ||
+          this.form.value.voucher_type === 'Bank Payment') &&
+        this.transactionCount === 0
+      ) {
         data['debit'] = this.form.value.amount;
         data['credit'] = 0;
       } else if (this.transactionCount === 1) {
@@ -95,9 +168,9 @@ export class VoucherComponent implements OnInit {
         data['date'] = this.transactions[0]['date'];
         data['voucher_type'] = this.transactions[0]['voucher_type'];
       } else if (
-        (this.form.value.voucher_type === 'Bank reciept' ||
-          this.form.value.voucher_type === 'Cash reciept') &&
-        this.transactionCount % 2 === 0
+        (this.form.value.voucher_type === 'Cash Receipt' ||
+          this.form.value.voucher_type === 'Bank Receipt') &&
+        this.transactionCount === 0
       ) {
         data['credit'] = this.form.value.amount;
         data['debit'] = 0;
@@ -109,21 +182,21 @@ export class VoucherComponent implements OnInit {
       this.transactions.push(data);
       this.transactionCount++;
 
-      // Reset the form
-      // this.form.reset();
+      this.form.get('account')?.setValue('');
+      this.form.get('description')?.setValue('');
+      this.form.get('amount')?.setValue('');
 
       // Update debit and credit
       this.debit += data['debit'];
       this.credit += data['credit'];
+
       this.form.get('voucher_type')?.disable();
       this.form.get('date')?.disable();
-
-      // Send data to API
     }
   }
+
   transactionsData: any[] = [];
   sendDataToAPI(data: any) {
-    // console.log(this.voucher_type);
     console.log(this.voucher_type?.value);
     const transactions = this.transactions.map((transaction) => {
       return {
@@ -163,5 +236,4 @@ export class VoucherComponent implements OnInit {
   refreshPage() {
     window.location.reload();
   }
-  
 }

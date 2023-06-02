@@ -51,9 +51,15 @@ export class BrandsComponent {
       this.productData = data.results;
     });
   }
-  searchBrand(): void {
-    this.pageIndex = 0;
-    this.getBrand(this.pageIndex, this.pageSize);
+ name:any;
+  Search() {
+    if (this.name == '') {
+      this.ngOnInit();
+    } else {
+      this.brands = this.brands.filter((res) => {
+        return res.name.match(this.name);
+      });
+    }
   }
   getBrand(pageIndex: number, pageSize: number) {
     if (this.searchQuery.trim() === '') {

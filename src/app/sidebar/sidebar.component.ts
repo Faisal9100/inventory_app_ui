@@ -17,5 +17,5 @@ export class SidebarComponent {
   showLoginForm(): void {
     this.loginFormVisible = false;
   }
-  
+  login:boolean = false;
 }
