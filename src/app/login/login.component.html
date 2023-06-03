@@ -117,47 +117,22 @@
       <div class="container-login100">
         <div class="wrap-login100">
     
-          <form class="login100-form validate-form" [formGroup]="form">
+          <form class="login100-form validate-form"(ngSubmit)="login()" >
             <span class="login100-form-title">Inventory Managenent System</span>
     
-            <div class="wrap-input100 validate-input">
-              <input
-                class="input100"
-                type="text"
-                placeholder="Username"
-                formControlName="username"
-                id="username_input"
-              />
-              <span class="focus-input100"></span>
-              <span class="symbol-input100">
-                <i class="fa fa-user"></i>
-              </span>
-            </div>
-    
-            <div
-              class="wrap-input100 validate-input"
-              data-validate="Password is required"
-            >
-              <input
-                class="input100"
-                type="password"
-                placeholder="Password"
-                formControlName="password"
-              />
-              <span class="focus-input100"></span>
-              <span class="symbol-input100">
-                <i class="fa fa-lock"></i>
-              </span>
-            </div>
+            
+              <input type="text" name="username" [(ngModel)]="username" placeholder="Username" required>
+              <input type="password" name="password" [(ngModel)]="password" placeholder="Password" required>
+             
+          
     
             <div class="container-login100-form-btn">
               <button
                 class="login100-form-btn"
-                [disabled]="form.invalid || (loader | async)"
-                (click)="login()"
+                
+                type="submit"
               >
-                <span *ngIf="!(loader | async)">Login</span>
-                <span *ngIf="loader | async">Loging In ....</span>
+                <span >Login</span>
               </button>
             </div>
             <a
@@ -167,7 +142,7 @@
             >
               Forgot Password / Reset Password
             </a>
-            <div class="site_alert" *ngIf="loginError">
+            <div class="site_alert" >
               Username / Password is Incorrect
               <button type="button" class="close">
                 <i class="bi bi-x" (click)="basic.closeAlert($event)"></i>
@@ -184,7 +159,7 @@
     </div>
     
     <!-- Modal -->
-    <div class="modal fade" id="resetPasswordModal">
+    <!-- <div class="modal fade" id="resetPasswordModal">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -220,14 +195,14 @@
                 ></button>
               </div>
             </form>
-          </div>
+          </div> -->
           <!-- <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                 Close
               </button>
               <button type="button" class="btn btn-primary">Reset Password</button>
             </div> -->
-        </div>
+        <!-- </div>
       </div>
     </div>
-    
+     -->

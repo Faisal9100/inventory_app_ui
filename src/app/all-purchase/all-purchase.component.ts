@@ -376,6 +376,11 @@ export class AllPurchaseComponent implements OnInit {
         this.addStock(purchaseId).then((res) => {
           this.getAllPurchaseData();
         });
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: 'Purchase added successfully.',
+        });
       });
   }
 
@@ -424,6 +429,38 @@ export class AllPurchaseComponent implements OnInit {
   //   <-----------------------------adding another product-------------------------------------------->
 
   update_purchase_id: any;
+  // postUpdateStock(product: any, q: any, p: any, date: any) {
+  //   if (!product.value || !q.value || !p.value || !date.value) {
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Error',
+  //       text: 'Please fill in all the required fields.',
+  //     });
+  //     return;
+  //   }
+  //   if (product && product.id) {
+  //     const requestBody = {
+  //       date: date.value,
+  //       product: product.value,
+  //       quantity: q.value,
+  //       price: p.value,
+  //       amount: p.value * q.value,
+  //     };
+
+  //     console.log(requestBody);
+
+  //     this.http
+  //       .post(
+  //         `http://192.168.1.9:8000/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
+  //         requestBody
+  //       )
+  //       .subscribe((response) => {
+  //         console.log(response);
+  //       });
+  //   } else {
+  //     console.log('Invalid product data');
+  //   }
+  // }
   postUpdateStock(product: any, q: any, p: any, date: any) {
     if (!product.value || !q.value || !p.value || !date.value) {
       Swal.fire({
@@ -433,6 +470,7 @@ export class AllPurchaseComponent implements OnInit {
       });
       return;
     }
+  
     if (product && product.id) {
       const requestBody = {
         date: date.value,
@@ -441,21 +479,35 @@ export class AllPurchaseComponent implements OnInit {
         price: p.value,
         amount: p.value * q.value,
       };
-
+  
       console.log(requestBody);
-
+  
       this.http
         .post(
           `http://192.168.1.9:8000/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
           requestBody
         )
-        .subscribe((response) => {
-          console.log(response);
-        });
-    } else {
-      console.log('Invalid product data');
+        .subscribe(
+          (response) => {
+            console.log(response);
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Stock added successfully.',
+            });
+          },
+          (error) => {
+            console.error(error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to add stock.',
+            });
+          }
+        );
     }
   }
+  
 
   updatedStock: any;
   p: any;

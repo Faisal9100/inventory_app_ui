@@ -13,32 +13,32 @@ import { UnitsComponent } from './units/units.component';
 import { WarehouseComponent } from './warehouse/warehouse.component';
 import { AccountlayerComponent } from './accountlayer/accountlayer.component';
 import { LoginComponent } from './login/login.component';
-import { AuthGuard } from './login/authQuard';
 import { SidebarComponent } from './sidebar/sidebar.component';
-import { MainGuard } from './main.guard';
+// import { MainGuard } from './main.guard';
 import { VoucherComponent } from './voucher/voucher.component';
 import { TransactionsComponent } from './transactions/transactions.component';
+import { AuthguardGuard } from './authguard.guard';
 const routes: Routes = [
   { path: 'sidebar', component: SidebarComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
-  { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'products', component: ProductsComponent },
-  { path: 'categories', component: CategoriesComponent },
-  { path: 'brands', component: BrandsComponent },
-  { path: 'purchase', component: AllPurchaseComponent },
-  { path: 'categories', component: CategoriesComponent },
-  { path: 'report', component: ReportComponent },
-  { path: 'All-sale', component: AllSaleComponent },
-  { path: 'warehouse', component: WarehouseComponent },
-  { path: 'units', component: UnitsComponent },
-  { path: 'customer', component: CustomerComponent },
-  { path: 'supplier', component: SupplierComponent },
-  { path: 'accounts', component: AccountlayerComponent },
-  { path: 'voucher', component: VoucherComponent },
-  { path: 'All-purchase', component: AllPurchaseComponent },
-  { path: 'Sale', component: AllSaleComponent },
-  { path: 'transaction', component: TransactionsComponent },
+  { path: 'dashboard', component: DashboardComponent,canActivate:[AuthguardGuard]  },
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: 'products', component: ProductsComponent,canActivate:[AuthguardGuard] },
+  { path: 'categories', component: CategoriesComponent ,canActivate:[AuthguardGuard] },
+  { path: 'brands', component: BrandsComponent ,canActivate:[AuthguardGuard] },
+  { path: 'purchase', component: AllPurchaseComponent,canActivate:[AuthguardGuard]  },
+  { path: 'categories', component: CategoriesComponent ,canActivate:[AuthguardGuard] },
+  { path: 'report', component: ReportComponent ,canActivate:[AuthguardGuard] },
+  { path: 'All-sale', component: AllSaleComponent,canActivate:[AuthguardGuard]  },
+  { path: 'warehouse', component: WarehouseComponent ,canActivate:[AuthguardGuard] },
+  { path: 'units', component: UnitsComponent ,canActivate:[AuthguardGuard] },
+  { path: 'customer', component: CustomerComponent,canActivate:[AuthguardGuard]  },
+  { path: 'supplier', component: SupplierComponent,canActivate:[AuthguardGuard]  },
+  { path: 'accounts', component: AccountlayerComponent ,canActivate:[AuthguardGuard] },
+  { path: 'voucher', component: VoucherComponent ,canActivate:[AuthguardGuard] },
+  { path: 'All-purchase', component: AllPurchaseComponent,canActivate:[AuthguardGuard]  },
+  { path: 'Sale', component: AllSaleComponent ,canActivate:[AuthguardGuard] },
+  { path: 'transaction', component: TransactionsComponent,canActivate:[AuthguardGuard]  },
 ];
 
 @NgModule({

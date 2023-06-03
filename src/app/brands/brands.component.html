@@ -35,8 +35,8 @@
     <tbody>
       <tr *ngFor="let brand of brands; let i = index">
         <td style="width: 25%">{{ brand.id }}</td>
-        <td style="width: 25%">{{ brand.name }}</td>
-        <td style="width: 25%">{{ productData?.[i]?.quantity ?? 0 }}</td>
+        <td>{{ brand.name }}</td>
+        <td>{{ productData?.[i]?.quantity ?? 0 }}</td>
 
         <td>
           <button

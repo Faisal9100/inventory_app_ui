@@ -188,15 +188,24 @@ export class SupplierComponent {
         )).value;
 
         if (!supplierTitle) {
-          Swal.showValidationMessage('Supplier title is required');
-        } else {
+          Swal.showValidationMessage('Supplier Title is required');
+        } 
+        if (!supplierContact) {
+          Swal.showValidationMessage('Supplier Contact is required');
+        } 
+        if (!supplierAddress) {
+          Swal.showValidationMessage('Supplier Address is required');
+        } 
+        if (!supplierEmail) {
+          Swal.showValidationMessage('Supplier Email is required');
+        } 
+        else {
           const newsupplier = {
             title: supplierTitle,
-            // address: supplierAddress,
-            // balance: supplierBalance,
-            // status: supplierStatus,
-            // contact: supplierContact,
-            // email: supplierEmail,
+            address: supplierAddress,
+            status: supplierStatus,
+            contact: supplierContact,
+            email: supplierEmail,
           };
           this.http.post<Supplier>(this.url, newsupplier).subscribe(() => {
             this.newsupplier = {

@@ -78,7 +78,13 @@ export class WarehouseComponent {
         )).value;
 
         if (!productName) {
-          Swal.showValidationMessage('Warehouse name is required');
+          Swal.showValidationMessage('Warehouse Name is required');
+        }
+        if (!productAddress) {
+          Swal.showValidationMessage('Warehouse Address is required');
+        }
+        if (!productStatus) {
+          Swal.showValidationMessage('Warehouse Status is required');
         } else {
           const newProduct = {
             name: productName,

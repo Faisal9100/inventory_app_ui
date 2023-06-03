@@ -10,7 +10,7 @@
       [(ngModel)]="name"
       (ngModelChange)="Search()"
     />
-    <button class="btn btn-primary" >
+    <button class="btn btn-primary">
       <i class="bi bi-search"></i>
     </button>
     <button
@@ -31,9 +31,9 @@
     <thead class="table-head">
       <tr>
         <th style="width: 25%">S.N</th>
-        <th style="width: 25%">Name</th>
-        <th style="width: 25%">Product</th>
-        <th style="width: 25%">Action</th>
+        <th>Name</th>
+        <th>Product</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -44,9 +44,9 @@
         "
       >
         <td style="width: 25%">{{ unit.id }}</td>
-        <td style="width: 25%">{{ unit.name }}</td>
-        <td style="width: 25%">{{ productData?.[i]?.quantity ?? 0 }}</td>
-        <td style="width: 25%">
+        <td>{{ unit.name }}</td>
+        <td>{{ productData?.[i]?.quantity ?? 0 }}</td>
+        <td>
           <button
             class="btn btn-outline-primary mx-2"
             (click)="openUpdateModal(unit)"

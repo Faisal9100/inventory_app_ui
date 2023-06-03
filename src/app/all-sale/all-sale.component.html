@@ -176,6 +176,7 @@
       <table class="table table-striped text-center table-bordered table-hover">
         <thead class="table-head">
           <tr>
+            <th>#</th>
             <th>Name</th>
             <th>Quantity</th>
 
@@ -189,6 +190,7 @@
             class="text-center m-auto justify-content-center"
             *ngFor="let row of rows"
           >
+          <td>{{row.purchase_id}}</td>
             <td class="text-center my-3" #prn>{{ row.product_name }}</td>
             <td>
               <input
@@ -433,19 +435,24 @@
         class="form-control"
         id="quantity"
         [(ngModel)]="quantity"
+    
         #q
       />
-      <p class="">
+      
+
+      <!-- <span>Default Purchase Price: <span style="color: tomato">{{ product.price }}</span></span> -->
+      
+      <!-- <p class="">
         Default Purchase Price:
         <span style="color: tomato"></span>
-      </p>
+      </p> -->
 
       <label for="" class="p-2">Price</label>
       <input type="number" class="form-control" #p />
-      <p class="">
+      <!-- <p class="">
         Default Purchase Price:
         <span style="color: tomato"></span>
-      </p>
+      </p> -->
     </div>
     <label for="" class="p-2">date</label>
 

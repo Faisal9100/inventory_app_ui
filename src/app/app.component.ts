@@ -8,17 +8,15 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'inventery-app';
 
-  isLoggedIn = false;
+  isLoggedIn = true;
   showSubMenu: boolean = false;
 
   toggleSubMenu() {
     this.showSubMenu = !this.showSubMenu;
-    
   }
   loginFormVisible: boolean = true;
-  
+
   showLoginForm(): void {
     this.loginFormVisible = false;
   }
-  
 }

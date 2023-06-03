@@ -1,5 +1,5 @@
-<app-login *ngIf="isLoggedIn"></app-login>
-<div *ngIf="!isLoggedIn">
+<app-login *ngIf="!isLoggedIn"></app-login>
+<div *ngIf="isLoggedIn">
   <mat-toolbar color="primary" style="border-bottom: 1px solid white">
     <mat-toolbar-row
       style="background-color: #071251 !important ; position: sticky"
@@ -8,15 +8,7 @@
       <h1 class="mt-2">Inventary App</h1>
       <div
         class="input-group col-sm-6 w-25 justify-content-center align-item-center m-auto"
-      >
-        <!-- <input
-        type="text"
-        class="form-control"
-        placeholder="Search"
-        aria-label="Recipient's username"
-        aria-describedby="button-addon2"
-        /> -->
-      </div>
+      ></div>
       <div class="profile">
         <i class="bi bi-person-circle"></i><img src="" alt="" />
       </div>
@@ -101,34 +93,6 @@
             <span class="sidenav-nav-link-text">All Purchase</span>
           </li>
 
-          <!-- <li class="sidenav-nav-item" (click)="toggleSubMenu()">
-          <i class="bi bi-bag-heart"></i>
-          <span class="sidenav-nav-link-text">Purchase</span>
-          <i
-          class="bi bi-chevron-down float-end"
-          style="
-          font-size: 12px;
-          font-weight: bold;
-              text-align: center;
-              margin: auto;
-              margin-top: 5px;
-            "
-          ></i>
-          <div *ngIf="showSubMenu">
-            <li class="sidenav-nav-item" routerLink="All-purchase">
-              <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i> All
-                Purchase</span
-                >
-              </li>
-              <li>
-                <span class="mat-list-item"
-                ><i class="bi bi-hypnotize" style="font-size: 12px"></i>
-                Purchase Return</span
-                >
-              </li>
-            </div>
-          </li> -->
           <li class="sidenav-nav-item" routerLink="Sale">
             <i class="bi bi-cash-stack"></i>
             <span class="sidenav-nav-link-text">All Sale</span>

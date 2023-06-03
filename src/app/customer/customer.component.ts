@@ -120,6 +120,14 @@ export class CustomerComponent {
 
         if (!supplierTitle) {
           Swal.showValidationMessage('Customer title is required');
+        }
+        else if (!supplierContact){
+          Swal.showValidationMessage('Customer Contact is required');
+
+        }
+       else if (!supplierEmail){
+          Swal.showValidationMessage('Customer Email is required');
+
         } else {
           const newsupplier = {
             title: supplierTitle,

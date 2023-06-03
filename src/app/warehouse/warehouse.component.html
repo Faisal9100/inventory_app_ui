@@ -30,11 +30,11 @@
   <table class="table table-striped text-center table-bordered table-hover">
     <thead class="table-head">
       <tr>
-        <th style="width: 25%">S.N</th>
-        <th style="width: 25%">Name</th>
-        <th style="width: 25%">Address</th>
-        <th style="width: 25%">Status</th>
-        <th style="width: 25%">Action</th>
+        <th >S.N</th>
+        <th >Name</th>
+        <th >Address</th>
+        <th>Status</th>
+        <th >Action</th>
       </tr>
     </thead>
     <tbody>
@@ -45,9 +45,9 @@
         "
       >
         <td style="width: 25%">{{ product.id }}</td>
-        <td style="width: 25%">{{ product.name }}</td>
-        <td style="width: 25%">{{ product.address }}</td>
-        <td style="width: 25%">
+        <td >{{ product.name }}</td>
+        <td >{{ product.address }}</td>
+        <td >
           <button
             class="btn btn-outline-success"
             *ngIf="product.status === true"

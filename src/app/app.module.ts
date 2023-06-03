@@ -7,7 +7,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -50,6 +50,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { LoginComponent } from './login/login.component';
 import { VoucherComponent } from './voucher/voucher.component';
 import { TransactionsComponent } from './transactions/transactions.component';
+import { AuthguardGuard } from './authguard.guard';
+// import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 // import { AuthQuardGuard } from './auth-quard.guard';
 
 @NgModule({
@@ -105,7 +107,13 @@ import { TransactionsComponent } from './transactions/transactions.component';
     ProductService,
     SupplierService,
     NgbActiveModal,
-    // AuthQuardGuard,
+    AuthguardGuard,
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: AuthInterceptorInterceptor,
+    //   multi: true
+    // }
+    
   ],
   bootstrap: [AppComponent],
 })

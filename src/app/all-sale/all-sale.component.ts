@@ -50,6 +50,7 @@ interface Row {
   total: number;
   totalQuantity: number;
   totalAmount: number;
+  purchase_id: number;
 }
 @Component({
   selector: 'app-all-sale',
@@ -238,6 +239,7 @@ export class AllSaleComponent {
     quantity: 0,
     amount: 0,
     total: 0,
+    purchase_id: '',
   };
 
   productList: any[] = [];
@@ -296,6 +298,7 @@ export class AllSaleComponent {
       total: total,
       totalQuantity: totalQuantity,
       totalAmount: totalAmount,
+      purchase_id: selectedProduct.purchase_id,
     };
     this.rows.push(newRow);
 
@@ -407,6 +410,7 @@ export class AllSaleComponent {
         price: row.amount,
         product_id: row.product_id,
         product_name: row.product_name,
+        stock: row.purchase_id,
       };
       await this.postOneStock(product, id);
     }
@@ -432,13 +436,33 @@ export class AllSaleComponent {
 
   // <---------------------------------- code for search ----------------------------------------->
 
+  // Search() {
+  //   if (this.warehouse == '') {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.AllPurchaseData = this.AllPurchaseData.filter((res) => {
+  //       return res.title.match(this.warehouse);
+  //     });
+  //   }
+  // }
   Search() {
-    if (this.warehouse == '') {
+    if (this.remarks === '') {
       this.ngOnInit();
     } else {
-      this.AllPurchaseData = this.AllPurchaseData.filter((res) => {
-        return res.title.match(this.warehouse);
+      const filteredData = this.AllPurchaseData.filter((res) => {
+        return res.title.match(this.remarks);
       });
+
+      if (filteredData.length === 0) {
+        // No products found
+        Swal.fire({
+          icon: 'info',
+          title: 'No Product Found',
+          text: 'No products match the search criteria.',
+        });
+      }
+
+      this.AllPurchaseData = filteredData;
     }
   }
 

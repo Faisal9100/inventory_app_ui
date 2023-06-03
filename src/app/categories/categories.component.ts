@@ -48,6 +48,7 @@ export class CategoriesComponent {
       this.productData = data.results;
     });
   }
+  
   // searchCategories(): void {
   //   this.pageIndex = 0;
   //   this.getCategories(this.pageIndex, this.pageSize);

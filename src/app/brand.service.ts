@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -15,6 +15,12 @@ export class BrandService {
   getBrand(pageIndex: number, pageSize: number): Observable<any> {
     return this.http.get<any>(this.url);
   }
+  makeHttpRequestWithHeaders() {
+    // Create the headers object
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Authorization': 'JWT <access_token>'
+    });}
   createBrand(id: number, name: string) {
     const data = { id, name };
     return this.http.post(this.url, data);

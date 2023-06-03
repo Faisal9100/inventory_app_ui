@@ -614,4 +614,14 @@ export class ProductsComponent {
     });
     doc.save('all_products.pdf');
   }
+  name: any;
+  Search() {
+    if (this.name == '') {
+      this.ngOnInit();
+    } else {
+      this.productData1 = this.productData1.filter((res: { name: string; }) => {
+        return res.name.match(this.name);
+      });
+    }
+  }
 }
