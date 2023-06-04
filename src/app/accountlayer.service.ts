@@ -7,7 +7,9 @@ import { Account } from './accountlayer/accountlayer.component';
   providedIn: 'root',
 })
 export class AccountlayerService {
-  filter(arg0: (account: { sub_layer_keyword: string; }) => boolean): AccountlayerService {
+  filter(
+    arg0: (account: { sub_layer_keyword: string }) => boolean
+  ): AccountlayerService {
     throw new Error('Method not implemented.');
   }
   accountAdded = new EventEmitter<Account>();
@@ -17,7 +19,7 @@ export class AccountlayerService {
   pages: number[] = [];
   totalItems: any;
   itemsPerPage: any;
-  public ip_address = '192.168.1.9:8000';
+  public ip_address = '127.0.0.1:8000';
 
   selectedMainLayer: any;
 
@@ -45,9 +47,9 @@ export class AccountlayerService {
   // }
   postLayer1(selectedMainLayer: any): Observable<any> {
     const requestBody = {
-      main_layer: selectedMainLayer
+      main_layer: selectedMainLayer,
     };
-  
+
     return this.http.post(this.url_layer1, requestBody);
   }
 

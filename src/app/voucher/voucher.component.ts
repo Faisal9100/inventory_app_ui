@@ -33,7 +33,7 @@ export class VoucherComponent implements OnInit {
 
   // getVoucher() {
   //   this.http
-  //     .get('http://192.168.1.9:8000/inventory/vouchar/')
+  //     .get('http://127.0.0.1:8000/inventory/vouchar/')
   //     .subscribe((data: any) => {
   //       this.transactionsData = data.results;
   //       console.log(data);
@@ -215,7 +215,7 @@ export class VoucherComponent implements OnInit {
       vocuher_type: this.voucher_type?.value,
     };
 
-    const apiUrl = 'http://192.168.1.9:8000/inventory/vouchar/';
+    const apiUrl = 'http://127.0.0.1:8000/inventory/vouchar/';
 
     console.log(JSON.stringify(requestBody));
     this.http.post(apiUrl, requestBody).subscribe(

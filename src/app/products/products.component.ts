@@ -34,7 +34,7 @@ export interface Product {
 })
 export class ProductsComponent {
   @Output() updateCategory = new EventEmitter<any>();
-  public ip_address = '192.168.1.9:8000';
+  public ip_address = '127.0.0.1:8000';
   pageIndex: any = 0;
   taskToEdit: any;
   currentPage = 1;
@@ -64,6 +64,10 @@ export class ProductsComponent {
     category: new FormControl(),
     image: new FormControl(),
   });
+brand: any;
+unit: any;
+category: any;
+note: any;
 
   constructor(
     private modalService: NgbModal,
@@ -520,34 +524,81 @@ export class ProductsComponent {
   //     }
   //   });
   // }
-  updateProduct() {
-    if (this.productForm.invalid) {
-      // Validate the form and display an error message if it's invalid
-      return;
-    }
+  // updateProduct() {
+  //   const productId = // Retrieve the ID of the product you want to update;
+  //   const productData = {
+  //     name: this.productForm.get('name')?.value,
+  //     note: this.productForm.get('note')?.value,
+  //     brand: this.productForm.get('brand')?.value,
+  //     unit: this.productForm.get('unit')?.value,
+  //     category: this.productForm.get('category')?.value,
+  //   };
   
-    const formData = new FormData();
-    formData.append('name', this.productForm.value.name);
-    formData.append('brand', this.productForm.value.brand);
-    formData.append('unit', this.productForm.value.unit);
-    formData.append('category', this.productForm.value.category);
-    formData.append('note', this.productForm.value.note);
-    formData.append('image', this.productForm.value.image);
+  //   const formData = new FormData();
+  //   formData.append('name', this.productForm.get('name')?.value);
+  //   formData.append('note', this.productForm.get('note')?.value);
+  //   formData.append('brand', this.productForm.get('brand')?.value);
+  //   formData.append('unit', this.productForm.get('unit')?.value);
+  //   formData.append('category', this.productForm.get('category')?.value);
+  //   formData.append('image', this.selectedFile, this.selectedFile.name);
+  //   formData.append('product', JSON.stringify(productData));
   
-    this.http
-      .put('http://your-api-endpoint', formData)
-      .subscribe(
-        (response) => {
-          console.log('Product updated successfully:', response);
-          // Handle success scenario (e.g., display success message, redirect, etc.)
-        },
-        (error) => {
-          console.error('An error occurred while updating the product:', error);
-          // Handle error scenario (e.g., display error message, handle specific errors, etc.)
-        }
-      );
-  }
+  //   console.log(this.productForm.get('unit')?.value);
+  
+  //   this.productService.updateProduct(productId, formData).subscribe(
+  //     (response) => {
+  //       const formData = {
+  //         name: '',
+  //         note: '',
+  //         brand: '',
+  //         unit: '',
+  //         category: '',
+  //       };
+  //       console.log(response);
+  //       this.getProducts();
+  //       this.productForm.patchValue(existingProductData); // Update form control values
+  //       Swal.fire({
+  //         icon: 'success',
+  //         title: 'Product updated successfully!',
+  //         showConfirmButton: false,
+  //         timer: 2000,
+  //       });
+     
+  //     }
+  //   )};
+    
+  
+  // updateProduct() {
+  //   if (this.productForm.invalid) {
+  //     // Validate the form and display an error message if it's invalid
+  //     return;
+  //   }
+  
+  //   const productId = this.productForm.value.productId; // Assuming you have a form field for the product ID
+  //   const formData = new FormData();
+  //   formData.append('name', this.productForm.value.name);
+  //   formData.append('brand', this.productForm.value.brand);
+  //   formData.append('unit', this.productForm.value.unit);
+  //   formData.append('category', this.productForm.value.category);
+  //   formData.append('note', this.productForm.value.note);
+  //   formData.append('image', this.productForm.value.image);
+  
+  //   this.http
+  //     .put(`http://your-api-endpoint/${productId}`, formData) // Replace 'your-api-endpoint' with the actual API endpoint and append the product ID to the URL
+  //     .subscribe(
+  //       (response) => {
+  //         console.log('Product updated successfully:', response);
+  //         // Handle success scenario (e.g., display success message, redirect, etc.)
+  //       },
+  //       (error) => {
+  //         console.error('An error occurred while updating the product:', error);
+  //         // Handle error scenario (e.g., display error message, handle specific errors, etc.)
+  //       }
+  //     );
+  // }
+  
   open3(content3:any){
+    // this.modalService.open(content3);/
 //     {product: Product = new Product();
 // // Assign existing data to the product model
 // this.product.id = existingProductId;
@@ -624,4 +675,42 @@ export class ProductsComponent {
       });
     }
   }
-}
+
+  updateProduct = {
+    name:'',
+    note:'',
+    unit:'',
+    brand:'',
+    category:'',
+    image:''
+  }
+  update_product(product:any){
+    this.updateProduct = product;
+  }
+  product:any;
+   update_product_Data(updateProduct: any,id:any) {
+      const formData = new FormData();
+      formData.append('name', this.productForm.get('name')?.value);
+      formData.append('note', this.productForm.get('note')?.value);
+      formData.append('brand', this.productForm.get('brand')?.value);
+      formData.append('unit', this.productForm.get('unit')?.value);
+      formData.append('category', this.productForm.get('category')?.value);
+      // formData.append('image', this.selectedFile, this.selectedFile.name);
+    
+      const productId = updateProduct;
+    
+      const url = `http://127.0.0.1:8000/inventory/products/${id}/`; 
+    
+      this.http.put(url, formData).subscribe(
+        (response) => {
+          console.log(response);
+         
+        },
+        (error) => {
+          console.log(error);
+          // Handle the error if the update fails
+        }
+      );
+    }
+  }
+

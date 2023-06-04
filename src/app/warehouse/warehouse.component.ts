@@ -18,7 +18,7 @@ export interface Product {
   styleUrls: ['./warehouse.component.css'],
 })
 export class WarehouseComponent {
-  ip_address = '192.168.1.9:8000';
+  ip_address = '127.0.0.1:8000';
   taskToEdit: any;
   currentPage = 1;
   pageSize = 10;

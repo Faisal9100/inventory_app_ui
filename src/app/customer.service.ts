@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -7,10 +7,16 @@ import { Observable } from 'rxjs';
 })
 export class CustomerService {
   constructor(public http: HttpClient) {}
-  public ip_address = '192.168.1.9:8000';
+  public ip_address = '127.0.0.1:8000';
   public url = 'http://' + this.ip_address + '/inventory/customers/';
 
   getAllPurchase(): Observable<any> {
-    return this.http.get<any>(this.url);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+      }),
+    };
+    return this.http.get<any>(this.url,httpOptions);
   }
 }

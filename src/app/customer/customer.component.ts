@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
@@ -33,7 +33,7 @@ export class CustomerComponent {
   
   totalItems: any;
   itemsPerPage: any;
-  public ip_address = '192.168.1.9:8000';
+  public ip_address = '127.0.0.1:8000';
   public url = 'http://' + this.ip_address + '/inventory/customers/';
   suppliers: any[] = [];
   supplier: Supplier = {
@@ -136,7 +136,13 @@ export class CustomerComponent {
             email: supplierEmail,
             contact: supplierContact,
           };
-          this.http.post<Supplier>(this.url, newsupplier).subscribe(() => {
+          const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+            }),
+          };
+          this.http.post<Supplier>(this.url, newsupplier,httpOptions).subscribe(() => {
             this.newsupplier = {
               title: '',
               address: '',
@@ -300,7 +306,12 @@ export class CustomerComponent {
         const updatedStatus =
           (<HTMLSelectElement>document.querySelector('.swal2-select')).value ===
           'true';
-
+          const httpOptions = {
+            headers: new HttpHeaders({
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+            }),
+          };
         this.http
           .put(`${this.url}${supplier.id}/`, {
             title: updatedTitle,

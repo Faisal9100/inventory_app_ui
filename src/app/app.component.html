@@ -1,5 +1,5 @@
 <app-login *ngIf="!isLoggedIn"></app-login>
-<div *ngIf="isLoggedIn">
+<div *ngIf="showSidebar">
   <mat-toolbar color="primary" style="border-bottom: 1px solid white">
     <mat-toolbar-row
       style="background-color: #071251 !important ; position: sticky"
@@ -98,7 +98,7 @@
             <span class="sidenav-nav-link-text">All Sale</span>
           </li>
 
-          <li class="sidenav-nav-item">
+          <li class="sidenav-nav-item" (click)="logout()">
             <i class="bi bi-gear-wide-connected"></i>
             <span class="sidenav-nav-link-text">Log Out</span>
           </li>
@@ -113,3 +113,4 @@
     </mat-sidenav-content>
   </mat-sidenav-container>
 </div>
+<router-outlet *ngIf="!showSidebar"></router-outlet>

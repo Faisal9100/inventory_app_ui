@@ -190,7 +190,7 @@
             class="text-center m-auto justify-content-center"
             *ngFor="let row of rows"
           >
-          <td>{{row.purchase_id}}</td>
+            <td>{{ row.purchase_id }}</td>
             <td class="text-center my-3" #prn>{{ row.product_name }}</td>
             <td>
               <input
@@ -367,7 +367,7 @@
           <td>
             <button
               class="btn btn-outline-danger"
-              (click)="deleteSaleList(stock.id  , stock_list_id)"
+              (click)="deleteSaleList(stock.id)"
             >
               <i class="bi bi-trash3-fill"></i>
             </button>
@@ -435,13 +435,11 @@
         class="form-control"
         id="quantity"
         [(ngModel)]="quantity"
-    
         #q
       />
-      
 
       <!-- <span>Default Purchase Price: <span style="color: tomato">{{ product.price }}</span></span> -->
-      
+
       <!-- <p class="">
         Default Purchase Price:
         <span style="color: tomato"></span>

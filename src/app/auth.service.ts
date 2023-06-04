@@ -17,7 +17,7 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 })
 export class AuthService {
   private tokenKey = 'auth_token';
-  private apiUrl = 'http://192.168.1.9:8000/auth/jwt/create/';
+  private apiUrl = 'http://127.0.0.1:8000/auth/jwt/create/';
   loginFormVisible: boolean = true;
 
   constructor(
@@ -27,25 +27,49 @@ export class AuthService {
     private router: Router
   ) {}
   makeHttpRequestWithHeaders() {
-    // Create the headers object
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      Authorization: 'JWT <access_token>',
+      Authorization: 'JWT <access>',
     });
   }
-  login(credentials: any): Observable<any> {
-    // Create the headers object
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      Authorization: 'JWT <access_token>',
-    });
+  // login(credentials: any): Observable<any> {
+  //   // Create the headers object
+  //   const headers = new HttpHeaders({
+  //     'Content-Type': 'application/json',
+  //     Authorization: 'JWT <access>',
+  //   });
+  //   return this.http.post<any>(this.apiUrl, credentials, { headers: headers });
+  // }
+  // Replace '<access>' with the actual access key value
+  // const accessKey = '<access>';
 
-    // Set any other desired headers
+  // // Create the headers object
+  // const headers = new HttpHeaders({
+  //   'Content-Type': 'application/json',
+  //   'Authorization': 'JWT ' + accessKey,
+  //   'access-key': accessKey
+  // });
+  login(credentials: any): Observable<boolean> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+      }),
+    };
 
-    // Make the HTTP POST request with the headers
-    return this.http.post<any>(this.apiUrl, credentials, { headers: headers });
+    return this.http
+      .post<any>(this.apiUrl, JSON.stringify(credentials), httpOptions)
+      .pipe(
+        map((response: any) => {
+          let result = response;
+          if (result && result.access) {
+            localStorage.setItem('token', result.access);
+            return true;
+          }
+          return false;
+        })
+      );
   }
-
   logout(): void {
     localStorage.removeItem('token');
   }

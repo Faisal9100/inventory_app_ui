@@ -14,6 +14,7 @@ import {
   FormControl,
 } from '@angular/forms';
 import { BasicService } from '../basic.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -26,168 +27,46 @@ export class LoginComponent {
     private auth: AuthService,
     public router: Router
   ) {}
-  username?: any;
-  password?: any;
-  // login(): void {
-  //   const credentials = { username: this.username, password: this.password };
-  //   this.auth.login(credentials).subscribe(
-  //     (result) => {
-  //       console.log(credentials);
-  //       if (result && result.token) {
-  //         localStorage.setItem('token', result.access);
-  //         this.router.navigate(['/']);
-  //       } else {
-  //       }
-  //     },
-  //     (error) => {
-  //       // Handle login error
+  invalidLogin:boolean=false;
+  // signIn(credentials: any) {
+  //   this.auth.login(credentials).subscribe((result: boolean) => {
+  //     console.log(result);
+  //     if (result) {
+  //       this.router.navigate(['/']);
+  //     } else {
+  //       this.invalidLogin = true;
   //     }
-  //   );
-  // }
-  login(): void {
-    const credentials = { username: this.username, password: this.password };
-    this.auth.login(credentials).subscribe(
-      (response) => {
-        console.log('Response:', response);
-        if (response && response.access) {
-          const accessToken = response.access;
-          // const refreshToken = response.refresh;
-  
-          // Store the tokens in localStorage or any other secure storage mechanism
-          localStorage.setItem('accessToken', accessToken);
-          // localStorage.setItem('refreshToken', refreshToken);
-  
-          // Redirect to the dashboard or any other desired route
-          this.router.navigate(['/dashboard']);
-        } else {
-          // Handle the case when the access token is missing in the response
-          console.error('Access token not found in the response');
-        }
-      },
-      (error) => {
-        // Handle login error
-        console.error('Login error:', error);
-      }
-    );
-  }
-  
-
-  // constructor(
-  //   private authService: AuthService,
-  //   private router: Router,
-  //   private http: HttpClient
-  // ) {}
-  // username?: string;
-  // password?: string;
-  // login() {
-  //   // Perform the login logic
-  //   // Assuming hardcoded username and password for demonstration purposes
-  //   const hardcodedUsername = 'admin';
-  //   const hardcodedPassword = '1234';
-
-  //   if (this.username === hardcodedUsername && this.password === hardcodedPassword) {
-  //     // Navigate to the sidebar component upon successful login
-  //     this.router.navigate(['/sidebar']);
-  //   } else {
-  //     // Handle login error (e.g., display an error message)
-  //   }
-  // }
-  //   userLogin(data:any){
-  // this.authService.login(this.loginData);
-  //   }
-  // ngOnInit(): void {
-  //   const localData = localStorage.getItem('signUpUsers');
-  //   if (localData != null) {
-  //     this.signupUsers = JSON.parse(localData);
-  //   }
-  // }
-  // signupUsers: any[] = [];
-  // signupObj: any = {
-  //   userName: '',
-  //   email: '',
-  //   password: '',
-  // };
-  // loginObj: any = {
-  //   username: '',
-  //   password: '',
-  // };
-  // onSignUp() {
-  //   this.signupUsers.push(this.signupObj);
-  //   localStorage.setItem('signUpUsers', JSON.stringify(this.signupUsers));
-  //   this.signupObj = {
-  //     username: '',
-  //     email: '',
-  //     password: '',
-  //   };
-  // }
-  // onLogIn() {
-  //   this.authService.onLogIn(this.loginObj).subscribe((res) => {
-  //     console.log(res);
-  //     localStorage.setItem('token', res.access);
-  //     this.router.navigateByUrl('/dashboard');
   //   });
   // }
-}
-
-// loader: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-// form = new UntypedFormGroup({
-//   username: new UntypedFormControl('', [Validators.required]),
-//   password: new UntypedFormControl('', [Validators.required]),
-// });
-// get username() {
-//   return this.form.get('username');
-// }
-// get password() {
-//   return this.form.get('password');
-// }
-
-// loginError: boolean = false;
-// login() {
-//   if (this.form.valid) {
-//     this.loginError = false;
-//     this.loader.next(true);
-//     let data = new FormData();
-//     data.append('username', this.username?.value);
-//     data.append('password', this.password?.value);
-//     this.auth
-//       .login(data)
-//       .then((res) => {
-//         this.loader.next(false);
-//       })
-//       .catch((error) => {
-//         if (error.status === 401) this.loginError = true;
-//         this.loader.next(false);
-//       });
-//   }
-// }
-
-// // ----------------------- Reset Password -----------------------
-// resetForm = new FormGroup({
-//   email: new FormControl('', [Validators.required, Validators.email]),
-// });
-// get email() {
-//   return this.resetForm.get('email');
-// }
-
-// reset_loader: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-// resetPassword() {
-//   if (this.email?.invalid) {
-//     document.getElementById('email')?.focus();
-//   } else {
-//     if (!this.reset_loader.value) {
-//       Promise.resolve().then((res) => this.reset_loader.next(true));
-//       let data = new FormData();
-//       data.append('email', <any>this.email?.value);
-//       this.auth
-//         .sendResetPassword(data)
-//         .then((res) => {
-//           setTimeout((res: any) => {
-//             this.reset_loader.next(false);
-//             document.getElementById('resetPasswordModelCloseButton')?.click();
-//             this.email?.reset();
-//           }, 100);
-//         })
-//         .catch((error) => setTimeout(() => this.reset_loader.next(false), 0));
-//     }
-//   }
-// }
+  username?:string;
+  password?:string;
+isLoggedIn :boolean= false; 
+  login() {
+    const hardcodedUsername = 'admin';
+    const hardcodedPassword = '1234';
+  
+    if (this.username === hardcodedUsername && this.password === hardcodedPassword) {
+      console.log('Login successful');
+      this.isLoggedIn = true; 
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Login Successfully',
+      });
+      // Perform any additional actions for successful login
+  
+      // Navigate to the dashboard
+      this.router.navigate(['/dashboard']);
+    } else {
+      console.log('Invalid username or password');
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Invalid username or password',
+      });
+      // Perform any additional actions for unsuccessful login
+    }
+  }
+  
+  
+  }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -15,7 +15,7 @@ export class CategoryService {
   unshift(newCategory: { name: any }) {
     throw new Error('Method not implemented.');
   }
-  public ip_address = '192.168.1.9:8000';
+  public ip_address = '127.0.0.1:8000';
 
   private url2 = 'http://' + this.ip_address + '/inventory/categories/${id}';
   public url = 'http://' + this.ip_address + '/inventory/categories/';
@@ -23,30 +23,72 @@ export class CategoryService {
   constructor(private http: HttpClient) {}
   //  code for categories
   getCategories(pageIndex: number, pageSize: number): Observable<any> {
-    return this.http.get<any>(this.url);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+      }),
+    };
+    return this.http.get<any>(this.url,httpOptions);
   }
   searchCategories(query: string): Observable<any> {
-    return this.http.get(`${this.url}?search=${query}`);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+      }),
+    };
+    return this.http.get(`${this.url}?search=${query}`,httpOptions);
   }
 
   addCategory(category: any): Observable<any> {
-    return this.http.post<any>(this.url, category);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+      }),
+    };
+    return this.http.post<any>(this.url, category,httpOptions);
   }
   createCategory(id: number, name: string) {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+      }),
+    };
     const data = { id, name };
-    return this.http.post(this.url, data);
+    return this.http.post(this.url, data,httpOptions);
   }
   deleteCategory(id: string): Observable<any> {
-    return this.http.delete(`${this.url}${id}`);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+      }),
+    };
+    return this.http.delete(`${this.url}${id}`,httpOptions);
   }
   putCategory(category: any): Observable<any> {
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+      }),
+    };
     const url = `${this.url2}/${category.id}`;
-    return this.http.put<any>(url, category);
+    return this.http.put<any>(url, category,httpOptions);
   }
   // categories code ended
-  public url3 = 'http://192.168.1.9:8000/inventory/products/';
+  public url3 = 'http://127.0.0.1:8000/inventory/products/';
 
   getProducts(): Observable<any> {
-    return this.http.get<any>(this.url3);
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+      }),
+    };
+    return this.http.get<any>(this.url3,httpOptions);
   }
 }

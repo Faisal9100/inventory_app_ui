@@ -22,7 +22,7 @@ const routes: Routes = [
   { path: 'sidebar', component: SidebarComponent },
   { path: 'login', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent,canActivate:[AuthguardGuard]  },
-  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '', redirectTo: '/login', pathMatch: 'full' },
   { path: 'products', component: ProductsComponent,canActivate:[AuthguardGuard] },
   { path: 'categories', component: CategoriesComponent ,canActivate:[AuthguardGuard] },
   { path: 'brands', component: BrandsComponent ,canActivate:[AuthguardGuard] },
