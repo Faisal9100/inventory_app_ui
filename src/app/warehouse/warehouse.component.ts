@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import 'jspdf-autotable';
 import jsPDF from 'jspdf';
+import { LocalhostApiService } from '../localhost-api.service';
 export interface Product {
   id: number;
   name: string;
@@ -18,7 +19,7 @@ export interface Product {
   styleUrls: ['./warehouse.component.css'],
 })
 export class WarehouseComponent {
-  ip_address = '127.0.0.1:8000';
+  // api.localhost = '127.0.0.1:8000';
   taskToEdit: any;
   currentPage = 1;
   pageSize = 10;
@@ -28,13 +29,14 @@ export class WarehouseComponent {
   product: Product = { id: 0, name: '', address: '', status: '' };
   closeResult: any;
 
-  public url = 'http://' + this.ip_address + '/inventory/warehouses/';
+  public url = 'http://' + this.api.localhost + '/inventory/warehouses/';
   totalItems: any;
 
   constructor(
     private modalService: NgbModal,
     public http: HttpClient,
-    public warehouseService: WarehouseService
+    public warehouseService: WarehouseService,
+    public api:LocalhostApiService
   ) {
     this.getwarehouse();
   }

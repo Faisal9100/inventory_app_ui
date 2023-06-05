@@ -1,24 +1,25 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { LocalhostApiService } from './localhost-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SaleService {
-  constructor(public http: HttpClient) {}
-  ip_address = '127.0.0.1:8000';
+  constructor(public http: HttpClient,public api:LocalhostApiService) {}
+ 
 
-  public url = 'http://127.0.0.1:8000/inventory/sales/';
+  public url = 'http://'+this.api.localhost+'/inventory/sales/';
 
   public stock_url =
-    'http://' + this.ip_address + 'inventory/sales/${purchaseId}/sale_items';
+    'http://' + this.api.localhost + 'inventory/sales/${purchaseId}/sale_items';
 
-  public warehouse_url = 'http://127.0.0.1:8000/inventory/warehouses/';
+  public warehouse_url = 'http://'+this.api.localhost+'/inventory/warehouses/';
 
-  public product_url = 'http://' + this.ip_address + '/inventory/products/';
+  public product_url = 'http://' + this.api.localhost + '/inventory/products/';
 
-  public customer_url = 'http:/127.0.0.1:8000/inventory/customers/';
+  public customer_url = 'http:/'+this.api.localhost+'/inventory/customers/';
 
   getAllPurchase(): Observable<any> {
     return this.http.get<any>(this.url);

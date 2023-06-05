@@ -12,19 +12,21 @@ import { BasicService } from './basic.service';
 import { HttpHeaders } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { LocalhostApiService } from './localhost-api.service';
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private tokenKey = 'auth_token';
-  private apiUrl = 'http://127.0.0.1:8000/auth/jwt/create/';
+  private apiUrl = 'http://'+this.api.localhost+'/auth/jwt/create/';
   loginFormVisible: boolean = true;
 
   constructor(
     private basic: BasicService,
     private http: HttpClient,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    public api:LocalhostApiService
   ) {}
   makeHttpRequestWithHeaders() {
     const headers = new HttpHeaders({

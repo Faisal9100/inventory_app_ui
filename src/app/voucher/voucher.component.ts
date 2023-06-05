@@ -1,9 +1,11 @@
+import { LocalhostApiService } from './../localhost-api.service';
 import { Component, OnInit } from '@angular/core';
 import { VoucherService } from '../voucher.service';
 import { AccountlayerService } from '../accountlayer.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-voucher',
@@ -23,7 +25,8 @@ export class VoucherComponent implements OnInit {
   constructor(
     public voucher: VoucherService,
     public account: AccountlayerService,
-    public http: HttpClient
+    public http: HttpClient,
+    public api:LocalhostApiService
   ) {}
   getAccount() {
     this.account.getAccounts().subscribe((data) => {
@@ -215,7 +218,7 @@ export class VoucherComponent implements OnInit {
       vocuher_type: this.voucher_type?.value,
     };
 
-    const apiUrl = 'http://127.0.0.1:8000/inventory/vouchar/';
+    const apiUrl = 'http://'+this.api.localhost+'/inventory/vouchar/';
 
     console.log(JSON.stringify(requestBody));
     this.http.post(apiUrl, requestBody).subscribe(
@@ -224,7 +227,10 @@ export class VoucherComponent implements OnInit {
         console.log('Data sent successfully:', response);
       },
       (error: any) => {
-        console.error('Error occurred while sending data:', error);
+       Swal.fire({
+        title: 'Error!',
+        text:'Balance of this account is going to be negative'
+       })
       }
     );
   }

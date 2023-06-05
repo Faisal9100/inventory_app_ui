@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { CategoryService } from '../category.service';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { ProductService } from '../product.service';
+import { LocalhostApiService } from '../localhost-api.service';
 
 export interface Product {
   serialNo: string;
@@ -20,7 +21,7 @@ export interface Product {
 })
 export class CategoriesComponent {
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
-  public ip_address="127.0.0.1:8000";
+
   categories: any[] = [];
   newCategory: any = {};
   modalService: any;
@@ -36,7 +37,8 @@ export class CategoriesComponent {
   constructor(
     private categoryService: CategoryService,
     private http: HttpClient,
-    public productService: ProductService
+    public productService: ProductService,
+    public api:LocalhostApiService
   ) {}
 
   ngOnInit() {
@@ -170,7 +172,7 @@ export class CategoriesComponent {
   }
   taskToEdit: any;
 
-  public url = "http://" + this.ip_address +"/inventory/categories/";
+  public url = "http://" + this.api.localhost +"/inventory/categories/";
 
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);

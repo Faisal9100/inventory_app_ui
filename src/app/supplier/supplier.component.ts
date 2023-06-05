@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
+import { LocalhostApiService } from '../localhost-api.service';
 
 export interface Supplier {
   id: number;
@@ -22,7 +23,7 @@ export interface Supplier {
   styleUrls: ['./supplier.component.css'],
 })
 export class SupplierComponent {
-  ip_address = '127.0.0.1:8000';
+ 
   supplierToEdit: any;
   pageSize = 10;
   currentPage = 1;
@@ -33,7 +34,7 @@ export class SupplierComponent {
   id = 'pagination';
   closeResult: any;
 
-  public url = 'http://' + this.ip_address + '/inventory/Suppliers/';
+  public url = 'http://' + this.api.localhost + '/inventory/Suppliers/';
   suppliers: any[] = [];
   supplier: Supplier = {
     id: 0,
@@ -49,7 +50,8 @@ export class SupplierComponent {
   constructor(
     private modalService: NgbModal,
     public http: HttpClient,
-    public supplierService: SupplierService
+    public supplierService: SupplierService,
+    public api:LocalhostApiService
   ) {
     this.getsupplier();
   }

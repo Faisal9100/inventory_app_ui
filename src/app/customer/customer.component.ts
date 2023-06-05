@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import { CustomerService } from '../customer.service';
+import { LocalhostApiService } from '../localhost-api.service';
 
 export interface Supplier {
   id: number;
@@ -33,8 +34,7 @@ export class CustomerComponent {
   
   totalItems: any;
   itemsPerPage: any;
-  public ip_address = '127.0.0.1:8000';
-  public url = 'http://' + this.ip_address + '/inventory/customers/';
+  public url = 'http://' + this.api.localhost + '/inventory/customers/';
   suppliers: any[] = [];
   supplier: Supplier = {
     id: 0,
@@ -47,7 +47,7 @@ export class CustomerComponent {
     credit: 0,
     debit: 0,
   };
-  constructor(private modalService: NgbModal, public http: HttpClient,public customerservice:CustomerService) {
+  constructor(private modalService: NgbModal, public http: HttpClient,public customerservice:CustomerService,public api:LocalhostApiService) {
     this.getCustomers();
   }
   ngOnInit(): void {

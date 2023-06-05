@@ -6,5 +6,5 @@ import { Injectable } from '@angular/core';
 export class LocalhostApiService {
 
   constructor() { }
-  localhost = '127.0.0.1:8000'
+  localhost = '192.168.1.9:8000'
 }

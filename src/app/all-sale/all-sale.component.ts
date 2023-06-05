@@ -14,6 +14,7 @@ import { SupplierService } from '../supplier.service';
 import { ProductService } from '../product.service';
 import Swal from 'sweetalert2';
 import { CustomerService } from '../customer.service';
+import { LocalhostApiService } from '../localhost-api.service';
 
 export interface PurchaseData {
   id: number;
@@ -107,7 +108,9 @@ export class AllSaleComponent {
   totalAmount: number = 0;
   remarks: any;
   account_customer: any;
-
+  defaultPurchasePrice?: number;
+  priceError: boolean = false;
+  
   updateTotal() {
     let total = 0;
     let quantityTotal = 0;
@@ -116,6 +119,7 @@ export class AllSaleComponent {
       total += row.amount * row.quantity;
       quantityTotal += row.quantity;
       amountTotal += row.amount;
+     
     }
     this.grandTotal = total - this.discount;
     this.totalQuantity = quantityTotal;
@@ -132,7 +136,8 @@ export class AllSaleComponent {
     public supplierService: SupplierService,
     public productService: ProductService,
     public SaleService: SaleService,
-    public customerservice: CustomerService
+    public customerservice: CustomerService,
+    public api: LocalhostApiService
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
@@ -156,7 +161,7 @@ export class AllSaleComponent {
   getStockList(id: number) {
     this.isLoading = true; // Set isLoading to true
     this.http
-      .get(`http://127.0.0.1:8000/inventory/sales/${id}/sale_items`)
+      .get(`http://` + this.api.localhost + `/inventory/sales/${id}/sale_items`)
       .subscribe((response: any) => {
         this.stocks = response.results;
         console.log(this.stocks);
@@ -222,7 +227,11 @@ export class AllSaleComponent {
 
   getProductById(warehouseId: number) {
     this.http
-      .get(`http://127.0.0.1:8000/inventory/warehouses/${warehouseId}/stocks/`)
+      .get(
+        `http://` +
+          this.api.localhost +
+          `/inventory/warehouses/${warehouseId}/stocks/`
+      )
       .subscribe((resp: any) => {
         this.productSale = resp['results'];
         console.log(this.productSale);
@@ -254,7 +263,7 @@ export class AllSaleComponent {
 
     // Check if the product is already added
     const isProductAdded = this.rows.some(
-      (row) => row.product_id === this.selectedProduct
+      (row) => row.product_id === this.selectedProduct.id
     );
 
     // If the product is already added, show an error message or perform appropriate actions
@@ -339,7 +348,10 @@ export class AllSaleComponent {
     };
 
     this.http
-      .post<{ id: number }>('http://127.0.0.1:8000/inventory/sales/', payload)
+      .post<{ id: number }>(
+        'http://' + this.api.localhost + '/inventory/sales/',
+        payload
+      )
       .subscribe(
         (response) => {
           console.log(response);
@@ -373,7 +385,13 @@ export class AllSaleComponent {
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
         this.http
-          .delete('http://127.0.0.1:8000/inventory/sales/' + purchaseId + '/')
+          .delete(
+            'http://' +
+              this.api.localhost +
+              '/inventory/sales/' +
+              purchaseId +
+              '/'
+          )
           .subscribe(
             () => {
               Swal.fire(
@@ -409,6 +427,7 @@ export class AllSaleComponent {
         product_id: row.product_id,
         product_name: row.product_name,
         stock: row.purchase_id,
+        
       };
       await this.postOneStock(product, id);
     }
@@ -419,7 +438,7 @@ export class AllSaleComponent {
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://127.0.0.1:8000/inventory/sales/${id}/sale_items/`,
+          `http://` + this.api.localhost + `/inventory/sales/${id}/sale_items/`,
           product
         )
         .subscribe(
@@ -447,22 +466,20 @@ export class AllSaleComponent {
     if (this.remarks === '') {
       this.ngOnInit();
     } else {
-      const filteredData = this.AllPurchaseData.filter((res) => {
-        return res.title.match(this.remarks);
+      this.AllPurchaseData = this.AllPurchaseData.filter((res) => {
+        return res.remarks.includes(this.remarks);
       });
-
-      if (filteredData.length === 0) {
-        // No products found
-        Swal.fire({
-          icon: 'info',
-          title: 'No Product Found',
-          text: 'No products match the search criteria.',
-        });
-      }
-
-      this.AllPurchaseData = filteredData;
     }
   }
+  // Search() {
+  //   if (this.remarks == '') {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.AllPurchaseData = this.AllPurchaseData.filter((res) => {
+  //       return res.title.includes(this.remarks);
+  //     });
+  //   }
+  // }
 
   // <----------------------------- code for deleting stock from sale list ------------------------------------------->
   stock_list_id: any;
@@ -479,7 +496,9 @@ export class AllSaleComponent {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://127.0.0.1:8000/inventory/sales/${this.stockid}/sale_items/${stock_list_id}/`
+            `http://` +
+              this.api.localhost +
+              `/inventory/sales/${stock_list_id}/sale_items/${this.stockid?.id}/`
           )
           .subscribe(
             () => {
@@ -502,21 +521,40 @@ export class AllSaleComponent {
   }
 
   // <------------------------------ MODEL FOR ADDING NEW STOCK IN SALE LIST ----------------------------------->
-
+  warehouse_ID: any;
+  warehouse_Name: any;
   openAddProductModal(content3: any, item: any) {
     this.update_purchase_id = item.id;
+    this.warehouse_ID = item.warehouse;
+    this.warehouse_Name = item.warehouse_name;
     this.modalService.open(content3).result.then((result) => {
       if (result === 'add') {
         this.addStock(this.purchaseId);
       }
+
+      this.ngOnDestroy();
     });
   }
+
+  ngOnDestroy() {
+    // Reset the values when the component is destroyed (modal is closed)
+    this.update_purchase_id = null;
+    this.warehouse_ID = null;
+    this.warehouse_Name = null;
+  }
+
   update_purchase_id: any;
 
   // <-------------------------- CODE FOR UPDATING STOCK IN SALE LIST---------------------------------------------->
 
   postUpdateStock(product: any, q: any, p: any, date: any) {
-    if (!product.value || !q.value || !p.value || !date.value) {
+    if (
+      !product.value ||
+      !q.value ||
+      !p.value ||
+      !date.value ||
+      !this.selectedWarehouse
+    ) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -533,12 +571,15 @@ export class AllSaleComponent {
         price: p.value,
         amount: p.value * q.value,
         stock: this.selectedWarehouse,
+        
       };
       console.log(requestBody);
 
       this.http
         .post(
-          `http://127.0.0.1:8000/inventory/sales/${this.update_purchase_id}/sale_items/`,
+          `http://` +
+            this.api.localhost +
+            `/inventory/sales/${this.update_purchase_id}/sale_items/`,
           requestBody
         )
         .subscribe((response) => {
@@ -548,13 +589,12 @@ export class AllSaleComponent {
           p.value = '';
           date.value = '';
         });
+      this.modalService.dismissAll();
       Swal.fire({
         icon: 'success',
         title: 'success',
         text: 'Product added successfully.',
       });
-
-      console.log('Invalid product data');
     }
   }
 
@@ -621,6 +661,22 @@ export class AllSaleComponent {
   refreshPage() {
     window.location.reload();
   }
+  // q:any;
+  producttotalQuantity: number = 0;
+selectedProductPrice: number = 0;
+
+  updateProductDetails() {
+    // Find the selected product from the productSale array
+    const selectedProduct = this.productSale.find(
+      (product) => product.product_id === this.selectedProduct
+    );
+  
+    // Update the total quantity and price based on the selected product
+    this.producttotalQuantity = selectedProduct ? selectedProduct.quantity : 0;
+    this.selectedProductPrice = selectedProduct ? selectedProduct.price : 0;
+  }
+  
+  
 }
 
 //  <---------------------------SALE ALL WORK END HERE------------------------------------>

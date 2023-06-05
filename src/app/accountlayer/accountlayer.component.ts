@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AccountlayerService } from '../accountlayer.service';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
+import { LocalhostApiService } from '../localhost-api.service';
 
 export interface Account {
   id: number;
@@ -23,20 +24,20 @@ export interface Account {
 })
 export class AccountlayerComponent implements OnInit {
   selectedMainLayer?: string;
-  ip_address = '127.0.0.1:8000';
+  ip_address = '`+this.api.localhost+`';
 
   public create_account_url =
-    'http://' + this.ip_address + '/inventory/layer2s/';
+    'http://' + this.api.localhost + '/inventory/layer2s/';
 
   public addLayer1 = "'http://'thid'/inventory/layer1s/11/?main_layer=assets";
 
-  public account_url = 'http://' + this.ip_address + '/inventory/accounts/';
+  public account_url = 'http://' + this.api.localhost + '/inventory/accounts/';
 
   public selectedProductId: number = 5;
 
   public url =
     'http://' +
-    this.ip_address +
+    this.api.localhost +
     '/inventory/layer2s/' +
     this.selectedProductId +
     '/accounts/';
@@ -96,7 +97,8 @@ export class AccountlayerComponent implements OnInit {
 
   constructor(
     public http: HttpClient,
-    public accountLayerservice: AccountlayerService
+    public accountLayerservice: AccountlayerService,
+    public api:LocalhostApiService
   ) {}
 
   ngOnInit(): void {
@@ -494,7 +496,7 @@ export class AccountlayerComponent implements OnInit {
           this.http
             // `${this.url_layer1}?main_layer=${selectedMainLayer}`
             .post<Account>(
-              `http://127.0.0.1:8000/inventory/layer1s/?main_layer=${selectedMainLayer}`,
+              `http://`+this.api.localhost+`/inventory/layer1s/?main_layer=${selectedMainLayer}`,
               newLayeraccount
             )
             .subscribe(() => {
@@ -519,7 +521,7 @@ export class AccountlayerComponent implements OnInit {
       preConfirm: () => {
         this.http
           .delete(
-            `http://127.0.0.1:8000/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
+            `http://`+this.api.localhost+`/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
           )
           .subscribe(() => {
             this.getAccountsData();
@@ -554,7 +556,7 @@ export class AccountlayerComponent implements OnInit {
           this.http
             // `${this.url_layer1}?main_layer=${selectedMainLayer}`
             .post<Account>(
-              `http://127.0.0.1:8000/inventory/layer1s/${selectedLayer2}/layer2s/`,
+              `http://`+this.api.localhost+`/inventory/layer1s/${selectedLayer2}/layer2s/`,
               newLayeraccount
             )
             .subscribe(() => {
@@ -579,7 +581,7 @@ export class AccountlayerComponent implements OnInit {
       preConfirm: () => {
         this.http
           .delete(
-            `http://127.0.0.1:8000/inventory/layer1s/${this.selectedLayer1}/layer2s/${accountId}`
+            `http://`+this.api.localhost+`/inventory/layer1s/${this.selectedLayer1}/layer2s/${accountId}`
           )
           .subscribe(() => {
             this.getAccountsData();
@@ -602,7 +604,7 @@ export class AccountlayerComponent implements OnInit {
   //       const updatedName = (<HTMLInputElement>(
   //         document.getElementById('name')
   //       )).value;
-  //       this.http.put(`http://127.0.0.1:8000/inventory/layer1s/${id}/?main_layer=${this.selectedMainLayer}`, { name: updatedName })
+  //       this.http.put(`http://`+this.api.localhost+`/inventory/layer1s/${id}/?main_layer=${this.selectedMainLayer}`, { name: updatedName })
   //         .subscribe(() => {
   //           console.log(`Product with ID ${selectedLayer1} updated successfully!`);
   //           Swal.fire('Updated!', 'Your product has been updated.', 'success');

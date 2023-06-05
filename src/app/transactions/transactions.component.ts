@@ -4,6 +4,7 @@ import { TransactionService } from '../transaction.service';
 import { AccountlayerService } from '../accountlayer.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClient } from '@angular/common/http';
+import { LocalhostApiService } from '../localhost-api.service';
 
 @Component({
   selector: 'app-transactions',
@@ -17,7 +18,8 @@ export class TransactionsComponent {
     public accounts: AccountlayerService,
     private formBuilder: FormBuilder,
     private modalService: NgbModal,
-    private http: HttpClient
+    private http: HttpClient,
+    public api: LocalhostApiService
   ) {
     this.getAccounts();
     // this.get_Stock_trans_details(this.s);
@@ -66,23 +68,24 @@ export class TransactionsComponent {
 
   get_Stock_trans_details(item: number) {
     this.http
-      .get(`http://127.0.0.1:8000/inventory/transactions_order/${item}/details/`)
+      .get(
+        `http://` +
+          this.api.localhost +
+          `/inventory/transactions_order/${item}/details/`
+      )
       .subscribe((resp: any) => {
         const { data, transactions, stocks } = resp;
-  
+
         this.transactionData = data;
         this.transaction_data = transactions;
         this.stocks = stocks;
-  
+
         console.log(resp);
       });
   }
-  
 
-
-  stocks:any[]=[];
+  stocks: any[] = [];
   // data:any[]=[];
-  transactionData:any;
-  transaction_data:any[]=[];
-
+  transactionData: any;
+  transaction_data: any[] = [];
 }

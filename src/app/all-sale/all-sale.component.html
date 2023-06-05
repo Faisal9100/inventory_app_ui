@@ -13,8 +13,8 @@
       type="text"
       class="form-control w-25"
       placeholder="Search All Sale"
-      name="warehouse"
-      [(ngModel)]="warehouse"
+      name="remarks"
+      [(ngModel)]="remarks"
       (ngModelChange)="Search()"
     />
     <button class="btn btn-primary">
@@ -27,9 +27,9 @@
     >
       <i class="bi bi-plus-circle"></i> Add new
     </button>
-    <button class="btn btn-outline-danger">
+    <!-- <button class="btn btn-outline-danger">
       <i class="bi bi-arrow-down-circle"></i> PDF
-    </button>
+    </button> -->
     <button class="btn btn-outline-dark mx-1" (click)="refreshPage()">
       <i class="bi bi-arrow-clockwise"></i>Load
     </button>
@@ -82,6 +82,7 @@
             type="button"
             class="btn btn-outline-dark"
             (click)="openAddProductModal(content3, item)"
+            (change)="onWarehouseChange(selectedWarehouse)"
           >
             <i class="bi bi-plus-circle"></i>
           </button>
@@ -402,12 +403,15 @@
         [(ngModel)]="selectedWarehouse"
         (change)="onWarehouseChange(selectedWarehouse)"
       >
-        <ng-option
+        <!-- <ng-option
           class=".ng-dropdown-panel"
           *ngFor="let data of warehouses"
           [value]="data.id"
           >{{ data.name }}</ng-option
-        >
+        > -->
+        <ng-option class="ng-dropdown-panel" [value]="warehouse_ID">
+          {{ warehouse_Name }}
+        </ng-option>
       </ng-select>
     </div>
     <div class="col-sm">
@@ -417,7 +421,7 @@
         [(ngModel)]="selectedProduct"
         id="selectedProduct"
         #product
-        (change)="isProductSelected = true"
+        (change)="isProductSelected = true; updateProductDetails()"
         #update_stock_product
       >
         <option
@@ -434,23 +438,23 @@
         type="number"
         class="form-control"
         id="quantity"
-        [(ngModel)]="quantity"
+        [(ngModel)]="producttotalQuantity"
         #q
       />
-
-      <!-- <span>Default Purchase Price: <span style="color: tomato">{{ product.price }}</span></span> -->
-
-      <!-- <p class="">
-        Default Purchase Price:
-        <span style="color: tomato"></span>
-      </p> -->
+      <p>Total Quantity: {{ producttotalQuantity }}</p>
 
       <label for="" class="p-2">Price</label>
-      <input type="number" class="form-control" #p />
-      <!-- <p class="">
+      <input
+        type="number"
+        class="form-control"
+        [(ngModel)]="selectedProductPrice"
+        #p
+      />
+
+      <p class="">
         Default Purchase Price:
-        <span style="color: tomato"></span>
-      </p> -->
+        <span style="color: tomato">{{ defaultPurchasePrice }}</span>
+      </p>
     </div>
     <label for="" class="p-2">date</label>
 

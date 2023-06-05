@@ -294,12 +294,9 @@
           <span class="text-danger">Only PNG,JPG and JPEG are allowed</span>
 
           <input
-            class="form-control-file"
             type="file"
-            name="image"
-            [(ngModel)]="updateProduct.image"
-            formControlName="image"
-            (change)="onFileSelected($event)"
+            #fileInput
+            (change)="onFileSelected2($event)"
           />
         </div>
       </div>
@@ -369,7 +366,8 @@
       type="submit"
       value="Update"
       class="btn btn-outline-dark"
-      (click)="update_product_Data(product,updateProduct)"
+      (click)="onFileSelected2($event)"
+      (click)="update_product_Data()"
     >
       Update Product
     </button>

@@ -2,14 +2,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, skip } from 'rxjs';
 import { Product } from './units/units.component';
+import { LocalhostApiService } from './localhost-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UnitService {
-  public ip_address = '127.0.0.1:8000';
-  public url = 'http://' + this.ip_address + '/inventory/units/';
-  public url2 = 'http://' + this.ip_address + '/inventory/units/${id}';
+  public url = 'http://' + this.api.localhost + '/inventory/units/';
+  public url2 = 'http://' + this.api.localhost + '/inventory/units/${id}';
 
   getproducts(pageIndex: any, pageSize: number) {
     throw new Error('Method not implemented.');
@@ -19,7 +19,7 @@ export class UnitService {
     throw new Error('Method not implemented.');
   }
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,public api:LocalhostApiService) {}
 
   // code for unit
   getUnit(): Observable<any> {

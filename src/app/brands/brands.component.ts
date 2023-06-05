@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { MatPaginator } from '@angular/material/paginator';
 import { BrandService } from '../brand.service';
 import { ProductService } from '../product.service';
+import { LocalhostApiService } from '../localhost-api.service';
 
 export interface Product {
   serialNo: string;
@@ -39,7 +40,8 @@ export class BrandsComponent {
   constructor(
     private brandService: BrandService,
     private http: HttpClient,
-    public productService: ProductService
+    public productService: ProductService,
+    public api:LocalhostApiService
   ) {}
 
   ngOnInit() {
@@ -167,7 +169,7 @@ export class BrandsComponent {
   }
   taskToEdit: any;
 
-  public url = 'http://' + this.ip_address + '/inventory/brands/';
+  public url = 'http://' +this.api.localhost + '/inventory/brands/';
 
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);

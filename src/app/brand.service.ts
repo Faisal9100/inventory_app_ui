@@ -1,16 +1,16 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { LocalhostApiService } from './localhost-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class BrandService {
-  public ip_address = '127.0.0.1:8000';
-  private url2 = 'http://' + this.ip_address + '/inventory/brands/${id}';
-  public url = 'http://' + this.ip_address + '/inventory/brands/';
+  private url2 = 'http://' + this.api.localhost + '/inventory/brands/${id}';
+  public url = 'http://' + this.api.localhost + '/inventory/brands/';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient,public api:LocalhostApiService) {}
   //  code for brand
   getBrand(pageIndex: number, pageSize: number): Observable<any> {
     return this.http.get<any>(this.url);
@@ -40,7 +40,7 @@ export class BrandService {
     return this.http.put<any>(url, category);
   }
   // brand code ended
-  public url3 = 'http://127.0.0.1:8000/inventory/products/';
+  public url3 = 'http://'+this.api.localhost+'/inventory/products/';
 
   getProducts(): Observable<any> {
     return this.http.get<any>(this.url3);

@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs';
+import { LocalhostApiService } from './localhost-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SupplierService {
-  ip_address = '127.0.0.1:8000';
-  public url = 'http://' + this.ip_address + '/inventory/Suppliers/';
+  public url = 'http://' + this.api.localhost + '/inventory/Suppliers/';
   pageSize = 10;
   currentPage = 1;
   totalPages!: number;
@@ -15,7 +15,7 @@ export class SupplierService {
   totalItems: any;
   itemsPerPage: any;
   suppliers: any;
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient,public api:LocalhostApiService) {}
   fetchsupplier() {
     let skip = (this.currentPage - 1) * this.pageSize;
     let limit = 20;

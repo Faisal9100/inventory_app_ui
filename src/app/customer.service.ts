@@ -1,14 +1,15 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { LocalhostApiService } from './localhost-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CustomerService {
-  constructor(public http: HttpClient) {}
+  constructor(public http: HttpClient,public api:LocalhostApiService) {}
   public ip_address = '127.0.0.1:8000';
-  public url = 'http://' + this.ip_address + '/inventory/customers/';
+  public url = 'http://' + this.api.localhost + '/inventory/customers/';
 
   getAllPurchase(): Observable<any> {
     const httpOptions = {
