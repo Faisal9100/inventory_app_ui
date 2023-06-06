@@ -26,9 +26,6 @@ import { ProductsComponent } from './products/products.component';
 import { AllPurchaseComponent } from './all-purchase/all-purchase.component';
 import { AllSaleComponent } from './all-sale/all-sale.component';
 import { SettingComponent } from './setting/setting.component';
-import { FaviconComponent } from './logo/favicon/favicon.component';
-import { ReportComponent } from './report/report.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
 import { NgChartsModule } from 'ng2-charts';
 import { SupplierComponent } from './supplier/supplier.component';
 import {
@@ -36,7 +33,6 @@ import {
   NgbModule,
   NgbPaginationModule,
 } from '@ng-bootstrap/ng-bootstrap';
-import { PaginationComponent } from './pagination/pagination.component';
 import { WarehouseServiceService } from './warehouse-service.service';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { ProductService } from './product.service';
@@ -68,11 +64,7 @@ import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
     AllPurchaseComponent,
     AllSaleComponent,
     SettingComponent,
-    FaviconComponent,
-    ReportComponent,
-    SidebarComponent,
     SupplierComponent,
-    PaginationComponent,
     AccountlayerComponent,
     LoginComponent,
     VoucherComponent,
@@ -109,11 +101,11 @@ import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
     SupplierService,
     NgbActiveModal,
     AuthguardGuard,
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: AuthInterceptorInterceptor,
-    //   multi: true
-    // }
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptorInterceptor,
+      multi: true
+    }
     
   ],
   bootstrap: [AppComponent],

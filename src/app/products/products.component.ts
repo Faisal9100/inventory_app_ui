@@ -231,6 +231,7 @@ export class ProductsComponent {
         console.log(response);
         this.getProducts();
         this.productForm.reset();
+        this.modalService.dismissAll();
         Swal.fire({
           icon: 'success',
           title: 'Product added successfully!',
@@ -265,20 +266,8 @@ export class ProductsComponent {
       }
     });
   }
- 
 
   open3(content3: any) {
-    // this.modalService.open(content3);/
-    //     {product: Product = new Product();
-    // // Assign existing data to the product model
-    // this.product.id = existingProductId;
-    // this.product.name = existingProductName;
-    // this.product.image = existingProductImage;
-    // this.product.brand = existingProductBrand;
-    // this.product.unit = existingProductUnit;
-    // this.product.category = existingProductCategory;
-    // this.product.note = existingProductNote;}
-    // this.modalService.open(content3)
   }
 
   generatePDF() {
@@ -343,7 +332,7 @@ export class ProductsComponent {
     }
   }
 
-  updateProduct: any
+  updateProduct: any;
   update_product(product: any) {
     this.updateProduct = product;
   }
@@ -375,10 +364,11 @@ export class ProductsComponent {
         Swal.fire({
           title: 'Product updated',
           text: 'product updated successfully!',
-          timer:2000,
+          timer: 2000,
           icon: 'success',
-        })
+        });
         this.getProducts();
+        this.modalService.dismissAll();
       },
       (error) => {
         console.log(error);

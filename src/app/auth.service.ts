@@ -18,7 +18,7 @@ import { LocalhostApiService } from './localhost-api.service';
 })
 export class AuthService {
   private tokenKey = 'auth_token';
-  private apiUrl = 'http://'+this.api.localhost+'/auth/jwt/create/';
+  private apiUrl = 'http://' + this.api.localhost + '/auth/jwt/create/';
   loginFormVisible: boolean = true;
 
   constructor(
@@ -26,7 +26,7 @@ export class AuthService {
     private http: HttpClient,
     private route: ActivatedRoute,
     private router: Router,
-    public api:LocalhostApiService
+    public api: LocalhostApiService
   ) {}
   makeHttpRequestWithHeaders() {
     const headers = new HttpHeaders({
@@ -55,7 +55,7 @@ export class AuthService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+        Authorization: `JWT ${localStorage.getItem('token')}`, // Access token stored in localStorage
       }),
     };
 
@@ -82,15 +82,13 @@ export class AuthService {
   //   // Return true if the token is valid, otherwise false
   //   return !!token;
   // }
-  proceedLogin(credentials:any){
-    return this.http.post(this.apiUrl,credentials)
+  proceedLogin(credentials: any) {
+    return this.http.post(this.apiUrl, credentials);
   }
-  getToken(){
-
-    return localStorage.getItem('token')||'';
+  getToken() {
+    return localStorage.getItem('token') || '';
   }
-  isLoggedIn(){
-    return localStorage.getItem('token')!=null;
+  isLoggedIn() {
+    return localStorage.getItem('token') != null;
   }
-
 }

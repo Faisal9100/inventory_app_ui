@@ -7,26 +7,23 @@ import { CategoriesComponent } from './categories/categories.component';
 import { CustomerComponent } from './customer/customer.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ProductsComponent } from './products/products.component';
-import { ReportComponent } from './report/report.component';
 import { SupplierComponent } from './supplier/supplier.component';
 import { UnitsComponent } from './units/units.component';
 import { WarehouseComponent } from './warehouse/warehouse.component';
 import { AccountlayerComponent } from './accountlayer/accountlayer.component';
 import { LoginComponent } from './login/login.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-// import { MainGuard } from './main.guard';
 import { VoucherComponent } from './voucher/voucher.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { AuthguardGuard } from './authguard.guard';
+
 const routes: Routes = [
-  { path: 'sidebar', component: SidebarComponent },
-  { path: 'login', component: LoginComponent },
   {
     path: 'dashboard',
     component: DashboardComponent,
     canActivate: [AuthguardGuard],
   },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
   {
     path: 'products',
     component: ProductsComponent,
@@ -48,7 +45,7 @@ const routes: Routes = [
     component: CategoriesComponent,
     canActivate: [AuthguardGuard],
   },
-  { path: 'report', component: ReportComponent, canActivate: [AuthguardGuard] },
+
   {
     path: 'All-sale',
     component: AllSaleComponent,

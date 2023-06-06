@@ -441,7 +441,10 @@
         [(ngModel)]="producttotalQuantity"
         #q
       />
-      <p>Total Quantity: {{ producttotalQuantity }}</p>
+      <p *ngIf="selectedWarehouse && selectedProduct" value="getSelectedWarehouseProductQuantity">
+        Selected Warehouse's Product Quantity: {{ getSelectedWarehouseProductQuantity() }}
+      </p>
+      
 
       <label for="" class="p-2">Price</label>
       <input
@@ -451,7 +454,7 @@
         #p
       />
 
-      <p class="">
+      <p class="" *ngIf="selectedProduct">
         Default Purchase Price:
         <span style="color: tomato">{{ defaultPurchasePrice }}</span>
       </p>

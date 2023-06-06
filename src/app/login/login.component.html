@@ -54,13 +54,17 @@
 					<input type="text"  name="username"
           id="username"
           formControlName="username"
-          required="true" class="login__input" placeholder="User name / Email">
+          [ngModel]="hardcodedUsername"
+          required="true" class="login__input" placeholder="Username">
 				</div>
 				<div class="login__field">
 					<i class="login__icon fas fa-lock"></i>
 					<input type="password"  name="password"
           id="password"
+          [ngModel]="hardcodedPassword"
+
           formControlName="password"
+
           placeholder="Password"
           required="true" class="login__input" placeholder="Password">
 				</div>

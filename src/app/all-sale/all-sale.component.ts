@@ -110,7 +110,7 @@ export class AllSaleComponent {
   account_customer: any;
   defaultPurchasePrice?: number;
   priceError: boolean = false;
-  
+
   updateTotal() {
     let total = 0;
     let quantityTotal = 0;
@@ -119,7 +119,6 @@ export class AllSaleComponent {
       total += row.amount * row.quantity;
       quantityTotal += row.quantity;
       amountTotal += row.amount;
-     
     }
     this.grandTotal = total - this.discount;
     this.totalQuantity = quantityTotal;
@@ -255,6 +254,7 @@ export class AllSaleComponent {
   // <------------------------ code for adding product when adding new sale ------------------------------->
 
   product_name: any;
+  quantityCheck_Product:any;
   addProduct() {
     // Ensure a product is selected
     if (!this.selectedProduct) {
@@ -284,9 +284,17 @@ export class AllSaleComponent {
     // Calculate the total quantity based on the selected product quantity and input quantity
     const totalQuantity = selectedProduct ? selectedProduct.quantity : 0;
     const totalAmount = selectedProduct ? selectedProduct.amount : 0;
+    let quantityCheck_Product = selectedProduct ? selectedProduct.quantity : 0;
 
     if (this.quantity > totalQuantity) {
       // Show an error message or perform appropriate actions
+      Swal.fire({
+        title: 'error',
+        text: 'You do not have any quantity left ',
+        icon: 'error',
+        confirmButtonText: 'ok',
+        timer: 2000,
+      });
       console.log('Entered quantity exceeds total quantity');
       return;
     }
@@ -427,7 +435,6 @@ export class AllSaleComponent {
         product_id: row.product_id,
         product_name: row.product_name,
         stock: row.purchase_id,
-        
       };
       await this.postOneStock(product, id);
     }
@@ -562,6 +569,7 @@ export class AllSaleComponent {
       });
       return; // Stop the execution if any field is empty
     }
+
     if (product && product.id) {
       const currentDate = new Date().toISOString().split('T')[0];
       const requestBody = {
@@ -571,7 +579,6 @@ export class AllSaleComponent {
         price: p.value,
         amount: p.value * q.value,
         stock: this.selectedWarehouse,
-        
       };
       console.log(requestBody);
 
@@ -582,19 +589,31 @@ export class AllSaleComponent {
             `/inventory/sales/${this.update_purchase_id}/sale_items/`,
           requestBody
         )
-        .subscribe((response) => {
-          console.log(response);
-          product.value = '';
-          q.value = '';
-          p.value = '';
-          date.value = '';
-        });
-      this.modalService.dismissAll();
-      Swal.fire({
-        icon: 'success',
-        title: 'success',
-        text: 'Product added successfully.',
-      });
+        .subscribe(
+          (response) => {
+            console.log(response);
+            product.value = '';
+            q.value = '';
+            p.value = '';
+            date.value = '';
+            this.modalService.dismissAll();
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Product added successfully.',
+            });
+            
+          },
+          (error) => {
+            console.error(error);
+            // Handle the error here, show an error message, etc.
+            Swal.fire({
+              icon: 'error',
+              title: 'Error',
+              text: 'Failed to add the product.',
+            });
+          }
+        );
     }
   }
 
@@ -663,20 +682,58 @@ export class AllSaleComponent {
   }
   // q:any;
   producttotalQuantity: number = 0;
-selectedProductPrice: number = 0;
+  selectedProductPrice: number = 0;
 
   updateProductDetails() {
     // Find the selected product from the productSale array
     const selectedProduct = this.productSale.find(
       (product) => product.product_id === this.selectedProduct
     );
-  
+
     // Update the total quantity and price based on the selected product
     this.producttotalQuantity = selectedProduct ? selectedProduct.quantity : 0;
     this.selectedProductPrice = selectedProduct ? selectedProduct.price : 0;
   }
+  getSelectedWarehouseProductPrice() {
+    // Check if both the selected warehouse and product are available
+    if (this.selectedWarehouse && this.selectedProduct) {
+      // Find the selected warehouse in the warehouses array
+      const selectedWarehouse = this.warehouses.find(warehouse => warehouse.id === this.selectedWarehouse);
+      
+      // Find the selected product in the productSale array
+      const selectedProduct = this.productSale.find(product => product.product_id === this.selectedProduct);
+      
+      // Check if both the selected warehouse and product are found
+      if (selectedWarehouse && selectedProduct) {
+        // Logic to calculate the product price based on the selected warehouse and product
+        // You can access the necessary properties from the selectedWarehouse and selectedProduct objects
+        // Return the calculated price value
+        return selectedProduct.price;
+      }}
+    }
+      getSelectedWarehouseProductQuantity():number {
+        // Check if both the selected warehouse and product are available
+        if (this.selectedWarehouse && this.selectedProduct) {
+          // Find the selected warehouse in the warehouses array
+          const selectedWarehouse = this.warehouses.find(warehouse => warehouse.id === this.selectedWarehouse);
+          
+          // Find the selected product in the productSale array
+          const selectedProduct = this.productSale.find(product => product.product_id === this.selectedProduct);
+          
+          // Check if both the selected warehouse and product are found
+          if (selectedWarehouse && selectedProduct) {
+       
+            return selectedProduct.quantity; // Assuming the product object has a `quantity` property
+          }
+        }
+        
+        return 0; 
+       
+      }
+      
+    }
+    
+    // Return a default value or handle the case when the selected warehouse or product is not found
   
   
-}
-
 //  <---------------------------SALE ALL WORK END HERE------------------------------------>
