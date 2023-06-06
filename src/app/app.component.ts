@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,9 +12,7 @@ export class AppComponent implements OnInit {
 
   isLoggedIn = true;
   showSubMenu: boolean = false;
-constructor(public router:Router){
-
-}
+  constructor(public router: Router, public auth: AuthService) {}
   toggleSubMenu() {
     this.showSubMenu = !this.showSubMenu;
   }
@@ -24,12 +23,10 @@ constructor(public router:Router){
   }
   showSidebar = true;
   logout() {
-    // Clear user-related data or tokens
-  
-    // Navigate to the login page
-    this.router.navigate(['/login']);
+    this.auth.logout();
+    this.router.navigateByUrl('/login');
   }
-  
+
   ngOnInit() {
     this.router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -37,5 +34,4 @@ constructor(public router:Router){
       }
     });
   }
-  
 }

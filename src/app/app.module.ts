@@ -51,6 +51,7 @@ import { LoginComponent } from './login/login.component';
 import { VoucherComponent } from './voucher/voucher.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { AuthguardGuard } from './authguard.guard';
+import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 // import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 // import { AuthQuardGuard } from './auth-quard.guard';
 

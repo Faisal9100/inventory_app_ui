@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LocalhostApiService {
-
-  constructor() { }
-  localhost = '192.168.1.9:8000'
+  constructor() {}
+  localhost = '127.0.0.1:8000';
 }

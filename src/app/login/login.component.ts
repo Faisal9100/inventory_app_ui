@@ -40,32 +40,51 @@ export class LoginComponent {
   // }
   username?:string;
   password?:string;
-isLoggedIn :boolean= false; 
-  login() {
-    const hardcodedUsername = 'admin';
-    const hardcodedPassword = '1234';
+// isLoggedIn :boolean= false; 
+  // login() {
+  //   const hardcodedUsername = 'admin';
+  //   const hardcodedPassword = '1234';
   
-    if (this.username === hardcodedUsername && this.password === hardcodedPassword) {
-      console.log('Login successful');
-      this.isLoggedIn = true; 
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Login Successfully',
-      });
-      // Perform any additional actions for successful login
+  //   if (this.username === hardcodedUsername && this.password === hardcodedPassword) {
+  //     console.log('Login successful');
+  //     this.isLoggedIn = true; 
+  //     Swal.fire({
+  //       icon: 'success',
+  //       title: 'Success',
+  //       text: 'Login Successfully',
+  //     });
+  //     // Perform any additional actions for successful login
   
-      // Navigate to the dashboard
-      this.router.navigate(['/dashboard']);
-    } else {
-      console.log('Invalid username or password');
-      Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: 'Invalid username or password',
+  //     // Navigate to the dashboard
+  //     this.router.navigate(['/dashboard']);
+  //   } else {
+  //     console.log('Invalid username or password');
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Oops...',
+  //       text: 'Invalid username or password',
+  //     });
+  //     // Perform any additional actions for unsuccessful login
+  //   }
+  // }
+  Login = new FormGroup({
+    username : new FormControl("",Validators.required),
+    password : new FormControl("",Validators.required)
+  })
+  responseData:any;
+    ProceedLogin(){
+    if(this.Login.valid){
+      this.auth.proceedLogin(this.Login.value).subscribe(result =>{
+        if(result != null){
+          this.responseData = result;
+          localStorage.setItem('token',this.responseData.access);
+          this.router.navigate(['']);
+        }
       });
-      // Perform any additional actions for unsuccessful login
     }
+  }
+  isLoggedIn(){
+    return localStorage.getItem('token')!=null;
   }
   
   

@@ -19,33 +19,53 @@ export class UnitService {
     throw new Error('Method not implemented.');
   }
 
-  constructor(private http: HttpClient,public api:LocalhostApiService) {}
+  constructor(private http: HttpClient, public api: LocalhostApiService) {}
 
   // code for unit
   getUnit(): Observable<any> {
-   let headers = new HttpHeaders();
-   let token = localStorage.getItem('token');
-   headers = headers.append('Authorization', 'JWT' + token)
-   let options = { headers: headers };
-    return this.http.get<any>(this.url,options);
+    let headers = new HttpHeaders();
+    let token = localStorage.getItem('token');
+    headers = headers.append('Authorization', 'JWT' + token);
+    let options = { headers: headers };
+    return this.http.get<any>(this.url, options);
   }
- 
+
   addUnit(category: any): Observable<any> {
-    return this.http.post<any>(this.url, category);
+    let headers = new HttpHeaders();
+    let token = localStorage.getItem('token');
+    headers = headers.append('Authorization', 'JWT' + token);
+    let options = { headers: headers };
+    return this.http.post<any>(this.url, category, options);
   }
   createUnit(id: number, name: string) {
+    let headers = new HttpHeaders();
+    let token = localStorage.getItem('token');
+    headers = headers.append('Authorization', 'JWT' + token);
+    let options = { headers: headers };
     const data = { id, name };
-    return this.http.post(this.url, data);
+    return this.http.post(this.url, data, options);
   }
   deleteUnit(id: string): Observable<any> {
-    return this.http.delete(`${this.url}${id}`);
+    let headers = new HttpHeaders();
+    let token = localStorage.getItem('token');
+    headers = headers.append('Authorization', 'JWT' + token);
+    let options = { headers: headers };
+    return this.http.delete(`${this.url}${id}`, options);
   }
   putProduct(product: Product): Observable<any> {
+    let headers = new HttpHeaders();
+    let token = localStorage.getItem('token');
+    headers = headers.append('Authorization', 'JWT' + token);
+    let options = { headers: headers };
     const url = `${this.url}${product.id}/`;
-    return this.http.put<any>(url, { name: product.name });
+    return this.http.put<any>(url, { name: product.name }, options);
   }
   getProducts(): Observable<any> {
-    return this.http.get<any>(this.url);
+    let headers = new HttpHeaders();
+    let token = localStorage.getItem('token');
+    headers = headers.append('Authorization', 'JWT' + token);
+    let options = { headers: headers };
+    return this.http.get<any>(this.url, options);
   }
   // unit code ended
 }

@@ -21,24 +21,76 @@ import { AuthguardGuard } from './authguard.guard';
 const routes: Routes = [
   { path: 'sidebar', component: SidebarComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent,canActivate:[AuthguardGuard]  },
+  {
+    path: 'dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthguardGuard],
+  },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
-  { path: 'products', component: ProductsComponent,canActivate:[AuthguardGuard] },
-  { path: 'categories', component: CategoriesComponent ,canActivate:[AuthguardGuard] },
-  { path: 'brands', component: BrandsComponent ,canActivate:[AuthguardGuard] },
-  { path: 'purchase', component: AllPurchaseComponent,canActivate:[AuthguardGuard]  },
-  { path: 'categories', component: CategoriesComponent ,canActivate:[AuthguardGuard] },
-  { path: 'report', component: ReportComponent ,canActivate:[AuthguardGuard] },
-  { path: 'All-sale', component: AllSaleComponent,canActivate:[AuthguardGuard]  },
-  { path: 'warehouse', component: WarehouseComponent ,canActivate:[AuthguardGuard] },
-  { path: 'units', component: UnitsComponent ,canActivate:[AuthguardGuard] },
-  { path: 'customer', component: CustomerComponent,canActivate:[AuthguardGuard]  },
-  { path: 'supplier', component: SupplierComponent,canActivate:[AuthguardGuard]  },
-  { path: 'accounts', component: AccountlayerComponent ,canActivate:[AuthguardGuard] },
-  { path: 'voucher', component: VoucherComponent ,canActivate:[AuthguardGuard] },
-  { path: 'All-purchase', component: AllPurchaseComponent,canActivate:[AuthguardGuard]  },
-  { path: 'Sale', component: AllSaleComponent ,canActivate:[AuthguardGuard] },
-  { path: 'transaction', component: TransactionsComponent,canActivate:[AuthguardGuard]  },
+  {
+    path: 'products',
+    component: ProductsComponent,
+    canActivate: [AuthguardGuard],
+  },
+  {
+    path: 'categories',
+    component: CategoriesComponent,
+    canActivate: [AuthguardGuard],
+  },
+  { path: 'brands', component: BrandsComponent, canActivate: [AuthguardGuard] },
+  {
+    path: 'purchase',
+    component: AllPurchaseComponent,
+    canActivate: [AuthguardGuard],
+  },
+  {
+    path: 'categories',
+    component: CategoriesComponent,
+    canActivate: [AuthguardGuard],
+  },
+  { path: 'report', component: ReportComponent, canActivate: [AuthguardGuard] },
+  {
+    path: 'All-sale',
+    component: AllSaleComponent,
+    canActivate: [AuthguardGuard],
+  },
+  {
+    path: 'warehouse',
+    component: WarehouseComponent,
+    canActivate: [AuthguardGuard],
+  },
+  { path: 'units', component: UnitsComponent, canActivate: [AuthguardGuard] },
+  {
+    path: 'customer',
+    component: CustomerComponent,
+    canActivate: [AuthguardGuard],
+  },
+  {
+    path: 'supplier',
+    component: SupplierComponent,
+    canActivate: [AuthguardGuard],
+  },
+  {
+    path: 'accounts',
+    component: AccountlayerComponent,
+    canActivate: [AuthguardGuard],
+  },
+  {
+    path: 'voucher',
+    component: VoucherComponent,
+    canActivate: [AuthguardGuard],
+  },
+  {
+    path: 'All-purchase',
+    component: AllPurchaseComponent,
+    canActivate: [AuthguardGuard],
+  },
+  { path: 'Sale', component: AllSaleComponent, canActivate: [AuthguardGuard] },
+  {
+    path: 'transaction',
+    component: TransactionsComponent,
+    canActivate: [AuthguardGuard],
+  },
 ];
 
 @NgModule({

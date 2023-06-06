@@ -1,25 +1,8 @@
-<!-- <div class="limiter">
-      <div class="container-login100">
-        <div class="wrap-login100">
-          <form (ngSubmit)="login()">
-            <div>
-              <label for="username">Username:</label>
-              <input type="text" id="username" [(ngModel)]="username" name="username">
-            </div>
-            <div>
-              <label for="password">Password:</label>
-              <input type="password" id="password" [(ngModel)]="password" name="password">
-            </div>
-            <button type="submit">Login</button>
-          </form>
-          </div>
-          </div>
-          </div> -->
-<div class="background-wrap">
+<!-- <div class="background-wrap">
   <div class="background"></div>
 </div>
 
-<form id="accesspanel" action="login" method="post" (ngSubmit)="login()">
+<form [formGroup]="Login" (ngSubmit)="ProceedLogin()">
   <h1 id="litheader">Log In</h1>
 
   <div class="inset">
@@ -28,7 +11,8 @@
         type="text"
         name="username"
         id="username"
-        [(ngModel)]="username"
+        formControlName="username"
+        required="true"
         placeholder="Email address 0r Username"
       />
     </p>
@@ -37,8 +21,9 @@
         type="password"
         name="password"
         id="password"
-        [(ngModel)]="password"
+        formControlName="password"
         placeholder="Password"
+        required="true"
       />
     </p>
     <div style="text-align: center">
@@ -56,42 +41,50 @@
     <input class="loginLoginValue" type="hidden" name="service" value="login" />
   </div>
   <p class="p-container">
-    <input type="submit" name="Login" id="go" value="LogIn" />
-  </p>
+   <input type="submit" name="Login" id="go" value="LogIn" /> -->
+    <!-- <button type="submit">LogIN</button>
+  </p> --> 
 
-</form>
+<div class="container">
+	<div class="screen">
+		<div class="screen__content">
+			<form class="login" [formGroup]="Login" (ngSubmit)="ProceedLogin()">
+				<div class="login__field">
+					<i class="login__icon fas fa-user"></i>
+					<input type="text"  name="username"
+          id="username"
+          formControlName="username"
+          required="true" class="login__input" placeholder="User name / Email">
+				</div>
+				<div class="login__field">
+					<i class="login__icon fas fa-lock"></i>
+					<input type="password"  name="password"
+          id="password"
+          formControlName="password"
+          placeholder="Password"
+          required="true" class="login__input" placeholder="Password">
+				</div>
+				<button class="button login__submit" type="submit">
+					<span class="button__text">Log In Now</span>
+					<i class="button__icon fas fa-chevron-right"></i>
+				</button>				
+			</form>
+			<!-- <div class="social-login">
+				<h3>log in via</h3>
+				<div class="social-icons">
+					<a href="#" class="social-login__icon fab fa-instagram"></a>
+					<a href="#" class="social-login__icon fab fa-facebook"></a>
+					<a href="#" class="social-login__icon fab fa-twitter"></a>
+				</div>
+			</div> -->
+		</div>
+		<div class="screen__background">
+			<span class="screen__background__shape screen__background__shape4"></span>
+			<span class="screen__background__shape screen__background__shape3"></span>		
+			<span class="screen__background__shape screen__background__shape2"></span>
+			<span class="screen__background__shape screen__background__shape1"></span>
+		</div>		
+	</div>
+</div>
 
-<!-- <form class="login100-form validate-form" #f="ngForm" (ngSubmit)="signIn(f.value)" >
-            <span class="login100-form-title">Inventory Managenent System</span>
-    
-              <label for="inputEmail"> Username</label>
-              <input type="text" class="form-control" id="inputUsername" name="username" ngModel placeholder="Username" required>
-              <label for="">Password</label>
-              <input type="password" id="inputPassword" name="password" ngModel placeholder="Password" required>
-             
-          
-    
-            <div class="container-login100-form-btn">
-              <button
-                class="login100-form-btn"
-                
-                type="submit"
-              >
-                <span >Login</span>
-              </button>
-            </div>
-            <a
-              data-bs-toggle="modal"
-              data-bs-target="#resetPasswordModal"
-              class="forgot text-center my-2 col-12 d-inline-block"
-            >
-              Forgot Password / Reset Password
-            </a>
-            <div class="site_alert" >
-              Username / Password is Incorrect
-              <button type="button" class="close">
-                <i class="bi bi-x" (click)="basic.closeAlert($event)"></i>
-              </button>
-            </div>
-    
-          </form> -->
+
