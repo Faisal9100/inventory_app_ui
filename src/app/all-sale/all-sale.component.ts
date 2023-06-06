@@ -1,3 +1,4 @@
+import { ProductService } from './../product.service';
 import { Account } from './../accountlayer/accountlayer.component';
 import { SaleService } from './../sale.service';
 
@@ -11,7 +12,6 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { WarehouseService } from '../warehouse.service';
 import { SupplierService } from '../supplier.service';
-import { ProductService } from '../product.service';
 import Swal from 'sweetalert2';
 import { CustomerService } from '../customer.service';
 import { LocalhostApiService } from '../localhost-api.service';
@@ -674,13 +674,13 @@ export class AllSaleComponent {
         title: 'Error',
         text: 'Quantity cannot exceed available quantity.',
       });
-      row.amount = row.product.price; // Reset the amount to the available amount
+      row.amount = row.product.price; 
     }
   }
   refreshPage() {
     window.location.reload();
   }
-  // q:any;
+ 
   producttotalQuantity: number = 0;
   selectedProductPrice: number = 0;
 
@@ -705,9 +705,7 @@ export class AllSaleComponent {
       
       // Check if both the selected warehouse and product are found
       if (selectedWarehouse && selectedProduct) {
-        // Logic to calculate the product price based on the selected warehouse and product
-        // You can access the necessary properties from the selectedWarehouse and selectedProduct objects
-        // Return the calculated price value
+       
         return selectedProduct.price;
       }}
     }
@@ -730,8 +728,22 @@ export class AllSaleComponent {
         return 0; 
        
       }
+      productSale2Qty_Prc:any[]=[];
+      // productQuantity(warehouseId: number) {
+      //     this.http
+      //       .get(
+      //         `http://` +
+      //           this.api.localhost +
+      //           `/inventory/warehouses/${warehouseId}/stocks/`
+      //       )
+      //       .subscribe((resp: any) => {
+      //         this.productSale2Qty_Prc = resp['results'];
+      //         console.log(resp);
+      //       });
+      //   }
+      }
       
-    }
+    
     
     // Return a default value or handle the case when the selected warehouse or product is not found
   

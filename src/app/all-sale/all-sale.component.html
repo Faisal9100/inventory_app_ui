@@ -441,9 +441,10 @@
         [(ngModel)]="producttotalQuantity"
         #q
       />
-      <p *ngIf="selectedWarehouse && selectedProduct" value="getSelectedWarehouseProductQuantity">
-        Selected Warehouse's Product Quantity: {{ getSelectedWarehouseProductQuantity() }}
-      </p>
+      <!-- <p *ngFor="let quantity of productSale" >
+        {{quantity.quantity}}
+      </p> -->
+      
       
 
       <label for="" class="p-2">Price</label>

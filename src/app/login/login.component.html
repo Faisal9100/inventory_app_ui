@@ -42,38 +42,56 @@
   </div>
   <p class="p-container">
    <input type="submit" name="Login" id="go" value="LogIn" /> -->
-    <!-- <button type="submit">LogIN</button>
-  </p> --> 
+<!-- <button type="submit">LogIN</button>
+  </p> -->
 
 <div class="container">
-	<div class="screen">
-		<div class="screen__content">
-			<form class="login" [formGroup]="Login" (ngSubmit)="ProceedLogin()">
-				<div class="login__field">
-					<i class="login__icon fas fa-user"></i>
-					<input type="text"  name="username"
-          id="username"
-          formControlName="username"
-          [ngModel]="hardcodedUsername"
-          required="true" class="login__input" placeholder="Username">
-				</div>
-				<div class="login__field">
-					<i class="login__icon fas fa-lock"></i>
-					<input type="password"  name="password"
-          id="password"
-          [ngModel]="hardcodedPassword"
-
-          formControlName="password"
-
-          placeholder="Password"
-          required="true" class="login__input" placeholder="Password">
-				</div>
-				<button class="button login__submit" type="submit">
-					<span class="button__text">Log In Now</span>
-					<i class="button__icon fas fa-chevron-right"></i>
-				</button>				
-			</form>
-			<!-- <div class="social-login">
+  <div class="screen">
+    <div class="screen__content">
+      <form class="login" [formGroup]="Login" (ngSubmit)="ProceedLogin()">
+        <div class="image">
+          <img
+            width="180px"
+            height="60px"
+            src="assets/images/logo.png"
+            alt="My Image"
+          />
+          <br /><br /><br />
+        </div>
+        <h1 class="text-center heading">Log In</h1>
+        <div class="login__field">
+          <i class="login__icon fas fa-user"></i>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            formControlName="username"
+            [ngModel]="hardcodedUsername"
+            required="true"
+            class="login__input"
+            placeholder="Username"
+          />
+        </div>
+        <div class="login__field">
+          <i class="login__icon fas fa-lock"></i>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            [ngModel]="hardcodedPassword"
+            formControlName="password"
+            placeholder="Password"
+            required="true"
+            class="login__input"
+            placeholder="Password"
+          />
+        </div>
+        <button class="button login__submit" type="submit">
+          <span class="button__text">Log In Now</span>
+          <i class="button__icon fas fa-chevron-right"></i>
+        </button>
+      </form>
+      <!-- <div class="social-login">
 				<h3>log in via</h3>
 				<div class="social-icons">
 					<a href="#" class="social-login__icon fab fa-instagram"></a>
@@ -81,14 +99,12 @@
 					<a href="#" class="social-login__icon fab fa-twitter"></a>
 				</div>
 			</div> -->
-		</div>
-		<div class="screen__background">
-			<span class="screen__background__shape screen__background__shape4"></span>
-			<span class="screen__background__shape screen__background__shape3"></span>		
-			<span class="screen__background__shape screen__background__shape2"></span>
-			<span class="screen__background__shape screen__background__shape1"></span>
-		</div>		
-	</div>
+    </div>
+    <div class="screen__background">
+      <span class="screen__background__shape screen__background__shape4"></span>
+      <span class="screen__background__shape screen__background__shape3"></span>
+      <span class="screen__background__shape screen__background__shape2"></span>
+      <span class="screen__background__shape screen__background__shape1"></span>
+    </div>
+  </div>
 </div>
-
-
