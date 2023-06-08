@@ -636,7 +636,7 @@ export class AllSaleComponent {
         quantity: q.value,
         price: p.value,
         amount: p.value * q.value,
-        stocks: purchase_id,
+        stock: purchase_id,
       };
       console.log(requestBody);
 
