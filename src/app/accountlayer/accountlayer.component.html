@@ -114,13 +114,13 @@
       <tr
         *ngFor="
           let account of accountData
-            | paginate : { itemsPerPage: 4, currentPage: p }
+            | paginate : { itemsPerPage: 10, currentPage: p }
         "
       >
         <td>{{ account.id }}</td>
         <td>{{ account.title }}</td>
         <td>{{ account.contact }}</td>
-      
+
         <td>
           <button
             class="btn btn-outline-success"

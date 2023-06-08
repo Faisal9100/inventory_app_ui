@@ -254,7 +254,7 @@ export class AllSaleComponent {
   // <------------------------ code for adding product when adding new sale ------------------------------->
 
   product_name: any;
-  quantityCheck_Product:any;
+  quantityCheck_Product: any;
   addProduct() {
     // Ensure a product is selected
     if (!this.selectedProduct) {
@@ -460,15 +460,6 @@ export class AllSaleComponent {
 
   // <---------------------------------- code for search ----------------------------------------->
 
-  // Search() {
-  //   if (this.warehouse == '') {
-  //     this.ngOnInit();
-  //   } else {
-  //     this.AllPurchaseData = this.AllPurchaseData.filter((res) => {
-  //       return res.title.match(this.warehouse);
-  //     });
-  //   }
-  // }
   Search() {
     if (this.remarks === '') {
       this.ngOnInit();
@@ -478,15 +469,6 @@ export class AllSaleComponent {
       });
     }
   }
-  // Search() {
-  //   if (this.remarks == '') {
-  //     this.ngOnInit();
-  //   } else {
-  //     this.AllPurchaseData = this.AllPurchaseData.filter((res) => {
-  //       return res.title.includes(this.remarks);
-  //     });
-  //   }
-  // }
 
   // <----------------------------- code for deleting stock from sale list ------------------------------------------->
   stock_list_id: any;
@@ -554,22 +536,98 @@ export class AllSaleComponent {
 
   // <-------------------------- CODE FOR UPDATING STOCK IN SALE LIST---------------------------------------------->
 
+  // postUpdateStock(product: any, q: any, p: any, date: any) {
+  //   if (
+  //     !product.value ||
+  //     !q.value ||
+  //     !p.value ||
+  //     !date.value ||
+  //     !this.selectedWarehouse
+  //   ) {
+  //     Swal.fire({
+  //       icon: 'error',
+  //       title: 'Error',
+  //       text: 'Please fill in all the required fields.',
+  //     });
+  //     return; // Stop the execution if any field is empty
+  //   }
+
+  //   if (product && product.id) {
+  //     const currentDate = new Date().toISOString().split('T')[0];
+  //     const requestBody = {
+  //       date: currentDate,
+  //       product: product.value,
+  //       quantity: q.value,
+  //       price: p.value,
+  //       amount: p.value * q.value,
+  //       stock: this.selectedWarehouse,
+  //     };
+  //     console.log(requestBody);
+
+  //     this.http
+  //       .post(
+  //         `http://` +
+  //           this.api.localhost +
+  //           `/inventory/sales/${this.update_purchase_id}/sale_items/`,
+  //         requestBody
+  //       )
+  //       .subscribe(
+  //         (response) => {
+  //           console.log(response);
+  //           product.id = ''; // Clear the product id
+  //           product.value = ''; // Clear the product value
+  //           q.value = '';
+  //           p.value = '';
+  //           date.value = '';
+  //           this.selectedWarehouse.value = '';
+  //           this.modalService.dismissAll();
+  //           Swal.fire({
+  //             icon: 'success',
+  //             title: 'Success',
+  //             text: 'Product added successfully.',
+  //           });
+  //         },
+  //         (error) => {
+  //           console.error(error);
+  //           // Handle the error here, show an error message, etc.
+  //           Swal.fire({
+  //             icon: 'error',
+  //             title: 'Error',
+  //             text: 'Failed to add the product.',
+  //           });
+  //         }
+  //       );
+  //   }
+  // }
   postUpdateStock(product: any, q: any, p: any, date: any) {
-    if (
-      !product.value ||
-      !q.value ||
-      !p.value ||
-      !date.value ||
-      !this.selectedWarehouse
-    ) {
+    if (!product.value || !q.value || !p.value || !date.value) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
         text: 'Please fill in all the required fields.',
       });
-      return; // Stop the execution if any field is empty
+      return;
     }
+    const selectedProductId = product.value;
+    const selectedProductQuantity = q.value;
 
+    const n: any = this.productSale.find(
+      (item) => item.product_id == selectedProductId
+    );
+    const totalProductQuantity = n ? p.quantity : 0;
+
+    if (selectedProductQuantity > totalProductQuantity) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Quantity cannot be greater than the available product quantity.',
+      });
+      return;
+    }
+    const m: any = this.productSale.find(
+      (item) => item.product_id == product.value
+    );
+    const purchase_id = m ? m.purchase_id : 0;
     if (product && product.id) {
       const currentDate = new Date().toISOString().split('T')[0];
       const requestBody = {
@@ -578,7 +636,7 @@ export class AllSaleComponent {
         quantity: q.value,
         price: p.value,
         amount: p.value * q.value,
-        stock: this.selectedWarehouse,
+        stocks: purchase_id,
       };
       console.log(requestBody);
 
@@ -592,6 +650,7 @@ export class AllSaleComponent {
         .subscribe(
           (response) => {
             console.log(response);
+            product.id = '';
             product.value = '';
             q.value = '';
             p.value = '';
@@ -602,7 +661,6 @@ export class AllSaleComponent {
               title: 'Success',
               text: 'Product added successfully.',
             });
-            
           },
           (error) => {
             console.error(error);
@@ -672,80 +730,54 @@ export class AllSaleComponent {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Quantity cannot exceed available quantity.',
+        text: 'Price cannot be less than or equal to default purchase price.',
       });
-      row.amount = row.product.price; 
+      row.amount = row.product.price;
     }
   }
   refreshPage() {
     window.location.reload();
   }
- 
+  getProductQuantity(productId: number) {
+    const selectedProduct22 = this.productSale.find(
+      (product) => product.product_id === productId
+    );
+    return selectedProduct22 ? selectedProduct22.quantity : 0;
+  }
+  totalproductQuantity: number = 0;
+  // totalQuantity: number = 0;
+  totalproductPrice: number = 0;
+  getProductPurchase_id: any;
+
+  getProductTotalQuantity(event: any) {
+    let p: any = this.productSale.find(
+      (item) => item.product_id == event.target.value
+    );
+    this.totalproductQuantity = p.quantity;
+  }
+  totalproductTotalPrice(event: any) {
+    let q: any = this.productSale.find(
+      (item) => item.product_id == event.target.value
+    );
+    this.totalproductPrice = q.price;
+    console.log(this.totalproductPrice);
+  }
+  getPurchase_id(event: any) {
+    let i: any = this.productSale.find(
+      (item) => item.product_id == event.target.value
+    );
+    this.getProductPurchase_id = i.purchase_id;
+  }
+
+  // updateTotalQuantity() {
+  //   this.totalproductQuantity = this.quantity || 0;
+  // }
+
+  selectedProduct22: any;
+  quantity22: any;
   producttotalQuantity: number = 0;
   selectedProductPrice: number = 0;
+  q: any;
+}
 
-  updateProductDetails() {
-    // Find the selected product from the productSale array
-    const selectedProduct = this.productSale.find(
-      (product) => product.product_id === this.selectedProduct
-    );
-
-    // Update the total quantity and price based on the selected product
-    this.producttotalQuantity = selectedProduct ? selectedProduct.quantity : 0;
-    this.selectedProductPrice = selectedProduct ? selectedProduct.price : 0;
-  }
-  getSelectedWarehouseProductPrice() {
-    // Check if both the selected warehouse and product are available
-    if (this.selectedWarehouse && this.selectedProduct) {
-      // Find the selected warehouse in the warehouses array
-      const selectedWarehouse = this.warehouses.find(warehouse => warehouse.id === this.selectedWarehouse);
-      
-      // Find the selected product in the productSale array
-      const selectedProduct = this.productSale.find(product => product.product_id === this.selectedProduct);
-      
-      // Check if both the selected warehouse and product are found
-      if (selectedWarehouse && selectedProduct) {
-       
-        return selectedProduct.price;
-      }}
-    }
-      getSelectedWarehouseProductQuantity():number {
-        // Check if both the selected warehouse and product are available
-        if (this.selectedWarehouse && this.selectedProduct) {
-          // Find the selected warehouse in the warehouses array
-          const selectedWarehouse = this.warehouses.find(warehouse => warehouse.id === this.selectedWarehouse);
-          
-          // Find the selected product in the productSale array
-          const selectedProduct = this.productSale.find(product => product.product_id === this.selectedProduct);
-          
-          // Check if both the selected warehouse and product are found
-          if (selectedWarehouse && selectedProduct) {
-       
-            return selectedProduct.quantity; // Assuming the product object has a `quantity` property
-          }
-        }
-        
-        return 0; 
-       
-      }
-      productSale2Qty_Prc:any[]=[];
-      // productQuantity(warehouseId: number) {
-      //     this.http
-      //       .get(
-      //         `http://` +
-      //           this.api.localhost +
-      //           `/inventory/warehouses/${warehouseId}/stocks/`
-      //       )
-      //       .subscribe((resp: any) => {
-      //         this.productSale2Qty_Prc = resp['results'];
-      //         console.log(resp);
-      //       });
-      //   }
-      }
-      
-    
-    
-    // Return a default value or handle the case when the selected warehouse or product is not found
-  
-  
 //  <---------------------------SALE ALL WORK END HERE------------------------------------>

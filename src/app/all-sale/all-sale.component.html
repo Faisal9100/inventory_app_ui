@@ -418,10 +418,10 @@
       <label for="selectedProduct" class="py-2">Products*:</label>
       <select
         class="form-select"
-        [(ngModel)]="selectedProduct"
         id="selectedProduct"
         #product
-        (change)="isProductSelected = true; updateProductDetails()"
+        (change)="getProductTotalQuantity($event)"
+        (change)="totalproductTotalPrice($event)"
         #update_stock_product
       >
         <option
@@ -430,36 +430,35 @@
           [value]="product.product_id"
         >
           {{ product.product_name }}
+          {{ product.quantity }}
+         
+      
         </option>
       </select>
+    </div>
 
+    <div>
       <label for="" class="p-2">Quantity</label>
       <input
         type="number"
         class="form-control"
         id="quantity"
-        [(ngModel)]="producttotalQuantity"
+        [(ngModel)]="quantity"
         #q
       />
-      <!-- <p *ngFor="let quantity of productSale" >
-        {{quantity.quantity}}
-      </p> -->
-      
-      
-
-      <label for="" class="p-2">Price</label>
-      <input
-        type="number"
-        class="form-control"
-        [(ngModel)]="selectedProductPrice"
-        #p
-      />
-
-      <p class="" *ngIf="selectedProduct">
-        Default Purchase Price:
-        <span style="color: tomato">{{ defaultPurchasePrice }}</span>
+      <p class="">
+        Total quantity of selected product:
+        <span style="color: tomato">{{ totalproductQuantity }}</span>
       </p>
     </div>
+
+    <label for="" class="p-2">Price</label>
+    <input type="number" class="form-control" #p />
+
+    <p class="">
+      Default Purchase Price:
+      <span style="color: tomato">{{ totalproductPrice }}</span>
+    </p>
     <label for="" class="p-2">date</label>
 
     <input
