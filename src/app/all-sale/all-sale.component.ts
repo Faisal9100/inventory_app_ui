@@ -472,8 +472,7 @@ export class AllSaleComponent {
 
   // <----------------------------- code for deleting stock from sale list ------------------------------------------->
   stock_list_id: any;
-  stockid: any;
-  deleteSaleList(stock_list_id: number) {
+  deleteStockList(stockid: number, stock: number) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to recover this account!',
@@ -487,7 +486,9 @@ export class AllSaleComponent {
           .delete(
             `http://` +
               this.api.localhost +
-              `/inventory/sales/${stock_list_id}/sale_items/${this.stockid?.id}/`
+              `/inventory/sales/${stock}/sale_items/` +
+              stockid +
+              '/'
           )
           .subscribe(
             () => {
@@ -508,6 +509,40 @@ export class AllSaleComponent {
       }
     });
   }
+
+  // deleteSaleList(stock: any) {
+  //   Swal.fire({
+  //     title: 'Are you sure?',
+  //     text: 'You will not be able to recover this account!',
+  //     icon: 'warning',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Yes, delete it!',
+  //     cancelButtonText: 'No, cancel',
+  //   }).then((result: { isConfirmed: any }) => {
+  //     if (result.isConfirmed) {
+  //       this.http
+  //         .delete(
+  //           `http://${this.api.localhost}/inventory/sales/${stock?.id}/sale_items/`
+  //         )
+  //         .subscribe(
+  //           () => {
+  //             Swal.fire(
+  //               'Deleted!',
+  //               'Your product has been deleted.',
+  //               'success'
+  //             );
+  //           },
+  //           () => {
+  //             Swal.fire(
+  //               'Error!',
+  //               'Cannot delete stock purchase with child rows in stock.',
+  //               'error'
+  //             );
+  //           }
+  //         );
+  //     }
+  //   });
+  // }
 
   // <------------------------------ MODEL FOR ADDING NEW STOCK IN SALE LIST ----------------------------------->
   warehouse_ID: any;
@@ -599,6 +634,7 @@ export class AllSaleComponent {
   //       );
   //   }
   // }
+  selectedProductQuantity: number = 0;
   postUpdateStock(product: any, q: any, p: any, date: any) {
     if (!product.value || !q.value || !p.value || !date.value) {
       Swal.fire({
@@ -610,17 +646,27 @@ export class AllSaleComponent {
     }
     const selectedProductId = product.value;
     const selectedProductQuantity = q.value;
+    const selectedProductPrice = p.value;
 
     const n: any = this.productSale.find(
       (item) => item.product_id == selectedProductId
     );
-    const totalProductQuantity = n ? p.quantity : 0;
+    const totalProductQuantity = n ? n.quantity : '';
+    const defaultProductPrice = n ? n.price : '';
 
     if (selectedProductQuantity > totalProductQuantity) {
       Swal.fire({
         icon: 'error',
         title: 'Validation Error',
         text: 'Quantity cannot be greater than the available product quantity.',
+      });
+      return;
+    }
+    if (selectedProductPrice < defaultProductPrice) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Validation Error',
+        text: 'Price cannot be less than the default product price.',
       });
       return;
     }
@@ -655,6 +701,7 @@ export class AllSaleComponent {
             q.value = '';
             p.value = '';
             date.value = '';
+
             this.modalService.dismissAll();
             Swal.fire({
               icon: 'success',

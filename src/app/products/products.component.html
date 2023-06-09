@@ -69,70 +69,7 @@
   </table>
 </div>
 
-<!-- <ng-template #content let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Add Products</h4>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="d('Cross click')"
-    ></button>
-  </div>
-  <div class="modal-body">
-    <form [formGroup]="productForm">
-      <div class="form-group">
-        <label class="form-label">Name:</label>
-        <input type="text" class="form-control" name="name" formControlName="name" required />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Quantity:</label>
-        <input type="number" class="form-control" name="quantity" formControlName="quantity" required />
-      </div><br>
-      <div class="form-group">
-        <label class="form-label">Image:</label>
-        <input
-          class="form-control-file"
-          type="file"
-          name="image"
-          formControlName="image"
-          (change)="onFileSelected($event)"
-        />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Note:</label>
-        <input type="text" class="form-control" name="note" formControlName="note" required />
-      </div>
-      <div class="form-group">
-        <label class="form-label">Brand:</label>
-        <select name="brand" class="form-control" formControlName="brand" required>
-          <option *ngFor="let brand of brands" [value]="brand.id">{{ brand.id }}</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Unit:</label>
-        <select name="unit" class="form-control" formControlName="unit" required>
-          <option *ngFor="let unit of units" [value]="unit.id">{{ unit.id }}</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Category:</label>
-        <select name="category" class="form-control" formControlName="category" required>
-          <option *ngFor="let category of categories" [value]="category.id">{{ category.id }}</option>
-        </select>
-      </div>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-outline-dark"
-      (click)="addProduct()"
-    >
-      Add Product
-    </button>
-  </div>
-</ng-template> -->
+
 
 <ng-template #content let-c="close" let-d="dismiss">
   <div
