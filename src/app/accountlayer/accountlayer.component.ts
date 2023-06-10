@@ -24,12 +24,12 @@ export interface Account {
 })
 export class AccountlayerComponent implements OnInit {
   selectedMainLayer?: string;
-  ip_address = '`+this.api.localhost+`';
 
   public create_account_url =
     'http://' + this.api.localhost + '/inventory/layer2s/';
 
-  public addLayer1 = "'http://'thid'/inventory/layer1s/11/?main_layer=assets";
+  public addLayer1 =
+    'http://' + this.api.localhost + '/inventory/layer1s/11/?main_layer=assets';
 
   public account_url = 'http://' + this.api.localhost + '/inventory/accounts/';
 
@@ -98,7 +98,7 @@ export class AccountlayerComponent implements OnInit {
   constructor(
     public http: HttpClient,
     public accountLayerservice: AccountlayerService,
-    public api:LocalhostApiService
+    public api: LocalhostApiService
   ) {}
 
   ngOnInit(): void {
@@ -113,14 +113,14 @@ export class AccountlayerComponent implements OnInit {
     );
   }
 
-  // __code for pagination__
+  // <_____________________________________________code for pagination__________________________________________>
 
   onPageChange(event: any) {
     this.currentPage = event;
     this.getAccountsData();
   }
 
-  // __code for displaying data in Main layer__
+  // <________________________________ code for displaying data in Main layer ____________________________________>
 
   onMainLayerChange(event: any) {
     this.selectedMainLayer = event.target.value;
@@ -145,7 +145,7 @@ export class AccountlayerComponent implements OnInit {
       });
   }
 
-  // __ code for adding layer1 data__
+  // <______________________________________ code for adding layer1 data _____________________________________>
 
   getLayer1() {
     this.accountLayerservice.getLayer1(this.selectedMainLayer).subscribe(
@@ -161,7 +161,7 @@ export class AccountlayerComponent implements OnInit {
     );
   }
 
-  // __ code for adding layer2 data__
+  // <________________________________ code for adding layer2 data_____________________________________________>
 
   getLayer2(selectedLayer1: any) {
     this.accountLayerservice.getLayer2(selectedLayer1).subscribe((data) => {
@@ -171,7 +171,7 @@ export class AccountlayerComponent implements OnInit {
     });
   }
 
-  // __code for getting Account Data__
+  // <_______________________________________code for getting Account Data________________________________________>
 
   getAccountsData() {
     let skip = (this.currentPage - 1) * this.pageSize;
@@ -186,7 +186,7 @@ export class AccountlayerComponent implements OnInit {
     });
   }
 
-  // __code for deleting Accounts__
+  // <________________________________code for deleting Accounts_____________________________________________>
 
   deleteAccount(id: number) {
     Swal.fire({
@@ -407,10 +407,10 @@ export class AccountlayerComponent implements OnInit {
         } else {
           const updatedAccount = {
             title: accountTitle,
-            address:accountAddress,
-            status:accountStatus,
-            contact:accountContact,
-            email:accountEmail
+            address: accountAddress,
+            status: accountStatus,
+            contact: accountContact,
+            email: accountEmail,
           };
           this.http
             .put<Account>(`${this.account_url}${account.id}/`, updatedAccount)
@@ -470,14 +470,16 @@ export class AccountlayerComponent implements OnInit {
   newLayerAccount = {
     name: '',
   };
-  // updateLayer_one_new_account(selectedLayer1:any,id:number) {
+
+  //  <------------------------ CODE FOR ADDING LAYER ONE ACCOUNT  ------------------------>
+
   addLayer_one_new_account(selectedMainLayer: any) {
     Swal.fire({
-      title: 'Add Account',
+      title: 'Add Layer One',
       html: `
         <div class="form-group">
-          <label for="Title" class="float-start my-2">Title:</label>
-          <input type="text" id="accountName" class="form-control" placeholder="Account Title" >
+          <label for="Title" class="float-start my-2">Name:</label>
+          <input type="text" id="accountName" class="form-control" placeholder="Name" >
           </div>
   
             `,
@@ -487,16 +489,20 @@ export class AccountlayerComponent implements OnInit {
         const accountName = (<HTMLInputElement>(
           document.getElementById('accountName')
         )).value;
-        if (!accountName) {
-          Swal.showValidationMessage('Account Name is required');
+        if (!accountName || !selectedMainLayer) {
+          Swal.showValidationMessage(
+            'Layer One Name is required and Main Layer must be selected.'
+          );
         } else {
           const newLayeraccount = {
             name: accountName,
           };
           this.http
-            // `${this.url_layer1}?main_layer=${selectedMainLayer}`
+
             .post<Account>(
-              `http://`+this.api.localhost+`/inventory/layer1s/?main_layer=${selectedMainLayer}`,
+              `http://` +
+                this.api.localhost +
+                `/inventory/layer1s/?main_layer=${selectedMainLayer}`,
               newLayeraccount
             )
             .subscribe(() => {
@@ -512,6 +518,55 @@ export class AccountlayerComponent implements OnInit {
       },
     });
   }
+
+  // updateLayer_one_new_account(account: any) {
+  //   Swal.fire({
+  //     title: 'Add Account',
+  //     html: `
+  //     <div class="form-group">
+  //     <label class="float-start my-2">title:</label>
+  //     <input type="text" id="accountTitle" class="form-control" placeholder="Account Title" value="${
+  //       account.title
+  //     }">
+  //    </div>
+
+  //           `,
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Add',
+  //     preConfirm: () => {
+  //       const accountName = (<HTMLInputElement>(
+  //         document.getElementById('accountTitle')
+  //       )).value;
+  //       if (!accountName) {
+  //         Swal.showValidationMessage('Account Name is required');
+  //       } else {
+  //         const newLayeraccount = {
+  //           account: accountName,
+  //         };
+  //         this.http
+  //           // `${this.url_layer1}?main_layer=${selectedMainLayer}`
+  //           .put<Account>(
+  //             `http://` +
+  //               this.api.localhost +
+  //               `/inventory/layer1s/?main_layer=${this.selectedMainLayer}`,
+  //             newLayeraccount
+  //           )
+  //           .subscribe(() => {
+  //             this.newLayerAccount = {
+  //               name: '',
+  //             };
+  //             this.getAccountsData();
+
+  //             Swal.fire('Added!', 'Your Account has been added.', 'success');
+  //             this.accountLayerservice.accountAdded.emit(this.account);
+  //           });
+  //       }
+  //     },
+  //   });
+  // }
+
+  //  <------------------------ CODE FOR DELETING LAYER ONE ACCOUNT ------------------------>
+
   DeleteLayer_one_new_account(selectedMainLayer: any, selectedLayer1: number) {
     Swal.fire({
       title: 'Delete Account',
@@ -519,9 +574,16 @@ export class AccountlayerComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Delete',
       preConfirm: () => {
+        if (!selectedMainLayer || !selectedLayer1) {
+          Swal.showValidationMessage(
+            ' Main Layer and Layer One must be selected.'
+          );
+        }
         this.http
           .delete(
-            `http://`+this.api.localhost+`/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
+            `http://` +
+              this.api.localhost +
+              `/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
           )
           .subscribe(() => {
             this.getAccountsData();
@@ -531,13 +593,16 @@ export class AccountlayerComponent implements OnInit {
       },
     });
   }
+
+  //  <------------------------ CODE FOR ADDING LAYER TWO ACCOUNT  ------------------------>
+
   addLayer_two_new_account(selectedLayer2: any) {
     Swal.fire({
-      title: 'Add Account',
+      title: 'Add Layer Two',
       html: `
         <div class="form-group">
-          <label for="Title" class="float-start my-2">Title:</label>
-          <input type="text" id="accountName" class="form-control" placeholder="Account Title" >
+          <label for="Title" class="float-start my-2">Name:</label>
+          <input type="text" id="accountName" class="form-control" placeholder="Name" >
           </div>
   
             `,
@@ -547,8 +612,10 @@ export class AccountlayerComponent implements OnInit {
         const accountName = (<HTMLInputElement>(
           document.getElementById('accountName')
         )).value;
-        if (!accountName) {
-          Swal.showValidationMessage('Account Name is required');
+        if (!accountName || !selectedLayer2) {
+          Swal.showValidationMessage(
+            'Layer Two Name is required and Layer One must be selected.'
+          );
         } else {
           const newLayeraccount = {
             name: accountName,
@@ -556,7 +623,9 @@ export class AccountlayerComponent implements OnInit {
           this.http
             // `${this.url_layer1}?main_layer=${selectedMainLayer}`
             .post<Account>(
-              `http://`+this.api.localhost+`/inventory/layer1s/${selectedLayer2}/layer2s/`,
+              `http://` +
+                this.api.localhost +
+                `/inventory/layer1s/${selectedLayer2}/layer2s/`,
               newLayeraccount
             )
             .subscribe(() => {
@@ -572,6 +641,9 @@ export class AccountlayerComponent implements OnInit {
       },
     });
   }
+
+  //  <------------------------ CODE FOR DELETING LAYER TWO ACCOUNT ------------------------>
+
   DeleteLayer_two_new_account(accountId: number) {
     Swal.fire({
       title: 'Delete Account',
@@ -579,9 +651,16 @@ export class AccountlayerComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Delete',
       preConfirm: () => {
+        if (!this.selectedLayer1) {
+          Swal.showValidationMessage(
+            'Layer One Name and Layer Two must be Selected.'
+          );
+        }
         this.http
           .delete(
-            `http://`+this.api.localhost+`/inventory/layer1s/${this.selectedLayer1}/layer2s/${accountId}`
+            `http://` +
+              this.api.localhost +
+              `/inventory/layer1s/${this.selectedLayer1}/layer2s/${accountId}`
           )
           .subscribe(() => {
             this.getAccountsData();
@@ -591,25 +670,4 @@ export class AccountlayerComponent implements OnInit {
       },
     });
   }
-  //   Swal.fire({
-  //     title: 'Update Product',
-  //     html: `
-  //     <input type="text" id="name" class="swal2-input" placeholder="Enter new name" value="${selectedLayer1.name}">
-  //   `,
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Update',
-  //     cancelButtonText: 'Cancel',
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       const updatedName = (<HTMLInputElement>(
-  //         document.getElementById('name')
-  //       )).value;
-  //       this.http.put(`http://`+this.api.localhost+`/inventory/layer1s/${id}/?main_layer=${this.selectedMainLayer}`, { name: updatedName })
-  //         .subscribe(() => {
-  //           console.log(`Product with ID ${selectedLayer1} updated successfully!`);
-  //           Swal.fire('Updated!', 'Your product has been updated.', 'success');
-  //         });
-  //     }
-  //   });
-  // }
 }

@@ -17,7 +17,7 @@
     </select>
   </div>
   <div class="col">
-    <label class="form-label">Layer 1:</label>
+    <label class="form-label">Layer One:</label>
     <select
       name="layer1"
       class="form-select"
@@ -35,8 +35,11 @@
       data-bs-target="#mainLayerModal"
       (click)="addLayer_one_new_account(selectedMainLayer)"
     >
+      <!-- (click)=" updateLayer_one_new_account(selectedMainLayer)" -->
       <i class="bi bi-plus-circle"></i>
     </button>
+
+    <!-- <button (click)="updateLayer_one_new_account(selectedMainLayer)"></button> -->
     <!-- <button
       class="btn btn-outline-success my-1"
       data-bs-toggle="modal"
@@ -57,7 +60,7 @@
   <!-- addLayer_one_new_account() -->
 
   <div class="col">
-    <label class="form-label">Layer 2:</label>
+    <label class="form-label">Layer Two:</label>
     <select name="layer2" class="form-select" [(ngModel)]="selectedLayer2">
       <option>Select Layer 2</option>
       <option [value]="value.id" *ngFor="let value of layer2">
@@ -107,6 +110,7 @@
         <th>Balance</th>
         <th>Email</th>
         <th>Address</th>
+        <th>Account Type</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -138,6 +142,7 @@
         <td>{{ account.balance }}</td>
         <td>{{ account.email }}</td>
         <td>{{ account.address }}</td>
+        <td>{{ account.account_type }}</td>
         <td>
           <button
             class="btn btn-outline-primary mx-2"

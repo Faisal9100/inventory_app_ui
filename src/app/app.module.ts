@@ -48,6 +48,7 @@ import { VoucherComponent } from './voucher/voucher.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { AuthguardGuard } from './authguard.guard';
 import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
+import { PasswordChangeComponent } from './password-change/password-change.component';
 // import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 // import { AuthQuardGuard } from './auth-quard.guard';
 
@@ -69,6 +70,7 @@ import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
     LoginComponent,
     VoucherComponent,
     TransactionsComponent,
+    PasswordChangeComponent,
   ],
   imports: [
     BrowserAnimationsModule,

@@ -13,6 +13,7 @@ import { ProductService } from '../product.service';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import { LocalhostApiService } from '../localhost-api.service';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export interface PurchaseData {
   id: number;
@@ -116,22 +117,30 @@ export class AllPurchaseComponent implements OnInit {
     public warehouseService: WarehouseService,
     public supplierService: SupplierService,
     public productService: ProductService,
-    public api: LocalhostApiService
+    public api: LocalhostApiService,
+    private fb: FormBuilder
   ) {
     config.backdrop = 'static';
     config.keyboard = false;
   }
+  purchaseForm: any = FormGroup;
 
   ngOnInit(): void {
     this.getwarehouse();
     this.getSupplier();
     this.getProducts();
     this.getAllPurchaseData();
+    this.purchaseForm = this.fb.group({
+      selectedProduct: ['', Validators.required],
+      quantity: ['', Validators.required],
+      price: ['', Validators.required],
+      date: ['', Validators.required],
+    });
   }
-  ip_address = '' + this.api.localhost + '';
+
   stocks: any;
 
-  // <----------------------------- code for getting AllPurchase ---------------------------------->
+  // <========================== code for getting AllPurchase ==============================>
 
   getAllPurchaseData() {
     this.isLoading = true;
@@ -144,7 +153,7 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-  // <------------------------------ code for getting StockList ------------------------------------->
+  // <========================== code for getting StockList =================================>
 
   getStockList(id: number) {
     this.isLoading = true;
@@ -160,7 +169,7 @@ export class AllPurchaseComponent implements OnInit {
       });
   }
 
-  //  <------------------------------code for deleting StockList ----------------------------------->
+  //  <============================= code for deleting StockList =================================>
 
   deleteStockList(stockid: number, purchasedId: number) {
     Swal.fire({
@@ -202,25 +211,25 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-  // <-------------------- code for opening model one for adding purchase ---------------------------------->
+  // <======================= code for opening model one for adding purchase =============================>
 
   openXl(content: any) {
     this.modalService.open(content, { size: 'xl' });
   }
 
-  //  <-------------------- code for opening model one for adding StockList ------------------------------->
+  //  <======================== code for opening model one for adding StockList ==========================>
 
   openXl2(content2: any) {
     this.modalService.open(content2, { size: 'xl' });
   }
 
-  // <-------------------- code for opening model for adding product in stock ----------------------------->
+  // <====================== code for opening model for adding product in stock =========================>
 
   openXl3(content3: any) {
     this.modalService.open(content3);
   }
 
-  //  <------------------------------ code for getting warehouse Data ------------------------------------->
+  //  <================================= code for getting warehouse Data =================================>
 
   getwarehouse() {
     this.warehouseService.GetWarehouse().subscribe((response) => {
@@ -228,7 +237,7 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-  //  <-------------------------------- code for getting supplier Data ------------------------------------>
+  //  <=================================== code for getting supplier Data ===================================>
 
   getSupplier() {
     this.supplierService.fetchsupplier().subscribe((response) => {
@@ -236,7 +245,7 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-  //  <---------------------------- code for getting Product Data ------------------------------------------>
+  //  <=============================== code for getting Product Data =======================================>
 
   getProducts() {
     this.productService.getProducts().subscribe((Response) => {
@@ -301,7 +310,7 @@ export class AllPurchaseComponent implements OnInit {
     return rowStrings.join('\n');
   }
 
-  // <------------------------code for removing product from the table ------------------------------------->
+  // <============================ code for removing product from the table ==================================>
 
   removeProduct(index: number) {
     this.rows.splice(index, 1);
@@ -309,7 +318,7 @@ export class AllPurchaseComponent implements OnInit {
   }
   i: any;
 
-  // <----------------------------- code for deleting stock purchase ---------------------------------------->
+  // <=================================== code for deleting stock purchase ====================================>
 
   deletePurchase(purchaseId: number) {
     Swal.fire({
@@ -351,7 +360,7 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-  // <------------------------------- code for adding stock purchase ----------------------------------->
+  // <======================================= code for adding stock purchase =====================================>
 
   addPurchase() {
     if (
@@ -395,6 +404,8 @@ export class AllPurchaseComponent implements OnInit {
       });
   }
 
+  // <============================= code opening model for adding stock purchase  =============================>
+
   openAddProductModal(content3: any, item: any) {
     this.update_purchase_id = item.id;
     this.modalService.open(content3).result.then((result) => {
@@ -405,7 +416,7 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-  // <---------------------------- code for adding stock purchase ------------------------------------------->
+  // <================================== code for adding stock purchase ========================================>
 
   async addStock(id: any) {
     for (let row of this.rows) {
@@ -439,9 +450,10 @@ export class AllPurchaseComponent implements OnInit {
     });
   }
 
-  //   <-----------------------------adding another product-------------------------------------------->
+  //   <=================================== adding another product =========================================>
 
   update_purchase_id: any;
+
   // postUpdateStock(product: any, q: any, p: any, date: any) {
   //   if (!product.value || !q.value || !p.value || !date.value) {
   //     Swal.fire({
@@ -451,6 +463,7 @@ export class AllPurchaseComponent implements OnInit {
   //     });
   //     return;
   //   }
+
   //   if (product && product.id) {
   //     const requestBody = {
   //       date: date.value,
@@ -464,18 +477,38 @@ export class AllPurchaseComponent implements OnInit {
 
   //     this.http
   //       .post(
-  //         `http://'+this.api.localhost+'/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
+  //         `http://` +
+  //           this.api.localhost +
+  //           `/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
   //         requestBody
   //       )
-  //       .subscribe((response) => {
-  //         console.log(response);
-  //       });
-  //   } else {
-  //     console.log('Invalid product data');
+  //       .subscribe(
+  //         (response) => {
+  //           console.log(response);
+  //           Swal.fire({
+  //             icon: 'success',
+  //             title: 'Success',
+  //             text: 'Stock added successfully.',
+  //           });
+  //           product.value = '';
+  //           q.value = '';
+  //           p.value = '';
+  //           date.value = '';
+  //         },
+  //         (error) => {
+  //           console.error(error);
+  //           Swal.fire({
+  //             icon: 'error',
+  //             title: 'Error',
+  //             text: 'Failed to add stock.',
+  //           });
+  //         }
+  //       );
+  //     // this.modalService.dismissAll();
   //   }
   // }
-  postUpdateStock(product: any, q: any, p: any, date: any) {
-    if (!product.value || !q.value || !p.value || !date.value) {
+  postUpdateStock() {
+    if (this.purchaseForm.invalid) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -484,16 +517,21 @@ export class AllPurchaseComponent implements OnInit {
       return;
     }
 
-    if (product && product.id) {
+    const product = this.purchaseForm.get('selectedProduct').value;
+    const q = this.purchaseForm.get('quantity').value;
+    const p = this.purchaseForm.get('price').value;
+    const date = this.purchaseForm.get('date').value;
+    // console.log(product, p, q, date);
+    if (product) {
       const requestBody = {
-        date: date.value,
-        product: product.value,
-        quantity: q.value,
-        price: p.value,
-        amount: p.value * q.value,
+        date: date,
+        product: product,
+        quantity: q,
+        price: p,
+        amount: p * q,
       };
 
-      console.log(requestBody);
+      // console.log(requestBody);
 
       this.http
         .post(
@@ -510,6 +548,7 @@ export class AllPurchaseComponent implements OnInit {
               title: 'Success',
               text: 'Stock added successfully.',
             });
+            this.purchaseForm.reset();
           },
           (error) => {
             console.error(error);
@@ -531,7 +570,7 @@ export class AllPurchaseComponent implements OnInit {
   tableSizes: any = [5, 10, 25, 100];
   title: any;
 
-  // <---------------------------------- code for search input field -------------------------------------------->
+  // <================================== code for search input field ===========================================>
 
   Search() {
     if (this.title == '') {
@@ -543,7 +582,7 @@ export class AllPurchaseComponent implements OnInit {
     }
   }
 
-  // <----------- code for getting stock data for a particular product in a particular purchase id -------------->
+  // <=========== code for getting stock data for a particular product in a particular purchase id =============>
 
   getStock(id: any) {
     return this.http.get(
@@ -553,7 +592,7 @@ export class AllPurchaseComponent implements OnInit {
     );
   }
 
-  // <----------------- model for opening stock model for a particular product in a particular purchase id -------->
+  // <============ model for opening stock model for a particular product in a particular purchase id ==========>
 
   openStockModal(productId: any) {
     this.getStock(productId).subscribe(
@@ -570,13 +609,13 @@ export class AllPurchaseComponent implements OnInit {
   invoiceNumber?: number;
   stockData: any[] = [];
 
-  // <------------------------------------ code for refreshing page -------------------------------------------->
+  // <====================================== code for refreshing page ============================================>
 
   refreshPage() {
     window.location.reload();
   }
 
-  // <-------------------------------------- code for print Reciept   ---------------------------------------->
+  // <====================================== code for print Reciept  ==============================================>
 
   generatePDF() {
     const columns2 = { title: 'All Purchase List' };

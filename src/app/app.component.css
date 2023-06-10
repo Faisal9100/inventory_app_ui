@@ -16,8 +16,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  height:calc(100rem -3.65rem);
+  height: calc(100rem - 3.65rem);
   cursor: pointer;
+  position: fixed;
 }
 .sidenav-nav-item {
   border-radius: 0.638rem;
@@ -78,4 +79,12 @@ i {
   position: relative;
   margin: auto;
   text-align: center;
+}
+.rotate {
+  /* Your rotation styles */
+  transform: rotate(180deg);
+  /* Add other styles as needed */
+}
+.active{
+  
 }

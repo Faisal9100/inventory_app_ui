@@ -75,13 +75,14 @@
             class="btn btn-outline-success mx-1"
             (click)="openXl2(content2)"
             (click)="getStockList(item.id)"
-          >
+            (click)="setUpdatePurchaseId(item)"
+            >
             <i class="bi bi-eye-fill"></i>
           </button>
           <button
-            type="button"
-            class="btn btn-outline-dark"
-            (click)="openAddProductModal(content3, item)"
+          type="button"
+          class="btn btn-outline-dark"
+          (click)="openAddProductModal(content3, item)"
             (change)="onWarehouseChange(selectedWarehouse)"
           >
             <i class="bi bi-plus-circle"></i>
@@ -364,12 +365,12 @@
           <td>{{ stock.price }}</td>
           <td>{{ stock.amount }}</td>
           <td>{{ stock.sale_amount }}</td>
-
           <td>
             <button
               class="btn btn-outline-danger"
-              (click)="deleteStockList(stock.id, stock.product)"
-            >
+              (click)="deleteStockList(stock.id)"
+              
+              >
               <i class="bi bi-trash3-fill"></i>
             </button>
           </td>
@@ -403,12 +404,7 @@
         [(ngModel)]="selectedWarehouse"
         (change)="onWarehouseChange(selectedWarehouse)"
       >
-        <!-- <ng-option
-          class=".ng-dropdown-panel"
-          *ngFor="let data of warehouses"
-          [value]="data.id"
-          >{{ data.name }}</ng-option
-        > -->
+    
         <ng-option class="ng-dropdown-panel" [value]="warehouse_ID">
           {{ warehouse_Name }}
         </ng-option>
@@ -431,8 +427,6 @@
         >
           {{ product.product_name }}
           {{ product.quantity }}
-         
-      
         </option>
       </select>
     </div>

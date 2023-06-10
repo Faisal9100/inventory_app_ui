@@ -148,6 +148,9 @@ export class AllSaleComponent {
     this.getCustomer();
     this.getAllPurchase();
   }
+
+  //  <------------------------ CODE FOR GETTING STOCK PURCHASE  ------------------------>
+
   getAllPurchase() {
     this.isLoading = true;
     this.SaleService.getAllPurchase().subscribe((data) => {
@@ -157,6 +160,9 @@ export class AllSaleComponent {
   }
 
   isLoading: boolean = false;
+
+  //  <------------------------ CODE FOR GETTING STOCK LIST ------------------------>
+
   getStockList(id: number) {
     this.isLoading = true; // Set isLoading to true
     this.http
@@ -471,8 +477,13 @@ export class AllSaleComponent {
   }
 
   // <----------------------------- code for deleting stock from sale list ------------------------------------------->
+  
+  saleId: any;
   stock_list_id: any;
-  deleteStockList(stockid: number, stock: number) {
+  setUpdatePurchaseId(item: number) {
+    this.stock_list_id = item;
+  }
+  deleteStockList(saleId: number) {
     Swal.fire({
       title: 'Are you sure?',
       text: 'You will not be able to recover this account!',
@@ -486,9 +497,7 @@ export class AllSaleComponent {
           .delete(
             `http://` +
               this.api.localhost +
-              `/inventory/sales/${stock}/sale_items/` +
-              stockid +
-              '/'
+              `/inventory/sales/${this.stock_list_id?.id}/sale_items/${saleId}/`
           )
           .subscribe(
             () => {
@@ -507,58 +516,11 @@ export class AllSaleComponent {
             }
           );
       }
+      this.addStock(this.id);
     });
   }
-
-  // deleteSaleList(stock: any) {
-  //   Swal.fire({
-  //     title: 'Are you sure?',
-  //     text: 'You will not be able to recover this account!',
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Yes, delete it!',
-  //     cancelButtonText: 'No, cancel',
-  //   }).then((result: { isConfirmed: any }) => {
-  //     if (result.isConfirmed) {
-  //       this.http
-  //         .delete(
-  //           `http://${this.api.localhost}/inventory/sales/${stock?.id}/sale_items/`
-  //         )
-  //         .subscribe(
-  //           () => {
-  //             Swal.fire(
-  //               'Deleted!',
-  //               'Your product has been deleted.',
-  //               'success'
-  //             );
-  //           },
-  //           () => {
-  //             Swal.fire(
-  //               'Error!',
-  //               'Cannot delete stock purchase with child rows in stock.',
-  //               'error'
-  //             );
-  //           }
-  //         );
-  //     }
-  //   });
-  // }
 
   // <------------------------------ MODEL FOR ADDING NEW STOCK IN SALE LIST ----------------------------------->
-  warehouse_ID: any;
-  warehouse_Name: any;
-  openAddProductModal(content3: any, item: any) {
-    this.update_purchase_id = item.id;
-    this.warehouse_ID = item.warehouse;
-    this.warehouse_Name = item.warehouse_name;
-    this.modalService.open(content3).result.then((result) => {
-      if (result === 'add') {
-        this.addStock(this.purchaseId);
-      }
-
-      this.ngOnDestroy();
-    });
-  }
 
   ngOnDestroy() {
     // Reset the values when the component is destroyed (modal is closed)
@@ -569,71 +531,25 @@ export class AllSaleComponent {
 
   update_purchase_id: any;
 
+  warehouse_ID: any;
+  warehouse_Name: any;
+  openAddProductModal(content3: any, item: any) {
+    this.update_purchase_id = item.id;
+    this.warehouse_ID = item.warehouse;
+    this.warehouse_Name = item.warehouse_name;
+    this.modalService.open(content3).result.then((result) => {
+      if (result === 'add') {
+        this.addStock(this.purchaseId);
+      }
+      this.update_purchase_id = null;
+      this.warehouse_ID = null;
+      this.warehouse_Name = null;
+      this.modalService.dismissAll();
+    });
+  }
+
   // <-------------------------- CODE FOR UPDATING STOCK IN SALE LIST---------------------------------------------->
 
-  // postUpdateStock(product: any, q: any, p: any, date: any) {
-  //   if (
-  //     !product.value ||
-  //     !q.value ||
-  //     !p.value ||
-  //     !date.value ||
-  //     !this.selectedWarehouse
-  //   ) {
-  //     Swal.fire({
-  //       icon: 'error',
-  //       title: 'Error',
-  //       text: 'Please fill in all the required fields.',
-  //     });
-  //     return; // Stop the execution if any field is empty
-  //   }
-
-  //   if (product && product.id) {
-  //     const currentDate = new Date().toISOString().split('T')[0];
-  //     const requestBody = {
-  //       date: currentDate,
-  //       product: product.value,
-  //       quantity: q.value,
-  //       price: p.value,
-  //       amount: p.value * q.value,
-  //       stock: this.selectedWarehouse,
-  //     };
-  //     console.log(requestBody);
-
-  //     this.http
-  //       .post(
-  //         `http://` +
-  //           this.api.localhost +
-  //           `/inventory/sales/${this.update_purchase_id}/sale_items/`,
-  //         requestBody
-  //       )
-  //       .subscribe(
-  //         (response) => {
-  //           console.log(response);
-  //           product.id = ''; // Clear the product id
-  //           product.value = ''; // Clear the product value
-  //           q.value = '';
-  //           p.value = '';
-  //           date.value = '';
-  //           this.selectedWarehouse.value = '';
-  //           this.modalService.dismissAll();
-  //           Swal.fire({
-  //             icon: 'success',
-  //             title: 'Success',
-  //             text: 'Product added successfully.',
-  //           });
-  //         },
-  //         (error) => {
-  //           console.error(error);
-  //           // Handle the error here, show an error message, etc.
-  //           Swal.fire({
-  //             icon: 'error',
-  //             title: 'Error',
-  //             text: 'Failed to add the product.',
-  //           });
-  //         }
-  //       );
-  //   }
-  // }
   selectedProductQuantity: number = 0;
   postUpdateStock(product: any, q: any, p: any, date: any) {
     if (!product.value || !q.value || !p.value || !date.value) {
@@ -648,11 +564,16 @@ export class AllSaleComponent {
     const selectedProductQuantity = q.value;
     const selectedProductPrice = p.value;
 
+    // const m: any = this.productSale.find(
+    //   (item) => item.product_id == product.value
+    // );
+
     const n: any = this.productSale.find(
       (item) => item.product_id == selectedProductId
     );
     const totalProductQuantity = n ? n.quantity : '';
     const defaultProductPrice = n ? n.price : '';
+    const purchase_id = n ? n.purchase_id : 0;
 
     if (selectedProductQuantity > totalProductQuantity) {
       Swal.fire({
@@ -670,10 +591,6 @@ export class AllSaleComponent {
       });
       return;
     }
-    const m: any = this.productSale.find(
-      (item) => item.product_id == product.value
-    );
-    const purchase_id = m ? m.purchase_id : 0;
     if (product && product.id) {
       const currentDate = new Date().toISOString().split('T')[0];
       const requestBody = {
@@ -782,9 +699,16 @@ export class AllSaleComponent {
       row.amount = row.product.price;
     }
   }
+
+  //  <--------------------------- CODE FOR REFRESHING PAGE ------------------------------------>
+
   refreshPage() {
     window.location.reload();
   }
+
+  //  <------------------------ CODE FOR GETTING TOTAL PRODUCT QUANTITY ------------------------>
+
+
   getProductQuantity(productId: number) {
     const selectedProduct22 = this.productSale.find(
       (product) => product.product_id === productId
@@ -796,12 +720,18 @@ export class AllSaleComponent {
   totalproductPrice: number = 0;
   getProductPurchase_id: any;
 
+  //  <------------------------ CODE FOR GETTING TOTAL PRODUCT QUANTITY ------------------------>
+
   getProductTotalQuantity(event: any) {
     let p: any = this.productSale.find(
       (item) => item.product_id == event.target.value
     );
     this.totalproductQuantity = p.quantity;
   }
+
+  //  <------------------------ CODE FOR GETTING TOTAL PRODUCT PRICE  ----------------------------->
+
+
   totalproductTotalPrice(event: any) {
     let q: any = this.productSale.find(
       (item) => item.product_id == event.target.value
@@ -816,9 +746,7 @@ export class AllSaleComponent {
     this.getProductPurchase_id = i.purchase_id;
   }
 
-  // updateTotalQuantity() {
-  //   this.totalproductQuantity = this.quantity || 0;
-  // }
+ 
 
   selectedProduct22: any;
   quantity22: any;

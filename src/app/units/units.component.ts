@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 import { MatPaginator } from '@angular/material/paginator';
 import { UnitService } from '../unit.service';
 import { ProductService } from '../product.service';
+import { LocalhostApiService } from '../localhost-api.service';
 
 export interface Product {
   serialNo: string;
@@ -44,7 +45,8 @@ export class UnitsComponent implements OnInit {
   constructor(
     public unitService: UnitService,
     public http: HttpClient,
-    public productService: ProductService
+    public productService: ProductService,
+    public api: LocalhostApiService
   ) {}
 
   ngOnInit() {
@@ -171,8 +173,8 @@ export class UnitsComponent implements OnInit {
       });
   }
   taskToEdit: any;
-  public ip_address = '192.168.1.9:8000';
-  public url = 'http://' + this.ip_address + '/inventory/Units/';
+
+  public url = 'http://' + this.api.localhost + '/inventory/Units/';
 
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);

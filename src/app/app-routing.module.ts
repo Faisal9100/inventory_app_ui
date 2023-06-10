@@ -15,6 +15,7 @@ import { LoginComponent } from './login/login.component';
 import { VoucherComponent } from './voucher/voucher.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { AuthguardGuard } from './authguard.guard';
+import { PasswordChangeComponent } from './password-change/password-change.component';
 
 const routes: Routes = [
   {
@@ -86,6 +87,11 @@ const routes: Routes = [
   {
     path: 'transaction',
     component: TransactionsComponent,
+    canActivate: [AuthguardGuard],
+  },
+  {
+    path: 'changePassword',
+    component: PasswordChangeComponent,
     canActivate: [AuthguardGuard],
   },
 ];
