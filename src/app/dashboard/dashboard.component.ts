@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { LocalhostApiService } from '../localhost-api.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -6,6 +8,14 @@ import { Component } from '@angular/core';
   styleUrls: ['./dashboard.component.css'],
 })
 export class DashboardComponent {
+  constructor(public http: HttpClient, public api: LocalhostApiService) {
+    // this.getDailySale();
+    this.getMonthlySale();
+    // this.getYearlySale();
+    // this.getDailyPurchase();
+    // this.getmonthlyPurchase();
+    // this.getYearlyPurchase();
+  }
   public lineChartData = [
     {
       data: [65, 59, 80, 81, 56, 55, 40, 30, 20, 40, 70, 89],
@@ -43,4 +53,58 @@ export class DashboardComponent {
   };
   public lineChartLegend = true;
   public lineChartType = 'line';
+  dailySale: any[] = [];
+  monthlySale: any[] = [];
+  yearlySale: any[] = [];
+  dailyPurchase: any[] = [];
+  monthlyPurchase: any[] = [];
+  yearlyPurchase: any[] = [];
+  // getDailySale() {
+  //   this.http
+  //     .get('http://127.0.0.1:8000/inventory/daily_sale/')
+  //     .subscribe((res: any) => {
+  //       this.dailySale = res.results;
+  //       console.log(res);
+  //     });
+  // }
+  getMonthlySale() {
+    this.http
+      .get('http://127.0.0.1:8000/inventory/montly_sale/')
+      .subscribe((res: any) => {
+        this.monthlySale = res.results;
+        console.log(res);
+      });
+  }
+  // getYearlySale() {
+  //   this.http
+  //     .get('http://127.0.0.1:8000/inventory/year_sale/')
+  //     .subscribe((res: any) => {
+  //       this.yearlySale = res.results;
+  //       console.log(res);
+  //     });
+  // }
+  // getDailyPurchase() {
+  //   this.http
+  //     .get('http://127.0.0.1:8000/inventory/daily_purchase/')
+  //     .subscribe((res: any) => {
+  //       this.dailyPurchase = res.results;
+  //       console.log(res);
+  //     });
+  // }
+  // getmonthlyPurchase() {
+  //   this.http
+  //     .get('http://127.0.0.1:8000/inventory/montly_purchase/')
+  //     .subscribe((res: any) => {
+  //       this.monthlyPurchase = res.results;
+  //       console.log(res);
+  //     });
+  // }
+  // getYearlyPurchase() {
+  //   this.http
+  //     .get('http://127.0.0.1:8000/inventory/year_purchase/')
+  //     .subscribe((res: any) => {
+  //       this.yearlyPurchase = res.results;
+  //       console.log(res);
+  //     });
+  // }
 }
