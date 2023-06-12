@@ -1,4 +1,4 @@
-<h1 class="fs-2">All Warehouses</h1>
+<h1 class="fs-3 mt-5">All Warehouses</h1>
 
 <div class="add-categories">
   <div class="input-group mb-3">
@@ -30,11 +30,11 @@
   <table class="table table-striped text-center table-bordered table-hover">
     <thead class="table-head">
       <tr>
-        <th >S.N</th>
-        <th >Name</th>
-        <th >Address</th>
+        <th>S.N</th>
+        <th>Name</th>
+        <th>Address</th>
         <th>Status</th>
-        <th >Action</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -45,9 +45,9 @@
         "
       >
         <td style="width: 25%">{{ product.id }}</td>
-        <td >{{ product.name }}</td>
-        <td >{{ product.address }}</td>
-        <td >
+        <td>{{ product.name }}</td>
+        <td>{{ product.address }}</td>
+        <td>
           <button
             class="btn btn-outline-success"
             *ngIf="product.status === true"

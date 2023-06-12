@@ -19,6 +19,7 @@
   height: calc(100rem - 3.65rem);
   cursor: pointer;
   position: fixed;
+  margin-top: 52px;
 }
 .sidenav-nav-item {
   border-radius: 0.638rem;
@@ -55,7 +56,8 @@ i {
   margin-left: 5px;
 }
 .active {
-  background-color: #f3f3f3;
+  background-color: #344edf;
+  width: 250px;
 }
 .active span,
 .mat-list-item {
@@ -85,6 +87,21 @@ i {
   transform: rotate(180deg);
   /* Add other styles as needed */
 }
-.active{
-  
+.fixed-toolbar {
+  background-color: #071251 !important;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 999;
+}
+.submanu {
+  background-color: #071251 !important;
+  color: white;
+}
+.submanu:hover {
+  background-color: #344edf;
+  color: white;
+}
+.mat-list-item:hover {
+  background-color: #344edf;
 }

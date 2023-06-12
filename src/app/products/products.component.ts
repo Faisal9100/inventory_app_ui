@@ -199,30 +199,37 @@ export class ProductsComponent {
   addProduct() {
     const productData = {
       name: this.productForm.get('name')?.value,
-
       note: this.productForm.get('note')?.value,
       brand: this.productForm.get('brand')?.value,
       unit: this.productForm.get('unit')?.value,
       category: this.productForm.get('category')?.value,
     };
-
+    if (
+      !this.name ||
+      !this.note ||
+      !this.brand ||
+      !this.unit ||
+      !this.category
+    ) {
+      Swal.fire({
+        icon: 'error',
+        title: 'please fill all the fields',
+        text: 'please fill all the fields',
+      });
+    }
     const formData = new FormData();
     formData.append('name', this.productForm.get('name')?.value);
-
     formData.append('note', this.productForm.get('note')?.value);
     formData.append('brand', this.productForm.get('brand')?.value);
     formData.append('unit', this.productForm.get('unit')?.value);
     formData.append('category', this.productForm.get('category')?.value);
     formData.append('image', this.selectedFile, this.selectedFile.name);
     formData.append('product', JSON.stringify(productData));
-
     console.log(this.productForm.get('unit')?.value);
-
     this.productService.addProduct(formData).subscribe(
       (response) => {
         const formData = {
           name: '',
-
           note: '',
           brand: '',
           unit: '',
@@ -267,8 +274,9 @@ export class ProductsComponent {
     });
   }
 
-  open3(content3: any) {
-  }
+  open3(content3: any) {}
+
+  // code for creating  pdf file
 
   generatePDF() {
     const columns2 = { title: 'All Products List' };
@@ -312,9 +320,7 @@ export class ProductsComponent {
 
     doc.text(columns2.title, 86, 8);
     doc.setFontSize(22);
-    // doc.setTextColor('red');
     doc.setFontSize(16);
-
     (doc as any).autoTable({
       columns: columns,
       body: data,
@@ -322,6 +328,9 @@ export class ProductsComponent {
     doc.save('all_products.pdf');
   }
   name: any;
+
+  //  code for searching products
+
   Search() {
     if (this.name == '') {
       this.ngOnInit();
@@ -342,6 +351,8 @@ export class ProductsComponent {
     console.log(this.selectedFile);
   }
   product: any;
+
+  //  code for updatting product
 
   update_product_Data() {
     const formData = new FormData();

@@ -1,4 +1,7 @@
-<h1 class="fs-2">Dashboard</h1>
+<h1 class="fs-3 mt-5">Dashboard</h1>
+<p *ngFor="let expense of total_Expense">
+  {{ expense.month }}
+</p>
 <div class="box-container">
   <div class="box">
     <div class="text">
@@ -7,9 +10,9 @@
           <i class="bi bi-cart-check-fill p-2"></i>
           <h2 class="topic">Daily Sales</h2>
         </div>
-        <div *ngFor="let item of dailySale">
+        <div>
           <h2 class="topic-heading" style="color: rgb(14, 96, 248)">
-            Rs:{{ item.amount }}
+            Rs:{{ daily_Sale_amount }}
           </h2>
         </div>
       </div>
@@ -27,9 +30,31 @@
           <h2 class="topic">Monthly Sale</h2>
         </div>
       </div>
-      <div *ngFor="let monthly of monthlySale">
+      <div>
         <h2 class="topic-heading" style="color: #ff9f43">
-          Rs:{{ monthlySale }}
+          <div>
+            <p>Rs: {{ monthly_sale_amount }}</p>
+          </div>
+        </h2>
+      </div>
+      <!-- <button class="dash-btn" style="background-color: #ff9f43">
+        View All
+      </button> -->
+    </div>
+  </div>
+  <div class="box">
+    <div class="text">
+      <div class="iconss">
+        <i class="bi bi-arrow-90deg-left p-2"></i>
+        <div>
+          <h2 class="topic">Cash In Hand</h2>
+        </div>
+      </div>
+      <div>
+        <h2 class="topic-heading" style="color: #ff9f43">
+          <div>
+            <p>Rs: {{ yearly_Sale_amount }}</p>
+          </div>
         </h2>
       </div>
       <!-- <button class="dash-btn" style="background-color: #ff9f43">
@@ -41,44 +66,50 @@
     <div class="text">
       <div class="iconss">
         <i class="bi bi-bag-plus-fill p-2"></i>
-        <h2 class="topic">Purchases</h2>
+        <h2 class="topic">Daily Purchases</h2>
       </div>
-      <h2 class="topic-heading" style="color: #28c76f">Rs:0</h2>
-      <button class="dash-btn" style="background-color: #28c76f">
+      <h2 class="topic-heading" style="color: #28c76f">
+        Rs:{{ daily_Purchase_amount }}
+      </h2>
+      <!-- <button class="dash-btn" style="background-color: #28c76f">
         View All
-      </button>
+      </button> -->
+    </div>
+  </div>
+  <div class="box">
+    <div class="text">
+      <div class="iconss">
+        <i class="bi bi-bag-plus-fill p-2"></i>
+        <h2 class="topic">Monthly Purchases</h2>
+      </div>
+      <h2 class="topic-heading" style="color: #28c76f">
+        Rs:{{ monthly_Purchase_amount }}
+      </h2>
+      <!-- <button class="dash-btn" style="background-color: #28c76f">
+        View All
+      </button> -->
     </div>
   </div>
   <div class="box">
     <div class="text">
       <div class="iconss">
         <i class="bi bi-arrow-90deg-right p-2"></i>
-        <h2 class="topic">Purchase Return</h2>
+        <h2 class="topic">All Customers</h2>
       </div>
-      <h2 class="topic-heading" style="color: #ea5455">Rs:0</h2>
-      <button class="dash-btn" style="background-color: #ea5455">
+      <h2 class="topic-heading" style="color: #ea5455">
+        Total: {{ all_Customer }}
+      </h2>
+      <!-- <button class="dash-btn" style="background-color: #ea5455">
         View All
-      </button>
+      </button> -->
     </div>
   </div>
-</div>
-<div class="text-danger fs-1">
-  <ul>
-    <li>Amount:{{ monthlySale[0]?.amount}}</li>
-  </ul>
-  
 </div>
 
 <br />
 <div style="display: block">
-  <canvas
-    baseChart
-    [datasets]="lineChartData"
-    [labels]="lineChartLabels"
-    [options]="lineChartOptions"
-    [legend]="lineChartLegend"
-  ></canvas>
+  <div class="purchase_sale col-12 col-md-8">
+    <canvas id="chart"></canvas>
+  </div>
 </div>
 <br /><br />
-
-<!-- <div class="text-danger fs-3" *ngFor="let sale of monthlySale">Rs:{{ sale.amount }}</div> -->

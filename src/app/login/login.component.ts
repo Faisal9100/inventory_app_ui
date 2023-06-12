@@ -84,10 +84,9 @@ export class LoginComponent {
   //   }
   // }
   // ...
-  
 
   // ...
-  
+
   ProceedLogin() {
     if (this.Login.valid) {
       this.auth.proceedLogin(this.Login.value).subscribe(
@@ -96,10 +95,17 @@ export class LoginComponent {
             this.responseData = result;
             localStorage.setItem('token', this.responseData.access);
             this.router.navigate(['/dashboard']);
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Login Successsfully  ',
+            });
           } else {
             // Password is incorrect, show validation error
-            this.Login.controls['password'].setErrors({ 'incorrectPassword': true });
-            
+            this.Login.controls['password'].setErrors({
+              incorrectPassword: true,
+            });
+
             // Show SweetAlert error message for incorrect password
             Swal.fire({
               icon: 'error',
@@ -119,8 +125,7 @@ export class LoginComponent {
       );
     }
   }
-  
-  
+
   hardcodedUsername = 'admin';
   hardcodedPassword = 'khan1234';
 

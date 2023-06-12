@@ -14,17 +14,8 @@
       </div>
     </mat-toolbar-row>
   </mat-toolbar> -->
-  <mat-toolbar
-    color="primary"
-    style="border-bottom: 1px solid white; overflow: hidden"
-  >
-    <mat-toolbar-row
-      style="
-        background-color: #071251 !important ;
-        position: fixed;
-        overflow: visible;
-      "
-    >
+  <mat-toolbar class="fixed-toolbar">
+    <mat-toolbar-row>
       <img
         width="50px"
         height="50px"
@@ -33,7 +24,7 @@
         (click)="sidenav.toggle()"
       />
       <!-- <i class="bi bi-hdd-stack-fill text-white" (click)="sidenav.toggle()"></i> -->
-      <h1 class="mt-2 mx-3">Iva Mobiles</h1>
+      <h1 class="mt-2 mx-3 text-white"  >Iva Mobiles</h1>
       <div
         class="input-group col-sm-6 w-25 justify-content-center align-item-center m-auto"
       ></div>
@@ -51,7 +42,10 @@
             <i class="bi bi-house-gear-fill"></i>
             <span class="sidenav-nav-link-text">Dashboard</span>
           </li>
-          <li class="sidenav-nav-item" [ngClass]="{'active': showSubMenu}" (click)="toggleSubMenu()">
+          <li
+            class="sidenav-nav-item submanu"
+            (click)="toggleSubMenu()"
+          >
             <i class="bi bi-file-ppt-fill"></i>
             <span class="sidenav-nav-link-text">Manage Product</span>
             <i
@@ -62,9 +56,8 @@
                 text-align: center;
                 margin: auto;
                 margin-top: 5px;
-
               "
-              [ngClass]="{'rotate': showSubMenu}"
+              [ngClass]="{ rotate: showSubMenu }"
             ></i>
             <div *ngIf="showSubMenu">
               <li routerLink="categories">
@@ -137,7 +130,7 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <div class="p-4" style="height: 100vh">
+      <div class="p-4" style="height: 100vh;">
         <router-outlet></router-outlet>
       </div>
     </mat-sidenav-content>

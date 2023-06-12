@@ -1,5 +1,6 @@
-<h1>Charts Of Accounts</h1>
-<div class="form-group row mt-3">
+<h1 class="fs-3 mt-5">Charts Of Accounts</h1>
+
+<div class="form-group row mt-4">
   <div class="col">
     <label class="form-label">Main Layer:</label>
     <select
@@ -97,9 +98,21 @@
 <br />
 
 <div class="mt-4 top-sellling">
-  <button class="btn btn-outline-danger float-end my-1" (click)="generatePDF()">
-    <i class="bi bi-arrow-down-circle"></i> PDF
-  </button>
+  <div>
+    <!-- <input
+      class="form-control"
+      type="Search Account"
+      name="account_type"
+      [(ngModel)]="account_type"
+      (ngModelChange)="Search()"
+    /><button class="btn btn-outline-primary my-1">Search</button> -->
+    <button
+      class="btn btn-outline-danger float-end my-1"
+      (click)="generatePDF()"
+    >
+      <i class="bi bi-arrow-down-circle"></i> PDF
+    </button>
+  </div>
   <table class="table table-striped text-center table-bordered table-hover">
     <thead class="table-head bg-primary text-white">
       <tr>

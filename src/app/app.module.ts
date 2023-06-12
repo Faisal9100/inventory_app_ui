@@ -73,6 +73,7 @@ import { PasswordChangeComponent } from './password-change/password-change.compo
     PasswordChangeComponent,
   ],
   imports: [
+    NgChartsModule,
     BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
