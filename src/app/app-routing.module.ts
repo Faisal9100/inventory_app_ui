@@ -16,6 +16,7 @@ import { VoucherComponent } from './voucher/voucher.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { AuthguardGuard } from './authguard.guard';
 import { PasswordChangeComponent } from './password-change/password-change.component';
+import { StaffComponent } from './staff/staff.component';
 
 const routes: Routes = [
   {
@@ -94,6 +95,9 @@ const routes: Routes = [
     component: PasswordChangeComponent,
     canActivate: [AuthguardGuard],
   },
+  {
+    path:'staff', component:StaffComponent,canActivate:[AuthguardGuard]
+  }
 ];
 
 @NgModule({

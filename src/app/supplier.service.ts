@@ -28,7 +28,7 @@ export class SupplierService {
     let token = localStorage.getItem('token');
     let headers = new HttpHeaders();
     headers = headers.append('Authorization', 'JWT ' + token);
-    console.log(token);
+    // console.log(token);
     //  let options = new RequestOptions({headers:headers});
     return this.http.get<any>(url, { headers: headers }).pipe(
       map((response) => {

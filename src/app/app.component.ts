@@ -39,7 +39,7 @@ export class AppComponent implements OnInit {
       confirmButtonColor: '#3085d6',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Yes, log me out!',
-      cancelButtonText: 'Cancel'
+      cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
         this.auth.logout();
@@ -52,7 +52,6 @@ export class AppComponent implements OnInit {
       }
     });
   }
-  
 
   ngOnInit() {
     this.router.events.subscribe((event) => {
@@ -60,7 +59,22 @@ export class AppComponent implements OnInit {
         this.showSidebar = !event.url.includes('/login');
       }
     });
+    // this.getUser();
   }
+  user: any; // variable to store the user information
+
+  // getUser(): void {
+  //   this.http.get('http://' + this.api.localhost + '/auth/users/me/').subscribe(
+  //     (response: any) => {
+  //       this.user = response.results;
+  //       console.log(this.user);
+  //     },
+  //     (error) => {
+  //       console.error('Error:', error);
+  //     }
+  //   );
+  // }
+
   //   dailySale: any[] = [];
   //   monthlySale:any[]= [];
   //   yearlySale:any[]=[];

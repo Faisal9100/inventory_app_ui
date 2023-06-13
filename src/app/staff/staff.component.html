@@ -1,0 +1,165 @@
+<h1 class="fs-3 mt-5">Staff</h1>
+<div class="add-categories">
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      class="form-control w-25"
+      placeholder="Search Staff"
+      name="title"
+    />
+    <button class="btn btn-primary">
+      <i class="bi bi-search"></i>
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-primary mx-2"
+      (click)="openAddProductModal(content3, staffs)"
+    >
+      <i class="bi bi-plus-circle"></i> Add new
+    </button>
+    <button class="btn btn-outline-danger">
+      <i class="bi bi-arrow-down-circle"></i> PDF
+    </button>
+  </div>
+</div>
+
+<div class="top-sellling">
+  <table class="table table-striped text-center table-bordered table-hover">
+    <thead class="table-head">
+      <tr>
+        <th style="width: 25%">S.N</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Username</th>
+        <th>Email Address</th>
+        <th>Staff Status</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let staff of staffs">
+        <td>{{ staff.id }}</td>
+        <td>{{ staff.first_name }}</td>
+        <td>{{ staff.last_name }}</td>
+        <td>{{ staff.username }}</td>
+        <td>{{ staff.email }}</td>
+        <td>
+          <button
+            class="btn btn-outline-success"
+            *ngIf="staff.is_active === true"
+          >
+            Enabled
+          </button>
+          <button
+            class="btn btn-outline-warning"
+            *ngIf="staff.is_active === false"
+          >
+            Disabled
+          </button>
+        </td>
+        <td>
+          <button
+            class="btn btn-outline-success"
+            *ngIf="staff.is_active === true"
+          >
+            Staff
+          </button>
+          <button
+            class="btn btn-outline-warning"
+            *ngIf="staff.is_active === false"
+          >
+            Not Staff
+          </button>
+        </td>
+
+        <td>
+          <button class="btn btn-outline-primary mx-2 my-1">
+            <i class="bi bi-pencil-square"></i>
+          </button>
+          <button class="btn btn-outline-danger">
+            <i class="bi bi-trash3-fill"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<ng-template #content3 let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title text-center" id="modal-basic-title">Add Staff!</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="col-sm">
+      <form [formGroup]="purchaseForm">
+        <label for="" class="p-2">Username:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="username"
+          id="username"
+        />
+        <label for="" class="p-2">First Name:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="firstname"
+          id="firstname"
+        />
+        <label for="" class="p-2">Last Name:</label>
+        <input
+          type="text"
+          class="form-control"
+          formControlName="lastname"
+          id="lastname"
+        />
+
+        <label for="" class="p-2">Email:</label>
+        <input type="email" class="form-control" formControlName="email" />
+
+        <label for="" class="p-2">Password:</label>
+        <input
+          type="password"
+          class="form-control"
+          formControlName="password"
+        />
+        <div class="col-sm">
+          <label for="warehouse" class="py-2">Permission Group:</label>
+          <ng-select id="warehouse" class="form-ng-select">
+            <ng-option
+              class=".ng-dropdown-panel"
+              *ngFor="let permission of permissions"
+              >{{ permission.id }}</ng-option
+            >
+          </ng-select>
+        </div>
+        <div class="col-sm">
+          <label for="warehouse" class="py-2">Is Staff:</label>
+          <ng-select id="warehouse" class="form-ng-select">
+            <ng-option class=".ng-dropdown-panel">Staff</ng-option>
+            <ng-option class=".ng-dropdown-panel">Not Staff</ng-option>
+          </ng-select>
+        </div>
+        <div class="col-sm">
+          <label for="warehouse" class="py-2">Status:</label>
+          <ng-select id="warehouse" class="form-ng-select">
+            <ng-option class=".ng-dropdown-panel">Enabled</ng-option>
+            <ng-option class=".ng-dropdown-panel">Disabled</ng-option>
+          </ng-select>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark">Add Product</button>
+    <button type="button" class="btn btn-outline-dark" (click)="c('close')">
+      Close
+    </button>
+  </div>
+</ng-template>

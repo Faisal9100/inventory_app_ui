@@ -49,6 +49,7 @@ import { TransactionsComponent } from './transactions/transactions.component';
 import { AuthguardGuard } from './authguard.guard';
 import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 import { PasswordChangeComponent } from './password-change/password-change.component';
+import { StaffComponent } from './staff/staff.component';
 // import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 // import { AuthQuardGuard } from './auth-quard.guard';
 
@@ -71,6 +72,7 @@ import { PasswordChangeComponent } from './password-change/password-change.compo
     VoucherComponent,
     TransactionsComponent,
     PasswordChangeComponent,
+    StaffComponent,
   ],
   imports: [
     NgChartsModule,
@@ -94,6 +96,7 @@ import { PasswordChangeComponent } from './password-change/password-change.compo
     NgSelectModule,
     ReactiveFormsModule,
     FormsModule,
+    NgChartsModule
   ],
   providers: [
     WarehouseServiceService,
