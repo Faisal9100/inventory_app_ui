@@ -1,7 +1,9 @@
 <h1 class="fs-3 mt-5">Charts Of Accounts</h1>
+<div *ngIf="errorMessage" class="error-message">{{ errorMessage }}</div>
+<div *ngIf="!errorMessage">
 
-<div class="form-group row mt-4">
-  <div class="col">
+  <div class="form-group row mt-4">
+    <div class="col">
     <label class="form-label">Main Layer:</label>
     <select
       name="main_layer"
@@ -175,6 +177,7 @@
     <pagination-controls
       class="my-pagination"
       (pageChange)="p = $event"
-    ></pagination-controls>
-  </table>
+      ></pagination-controls>
+    </table>
+  </div>
 </div>

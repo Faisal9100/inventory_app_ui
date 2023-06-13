@@ -108,7 +108,8 @@ export class AccountlayerComponent implements OnInit {
         this.accountData = data.results;
       },
       (error) => {
-        console.log(error);
+        // Handle the error response
+        this.errorMessage = error;
       }
     );
   }
@@ -164,28 +165,39 @@ export class AccountlayerComponent implements OnInit {
   // <________________________________ code for adding layer2 data_____________________________________________>
 
   getLayer2(selectedLayer1: any) {
-    this.accountLayerservice.getLayer2(selectedLayer1).subscribe((data) => {
-      this.layer2 = data;
+    this.accountLayerservice.getLayer2(selectedLayer1).subscribe(
+      (data) => {
+        this.layer2 = data;
 
-      console.log(data);
-    });
+        console.log(data);
+      },
+      (error) => {
+        // Handle the error response
+        this.errorMessage = error;
+      }
+    );
   }
 
   // <_______________________________________code for getting Account Data________________________________________>
 
   getAccountsData() {
-    let skip = (this.currentPage - 1) * this.pageSize;
-
-    let limit = 20;
-    this.accountLayerservice.getAccounts().subscribe((data) => {
-      this.accountData = data.results;
-      this.totalPages = Math.ceil(data.count / this.pageSize);
-      this.totalItems = data.count;
-      this.accountData.push(data);
-      this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
-    });
+    // let skip = (this.currentPage - 1) * this.pageSize;
+    // let limit = 20;
+    this.accountLayerservice.getAccounts().subscribe(
+      (data) => {
+        this.accountData = data.results;
+        // this.totalPages = Math.ceil(data.count / this.pageSize);
+        // this.totalItems = data.count;
+        // this.accountData.push(data);
+        // this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
+      },
+      (error) => {
+        // Handle the error response
+        this.errorMessage = error;
+      }
+    );
   }
-
+  errorMessage: any;
   // <________________________________code for deleting Accounts_____________________________________________>
 
   deleteAccount(id: number) {
@@ -610,16 +622,61 @@ export class AccountlayerComponent implements OnInit {
 
   //  <------------------------ CODE FOR ADDING LAYER TWO ACCOUNT  ------------------------>
 
+  // addLayer_two_new_account(selectedLayer2: any) {
+  //   Swal.fire({
+  //     title: 'Add Layer Two',
+  //     html: `
+  //       <div class="form-group">
+  //         <label for="Title" class="float-start my-2">Name:</label>
+  //         <input type="text" id="accountName" class="form-control" placeholder="Name" >
+  //         </div>
+
+  //           `,
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Add',
+  //     preConfirm: () => {
+  //       const accountName = (<HTMLInputElement>(
+  //         document.getElementById('accountName')
+  //       )).value;
+  //       if (!accountName || !selectedLayer2) {
+  //         Swal.showValidationMessage(
+  //           'Layer Two Name is required and Layer One must be selected.'
+  //         );
+  //       } else {
+  //         const newLayeraccount = {
+  //           name: accountName,
+  //         };
+  //         this.http
+  //           // `${this.url_layer1}?main_layer=${selectedMainLayer}`
+  //           .post<Account>(
+  //             `http://` +
+  //               this.api.localhost +
+  //               `/inventory/layer1s/${selectedLayer2}/layer2s/`,
+  //             newLayeraccount
+  //           )
+  //           .subscribe(() => {
+  //             this.newLayerAccount = {
+  //               name: '',
+  //             };
+  //             this.getAccountsData();
+
+  //             Swal.fire('Added!', 'Your Account has been added.', 'success');
+  //             this.accountLayerservice.accountAdded.emit(this.account);
+  //           });
+  //       }
+  //     },
+  //   });
+  // }
   addLayer_two_new_account(selectedLayer2: any) {
+    this.errorMessage = '';
     Swal.fire({
       title: 'Add Layer Two',
       html: `
         <div class="form-group">
           <label for="Title" class="float-start my-2">Name:</label>
           <input type="text" id="accountName" class="form-control" placeholder="Name" >
-          </div>
-  
-            `,
+        </div>
+      `,
       showCancelButton: true,
       confirmButtonText: 'Add',
       preConfirm: () => {
@@ -635,22 +692,36 @@ export class AccountlayerComponent implements OnInit {
             name: accountName,
           };
           this.http
-            // `${this.url_layer1}?main_layer=${selectedMainLayer}`
             .post<Account>(
               `http://` +
                 this.api.localhost +
                 `/inventory/layer1s/${selectedLayer2}/layer2s/`,
               newLayeraccount
             )
-            .subscribe(() => {
-              this.newLayerAccount = {
-                name: '',
-              };
-              this.getAccountsData();
+            .subscribe(
+              () => {
+                this.newLayerAccount = {
+                  name: '',
+                };
+                this.getAccountsData();
 
-              Swal.fire('Added!', 'Your Account has been added.', 'success');
-              this.accountLayerservice.accountAdded.emit(this.account);
-            });
+                Swal.fire('Added!', 'Your Account has been added.', 'success');
+                this.accountLayerservice.accountAdded.emit(this.account);
+              },
+              (error) => {
+                error= 'IntegrityError at /inventory/layer1s/7/layer2s/\n(1048, "Column \'main_layer\' cannot be null")'
+                this.errorMessage = error;
+                // if (
+                //   error.status === 500 &&
+                //   error.error ===
+                //     'IntegrityError at /inventory/layer1s/7/layer2s/\n(1048, "Column \'main_layer\' cannot be null")'
+                // ) {
+                //   Swal.fire('Error!', 'Layer One must be selected.', 'error');
+                // } else {
+                //   Swal.fire('Error!', 'An unexpected error occurred.', 'error');
+                // }
+              }
+            );
         }
       },
     });

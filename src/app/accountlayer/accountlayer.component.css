@@ -18,4 +18,9 @@ nav#pagination {
   .text-dark{
     cursor: pointer;
   }
+  .error-message {
+    color: red;
+    margin-top: 10px;
+  }
+  
   

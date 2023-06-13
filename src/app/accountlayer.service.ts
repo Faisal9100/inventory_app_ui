@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { Account } from './accountlayer/accountlayer.component';
 import { LocalhostApiService } from './localhost-api.service';
 
@@ -30,18 +30,20 @@ export class AccountlayerService {
 
   private url_layer1 = 'http://' + this.api.localhost + '/inventory/layer1s';
 
-  constructor(private http: HttpClient,public api:LocalhostApiService) {}
+  constructor(private http: HttpClient, public api: LocalhostApiService) {}
 
   getAccounts(): Observable<any> {
     let skip = (this.currentPage - 1) * this.pageSize;
 
     let limit = 20;
     let url = `${this.url}?skip=${skip}&limit=${limit}`;
-    return this.http.get(url);
+    return this.http.get(url).pipe(catchError(this.handleError));
   }
 
   getLayer1(selectedMainLayer: any): Observable<any> {
-    return this.http.get(`${this.url_layer1}?main_layer=${selectedMainLayer}`);
+    return this.http
+      .get(`${this.url_layer1}?main_layer=${selectedMainLayer}`)
+      .pipe(catchError(this.handleError));
   }
   // postAddLayer1(selectedMainLayer: any): Observable<any> {
   //   return this.http.post(`${this.url_layer1}?main_layer=${selectedMainLayer}`);
@@ -51,11 +53,26 @@ export class AccountlayerService {
       main_layer: selectedMainLayer,
     };
 
-    return this.http.post(this.url_layer1, requestBody);
+    return this.http
+      .post(this.url_layer1, requestBody)
+      .pipe(catchError(this.handleError));
   }
 
   getLayer2(selectedLayer1: any): Observable<any> {
     const url = `${this.url_layer2}/${selectedLayer1}/layer2s`;
-    return this.http.get(url);
+    return this.http.get(url).pipe(catchError(this.handleError));
+  }
+  private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      // Client-side error occurred
+      console.error('An error occurred:', error.error.message);
+    } else {
+      // API returned an error response
+      console.error(
+        `Backend returned code ${error.status}, ` + `body was: ${error.error}`
+      );
+    }
+    // Return an observable with a user-facing error message
+    return throwError('Something went wrong. Please try again later.');
   }
 }
