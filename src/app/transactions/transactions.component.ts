@@ -5,6 +5,7 @@ import { AccountlayerService } from '../accountlayer.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClient } from '@angular/common/http';
 import { LocalhostApiService } from '../localhost-api.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-transactions',
@@ -44,22 +45,37 @@ export class TransactionsComponent {
       const fromDate = this.form.get('fromDate')?.value;
       const toDate = this.form.get('toDate')?.value;
       const accountId = this.form.get('accountId')?.value;
-
+  
       this.transaction.getTransactions(fromDate, toDate, accountId).subscribe(
         (response: any) => {
           if (response && response.results) {
             this.transactions = response.results;
             console.log(this.transactions);
+  
+            // Check if no transactions found
+            if (this.transactions.length === 0) {
+              Swal.fire(
+                'No Transactions',
+                'The selected account has no transactions.',
+                'info'
+              );
+            }
           } else {
             console.error('Invalid response format');
           }
         },
         (error) => {
           console.error(error);
+          Swal.fire(
+            'Error',
+            'An error occurred while retrieving transactions.',
+            'error'
+          );
         }
       );
     }
   }
+  
   open(content3: any) {
     this.modalService.open(content3, { size: 'lg', centered: true });
   }

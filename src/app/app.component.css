@@ -105,3 +105,22 @@ i {
 .mat-list-item:hover {
   background-color: #344edf;
 }
+.dropdown-item {
+  cursor: pointer;
+}
+.isActive {
+  background-color: #f5f5f5;
+}
+
+.isActive .sidenav-nav-link-text {
+  color: blue;
+}
+
+.isActive .bi-chevron-down {
+  color: blue;
+}
+
+.isActive .mat-list-item {
+  color: blue;
+}
+

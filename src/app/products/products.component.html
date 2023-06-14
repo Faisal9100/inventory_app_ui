@@ -39,7 +39,12 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let product of productData1">
+      <tr
+        *ngFor="
+          let product of productData1
+            | paginate : { itemsPerPage: 9, currentPage: p }
+        "
+      >
         <td>
           <img width="50px" height="50px" src="{{ product.image }}" alt="" />
         </td>
@@ -67,9 +72,11 @@
       </tr>
     </tbody>
   </table>
+  <pagination-controls
+    class="my-pagination"
+    (pageChange)="p = $event"
+  ></pagination-controls>
 </div>
-
-
 
 <ng-template #content let-c="close" let-d="dismiss">
   <div
@@ -230,11 +237,7 @@
           <label class="form-label">Image:</label>
           <span class="text-danger">Only PNG,JPG and JPEG are allowed</span>
 
-          <input
-            type="file"
-            #fileInput
-            (change)="onFileSelected2($event)"
-          />
+          <input type="file" #fileInput (change)="onFileSelected2($event)" />
         </div>
       </div>
       <div class="form-group row mt-3">

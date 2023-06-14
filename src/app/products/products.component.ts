@@ -380,11 +380,18 @@ export class ProductsComponent {
         });
         this.getProducts();
         this.modalService.dismissAll();
+        this.productForm.reset();
       },
       (error) => {
         console.log(error);
-        // Handle the error if the update fails
+        
       }
     );
   }
+  onPageChange(event: any) {
+    this.currentPage = event;
+    this.getUnit();
+  }
+  p: any;
+  // pages: number[] = [];
 }

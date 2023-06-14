@@ -62,6 +62,7 @@ export class AppComponent implements OnInit {
     // this.getUser();
   }
   user: any; // variable to store the user information
+  isActive: boolean = false;
 
   // getUser(): void {
   //   this.http.get('http://' + this.api.localhost + '/auth/users/me/').subscribe(

@@ -1,19 +1,5 @@
 <app-login *ngIf="!isLoggedIn"></app-login>
 <div *ngIf="showSidebar">
-  <!-- <mat-toolbar color="primary" style="border-bottom: 1px solid white">
-    <mat-toolbar-row
-      style="background-color: #071251 !important ; position: sticky"
-    >
-      <i class="bi bi-hdd-stack-fill text-white" (click)="sidenav.toggle()"></i>
-      <h1 class="mt-2">Inventary App</h1>
-      <div
-        class="input-group col-sm-6 w-25 justify-content-center align-item-center m-auto"
-      ></div>
-      <div class="profile">
-        <i class="bi bi-person-circle"></i><img src="" alt="" />
-      </div>
-    </mat-toolbar-row>
-  </mat-toolbar> -->
   <mat-toolbar class="fixed-toolbar">
     <mat-toolbar-row>
       <img
@@ -28,8 +14,32 @@
       <div
         class="input-group col-sm-6 w-25 justify-content-center align-item-center m-auto"
       ></div>
-      <div class="profile" routerLink="changePassword">
+      <!-- <div class="profile" routerLink="changePassword">
         <i class="bi bi-person-circle"></i><img src="" alt="" />
+      </div> -->
+
+      <div class="btn-group">
+        <div
+          type="button"
+          class="dropdown-toggle"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <i class="bi bi-person-circle"></i>
+        </div>
+        <ul class="dropdown-menu">
+          <li>
+            <a class="dropdown-item" routerLink="changePassword"
+              >Change Password</a
+            >
+          </li>
+          <li><hr class="dropdown-divider" /></li>
+          <li>
+            <a class="dropdown-item" (click)="logout()">
+              <i class="bi bi-box-arrow-right"></i> Log Out</a
+            >
+          </li>
+        </ul>
       </div>
       <p class="text-white">{{ user }}</p>
     </mat-toolbar-row>
@@ -43,7 +53,11 @@
             <i class="bi bi-house-gear-fill"></i>
             <span class="sidenav-nav-link-text">Dashboard</span>
           </li>
-          <li class="sidenav-nav-item submanu" (click)="toggleSubMenu()">
+          <li
+            class="sidenav-nav-item submanu"
+            (click)="toggleSubMenu()"
+            [ngClass]="{ isActive: isActive }"
+          >
             <i class="bi bi-file-ppt-fill"></i>
             <span class="sidenav-nav-link-text">Manage Product</span>
             <i
@@ -100,6 +114,10 @@
             <i class="bi bi-microsoft-teams"></i>
             <span class="sidenav-nav-link-text">Staff</span>
           </li>
+          <li class="sidenav-nav-item" routerLink="permission">
+            <i class="bi bi-microsoft-teams"></i>
+            <span class="sidenav-nav-link-text">Permissions</span>
+          </li>
           <li class="sidenav-nav-item" routerLink="warehouse">
             <i class="bi bi-shop"></i>
             <span class="sidenav-nav-link-text">Warehouse</span>
@@ -123,10 +141,10 @@
             <span class="sidenav-nav-link-text">All Sale</span>
           </li>
 
-          <li class="sidenav-nav-item" (click)="logout()">
+          <!-- <li class="sidenav-nav-item" (click)="logout()">
             <i class="bi bi-box-arrow-right"></i>
             <span class="sidenav-nav-link-text">Log Out</span>
-          </li>
+          </li> -->
         </ul>
       </mat-nav-list>
     </mat-sidenav>

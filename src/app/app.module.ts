@@ -50,6 +50,7 @@ import { AuthguardGuard } from './authguard.guard';
 import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 import { PasswordChangeComponent } from './password-change/password-change.component';
 import { StaffComponent } from './staff/staff.component';
+import { PermissionComponent } from './permission/permission.component';
 // import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 // import { AuthQuardGuard } from './auth-quard.guard';
 
@@ -73,6 +74,7 @@ import { StaffComponent } from './staff/staff.component';
     TransactionsComponent,
     PasswordChangeComponent,
     StaffComponent,
+    PermissionComponent,
   ],
   imports: [
     NgChartsModule,

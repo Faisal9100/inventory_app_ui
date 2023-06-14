@@ -43,7 +43,8 @@ export class VoucherComponent implements OnInit {
   //     });
   // }
   form = new FormGroup({
-    date: new FormControl('', Validators.required),
+    // date: new FormControl('', Validators.required),
+    date: new FormControl(new Date().toISOString().substring(0, 10)),
     voucher_type: new FormControl('', Validators.required),
     account: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
@@ -77,77 +78,9 @@ export class VoucherComponent implements OnInit {
     return voucherType ? voucherType.label : '';
   }
 
-  // addTransaction() {
-  //   if (this.form.valid) {
-  //     const data: any = {};
-  //     data['date'] = this.form.value.date;
-  //     data['voucher_type'] = this.form.value.voucher_type;
-  //     data['account'] = this.form.value.account;
-  //     data['description'] = this.form.value.description;
-  //     data['amount'] = this.form.value.amount;
-
-  //     // Check transaction count and voucher type to determine debit or credit
-  //     if (
-  //       (this.form.value.voucher_type === 'Cash Payment' ||
-  //         this.form.value.voucher_type === 'Bank Payment') &&
-  //       this.transactionCount === 0
-  //     ) {
-  //       data['debit'] = this.form.value.amount;
-  //       data['credit'] = 0;
-  //     } else if (this.transactionCount === 1) {
-  //       data['debit'] = 0;
-  //       data['credit'] = this.form.value.amount;
-  //       this.debit = 0;
-  //       // Assign date and voucher type from the first transaction
-  //       data['date'] = this.transactions[0]['date'];
-  //       data['voucher_type'] = this.transactions[0]['voucher_type'];
-  //     } else if (
-  //       (this.form.value.voucher_type === 'Cash Receipt' ||
-  //         this.form.value.voucher_type === 'Bank Receipt') &&
-  //       this.transactionCount === 0
-  //     ) {
-  //       data['credit'] = this.form.value.amount;
-  //       data['debit'] = 0;
-  //     } else {
-  //       data['credit'] = 0;
-  //       data['debit'] = this.form.value.amount;
-  //     }
-
-  //     this.transactions.push(data);
-  //     this.transactionCount++;
-
-  //     this.form.get('account')?.setValue('');
-  //     this.form.get('description')?.setValue('');
-  //     this.form.get('amount')?.setValue('');
-
-  //     // Update debit and credit
-  //     this.debit += data['debit'];
-  //     this.credit += data['credit'];
-
-  //     this.form.get('voucher_type')?.disable();
-  //     this.form.get('date')?.disable();
-  //   }
-  // }
-
   addTransaction() {
     if (this.form.valid) {
-      // if (
-      //   this.form.value.voucher_type === 'Bank Payment' ||
-      //   this.form.value.voucher_type === 'Bank Receipt'
-      // ) {
-      //   this.accountData = this.accountData.filter(
-      //     (account: { sub_layer_keyword: string }) =>
-      //       account.sub_layer_keyword === 'bank'
-      //   );
-      // } else if (
-      //   this.form.value.voucher_type === 'Cash Receipt' ||
-      //   this.form.value.voucher_type === 'Cash Payment'
-      // ) {
-      //   this.accountData = this.accountData.filter(
-      //     (account: { sub_layer_keyword: string }) =>
-      //       account.sub_layer_keyword === 'cashinhand'
-      //   );
-      // }
+     
       const data: any = {};
       data['date'] = this.form.value.date;
       data['voucher_type'] = this.form.value.voucher_type;
@@ -210,16 +143,15 @@ export class VoucherComponent implements OnInit {
         credit: transaction.credit,
       };
     });
-
-    // console.log(this.voucher_type?.value);
+  
     const requestBody = {
       transaction_date: this.date?.value,
       transactions: transactions,
       vocuher_type: this.voucher_type?.value,
     };
-
-    const apiUrl = 'http://'+this.api.localhost+'/inventory/vouchar/';
-
+  
+    const apiUrl = 'http://' + this.api.localhost + '/inventory/vouchar/';
+  
     console.log(JSON.stringify(requestBody));
     this.http.post(apiUrl, requestBody).subscribe(
       (response: any) => {
@@ -227,13 +159,75 @@ export class VoucherComponent implements OnInit {
         console.log('Data sent successfully:', response);
       },
       (error: any) => {
-       Swal.fire({
-        title: 'Error!',
-        text:'Balance of this account is going to be negative'
-       })
+        if (
+          Array.isArray(error.error) &&
+          error.error.includes("Account Dual Entry in one transaction is not allowed.")
+        ) {
+          Swal.fire({
+            title: 'Error!',
+            text: 'Account Dual Entry in one transaction is not allowed.',
+            icon: 'error'
+          });
+        } else if (
+          error.error &&
+          error.error.Credit &&
+          error.error.Credit.includes("Credit can't be more than Debit in Payment")
+        ) {
+          Swal.fire({
+            title: 'Error!',
+            text: "Credit can't be more than Debit in Payment",
+            icon: 'error'
+          });
+        } else if (
+          error.error === "Debit can't be more than Credit in Payment"
+        ) {
+          Swal.fire({
+            title: 'Error!',
+            text: "Debit can't be more than Credit in Payment",
+            icon: 'error'
+          });
+        } else if (
+          error.error &&
+          error.error['Duplicate Entry'] &&
+          error.error['Duplicate Entry'].includes("Account Dual Entry in one transaction is not allowed.")
+        ) {
+          Swal.fire({
+            title: 'Error!',
+            text: 'Account Dual Entry in one transaction is not allowed.',
+            icon: 'error'
+          });
+        } else if (
+          error.error &&
+          error.error.Debit &&
+          error.error.Debit.includes("Debit can't be more than Credit in Payment")
+        ) {
+          Swal.fire({
+            title: 'Error!',
+            text: "Debit can't be more than Credit in Payment",
+            icon: 'error'
+          });
+        }
+        else if (
+          error.error &&
+          error.error['cash in hand2'] &&
+          error.error['cash in hand2'].includes("Balance of this account is going to be negative")
+        ) {
+          Swal.fire({
+            title: 'Error!',
+            text: 'Balance of this account is going to be negative',
+            icon: 'error'
+          });
+        } else {
+          Swal.fire({
+            title: 'Error!',
+            text: 'An unexpected error occurred.',
+            icon: 'error'
+          });
+        }
       }
     );
   }
+  
 
   isComplete: boolean = false;
   transaction_order_res: any[] = [];

@@ -17,6 +17,7 @@ import { TransactionsComponent } from './transactions/transactions.component';
 import { AuthguardGuard } from './authguard.guard';
 import { PasswordChangeComponent } from './password-change/password-change.component';
 import { StaffComponent } from './staff/staff.component';
+import { PermissionComponent } from './permission/permission.component';
 
 const routes: Routes = [
   {
@@ -96,8 +97,15 @@ const routes: Routes = [
     canActivate: [AuthguardGuard],
   },
   {
-    path:'staff', component:StaffComponent,canActivate:[AuthguardGuard]
-  }
+    path: 'staff',
+    component: StaffComponent,
+    canActivate: [AuthguardGuard],
+  },
+  {
+    path: 'permission',
+    component: PermissionComponent,
+    canActivate: [AuthguardGuard],
+  },
 ];
 
 @NgModule({

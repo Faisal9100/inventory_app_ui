@@ -1,0 +1,112 @@
+<h1 class="fs-3 mt-5">Permissions Groups</h1>
+<div class="add-categories">
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      class="form-control w-25"
+      placeholder="Search Staff"
+      name="name"
+      [(ngModel)]="name"
+      (ngModelChange)="Search()"
+    />
+    <button class="btn btn-primary">
+      <i class="bi bi-search"></i>
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-primary mx-2"
+      (click)="open(content3)"
+    >
+      <i class="bi bi-plus-circle"></i> Add new
+    </button>
+    <button class="btn btn-outline-danger">
+      <i class="bi bi-arrow-down-circle"></i> PDF
+    </button>
+  </div>
+</div>
+
+<div class="top-sellling">
+  <table class="table table-striped text-center table-bordered table-hover">
+    <thead class="table-head">
+      <tr>
+        <th>S.N</th>
+        <th>Name</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container>
+        <tr
+          *ngFor="
+            let staff of groups | paginate : { itemsPerPage: 9, currentPage: p }
+          "
+        >
+          <td>{{ staff.id }}</td>
+          <td>{{ staff.name }}</td>
+          <td>
+            <button class="btn btn-outline-primary mx-2 my-1">
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button class="btn btn-outline-danger" (click)="deleteStaff()">
+              <i class="bi bi-trash3-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
+      <ng-template #noData>
+        <tr>
+          <td colspan="3" class="text-center">No data available.</td>
+        </tr>
+      </ng-template>
+    </tbody>
+  </table>
+
+  <pagination-controls
+    class="my-pagination"
+    (pageChange)="p = $event"
+  ></pagination-controls>
+</div>
+<ng-template #content3 let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title text-center" id="modal-basic-title">
+      Add Permissions!
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="Permissions-form">
+
+        <label for="name">Name</label>
+        <input type="text" class="form-control" formControlName="name" />
+        <br>
+        <div class="data-card">
+            <div class="data-card-header">
+                <h3>Permissions Model</h3>
+            </div>
+            <div class="data-card-body">
+                <ul>
+                    <li *ngFor="let item of permissions">
+                        <span class="data-item-name" [value]="item.id" form-control-name="permission"
+                        ><input type="checkbox" class="form-check-inline" form-control-name="check" [value]="item.id"  />{{
+                            item.model
+                        }}</span
+                        >
+                    </li>
+                </ul>
+            </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark">Add Permissions</button>
+    <button type="button" class="btn btn-outline-dark" (click)="c('close')">
+      Close
+    </button>
+  </div>
+</ng-template>

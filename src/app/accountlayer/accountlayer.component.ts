@@ -15,6 +15,7 @@ export interface Account {
   credit: number;
   debit: number;
   email: string;
+  account_type: string;
 }
 
 @Component({
@@ -82,7 +83,7 @@ export class AccountlayerComponent implements OnInit {
     contact: '',
     email: '',
   };
-
+  account_type: any;
   account: Account = {
     id: 0,
     title: '',
@@ -93,6 +94,7 @@ export class AccountlayerComponent implements OnInit {
     balance: 0,
     contact: 0,
     email: '',
+    account_type: '',
   };
 
   constructor(
@@ -578,7 +580,6 @@ export class AccountlayerComponent implements OnInit {
   // }
 
   //  <------------------------ CODE FOR DELETING LAYER ONE ACCOUNT ------------------------>
-
   DeleteLayer_one_new_account(selectedMainLayer: any, selectedLayer1: number) {
     Swal.fire({
       title: 'Delete Account',
@@ -588,37 +589,37 @@ export class AccountlayerComponent implements OnInit {
       preConfirm: () => {
         if (!selectedMainLayer || !selectedLayer1) {
           Swal.showValidationMessage(
-            ' Main Layer and Layer One must be selected.'
+            'Main Layer and Layer One must be selected.'
           );
         }
-        this.http
+        return this.http
           .delete(
             `http://` +
               this.api.localhost +
               `/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
           )
-          .subscribe(
-            (res) => {
-              this.getAccountsData();
-              Swal.fire(
-                'Deleted!',
-                'Your Account has been deleted.',
-                'success'
-              );
-              this.accountLayerservice.accountAdded.emit(this.account);
-            },
-            (error) => {
-              console.log(error);
+          .toPromise()
+          .then(() => {
+            this.getAccountsData();
+            Swal.fire('Deleted!', 'Your Account has been deleted.', 'success');
+            this.accountLayerservice.accountAdded.emit(this.account);
+          })
+          .catch((error) => {
+            let errorMessage = 'An error occurred while deleting the account.';
+            if (error.error && error.error.delete) {
+              errorMessage = error.error.delete;
             }
-          );
-        // Swal.fire({
-        //   icon: 'error',
-        //   title: 'Deleting Failed',
-        //   text: 'You cannot delete this row.',
-        // });
+            Swal.fire('Error', errorMessage, 'error');
+          });
       },
     });
   }
+
+  // Swal.fire({
+  //   icon: 'error',
+  //   title: 'Deleting Failed',
+  //   text: 'You cannot delete this row.',
+  // });
 
   //  <------------------------ CODE FOR ADDING LAYER TWO ACCOUNT  ------------------------>
 
@@ -709,7 +710,8 @@ export class AccountlayerComponent implements OnInit {
                 this.accountLayerservice.accountAdded.emit(this.account);
               },
               (error) => {
-                error= 'IntegrityError at /inventory/layer1s/7/layer2s/\n(1048, "Column \'main_layer\' cannot be null")'
+                error =
+                  'IntegrityError at /inventory/layer1s/7/layer2s/\n(1048, "Column \'main_layer\' cannot be null")';
                 this.errorMessage = error;
                 // if (
                 //   error.status === 500 &&
@@ -799,13 +801,28 @@ export class AccountlayerComponent implements OnInit {
       },
     });
   }
+  // Search() {
+    //   if (this.account_type === '') {
+      //     this.ngOnInit();
+      //   } else {
+        //     this.accountData = this.accountData.filter((res) => {
+          //       return res.account_type.match(this.account_type);
+          //     });
+          //   }
+          // }
+          title: any;
   Search() {
-    if (this.account) {
+    if (this.title === '') {
       this.ngOnInit();
     } else {
+      // const capitalizedTitle =
+      // this.title.charAt(0).toUpperCase() + this.title.slice(1);
       this.accountData = this.accountData.filter((res) => {
-        return res.title.match(this.account);
+        return res.title.includes(this.title);
       });
     }
+  }
+  refresh() {
+    window.location.reload();
   }
 }

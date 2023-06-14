@@ -1,0 +1,39 @@
+.list {
+  display: flex;
+}
+.data-card {
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.data-card-header {
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #ddd;
+  padding: 10px;
+}
+
+.data-card-header h3 {
+  margin: 0;
+}
+
+.data-card-body ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.data-card-body li {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+}
+
+.data-item-name {
+  flex: 1;
+  font-weight: bold;
+}
+
+.data-item-value {
+  flex: 2;
+}

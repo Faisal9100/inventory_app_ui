@@ -57,9 +57,8 @@ export class UnitsComponent implements OnInit {
     });
   }
 
-  p: any;
   name: any;
-
+  
   Search() {
     if (this.name == '') {
       this.ngOnInit();
@@ -86,8 +85,9 @@ export class UnitsComponent implements OnInit {
     this.currentPage = event;
     this.getUnit();
   }
+  p: any;
   pages: number[] = [];
-
+  
   addUnit() {
     Swal.fire({
       title: 'Add New Unit',
