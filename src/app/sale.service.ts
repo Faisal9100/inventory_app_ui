@@ -7,19 +7,18 @@ import { LocalhostApiService } from './localhost-api.service';
   providedIn: 'root',
 })
 export class SaleService {
-  constructor(public http: HttpClient,public api:LocalhostApiService) {}
- 
+  constructor(public http: HttpClient, public api: LocalhostApiService) {}
 
-  public url = 'http://'+this.api.localhost+'/inventory/sales/';
+  public url = this.api.localhost + '/inventory/sales/';
 
   public stock_url =
-    'http://' + this.api.localhost + 'inventory/sales/${purchaseId}/sale_items';
+    this.api.localhost + 'inventory/sales/${purchaseId}/sale_items';
 
-  public warehouse_url = 'http://'+this.api.localhost+'/inventory/warehouses/';
+  public warehouse_url = this.api.localhost + '/inventory/warehouses/';
 
-  public product_url = 'http://' + this.api.localhost + '/inventory/products/';
+  public product_url = this.api.localhost + '/inventory/products/';
 
-  public customer_url = 'http:/'+this.api.localhost+'/inventory/customers/';
+  public customer_url = this.api.localhost + '/inventory/customers/';
 
   getAllPurchase(): Observable<any> {
     return this.http.get<any>(this.url);

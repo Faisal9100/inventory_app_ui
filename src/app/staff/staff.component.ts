@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { LocalhostApiService } from '../localhost-api.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
 import Swal from 'sweetalert2';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-staff',
@@ -20,9 +21,9 @@ export class StaffComponent implements OnInit {
   staffs: any[] = [];
   getStaff() {
     this.http
-      .get<any>('http://' + this.api.localhost + '/inventory/staff_members/')
+      .get<any>(this.api.localhost + '/inventory/staff_members/')
       .subscribe((response) => {
-        this.staffs = response;
+        this.staffs = response.results;
         console.log(this.staffs);
       });
   }
@@ -42,10 +43,10 @@ export class StaffComponent implements OnInit {
     });
     this.purchaseForm2 = this.fb.group({
       username: ['', Validators.required],
-      firstname: ['', Validators.required],
-      lastname: ['', Validators.required],
+      first_name: ['', Validators.required],
+      last_name: ['', Validators.required],
       email: ['', Validators.required],
-      status: ['', Validators.required],
+      is_active: ['', Validators.required],
       permission: ['', Validators.required],
       password: ['', Validators.required],
       // isStaff: ['', Validators.required],
@@ -66,7 +67,7 @@ export class StaffComponent implements OnInit {
   permissions: any[] = [];
   getPermission() {
     this.http
-      .get<any>('http://' + this.api.localhost + '/inventory/groups/')
+      .get<any>(this.api.localhost + '/inventory/groups/')
       .subscribe((response) => {
         this.permissions = response;
       });
@@ -111,7 +112,7 @@ export class StaffComponent implements OnInit {
 
     this.http
       .post(
-        'http://' + this.api.localhost + '/inventory/staff_members/',
+        this.api.localhost + '/inventory/staff_members/',
         requestBody
       )
       .subscribe(
@@ -121,6 +122,7 @@ export class StaffComponent implements OnInit {
             title: 'Success',
             text: 'Staff added successfully.',
           });
+          this.getStaff();
           this.purchaseForm.reset();
         },
 
@@ -156,14 +158,15 @@ export class StaffComponent implements OnInit {
         this.http
           .delete(
             `${
-              'http://' + this.api.localhost + '/inventory/staff_members/'
+              this.api.localhost + '/inventory/staff_members/'
             }${id}`
           )
           .subscribe(() => {
-            console.log(`Customer with ID ${id} deleted successfully!`);
+            // console.log(`Customer with ID ${id} deleted successfully!`);
             // this.getCustomers();
             Swal.fire('Deleted!', 'Your Customer has been deleted.', 'success');
           });
+        this.getStaff();
       } else if (result.isDenied) {
         Swal.fire('Cancelled', 'Your Customer is safe :)', 'info');
       }
@@ -183,37 +186,155 @@ export class StaffComponent implements OnInit {
   //   formData.append('status', this.purchaseForm2.get('status')?.value);
   //   console.log(formData);
   // }
-  open(content: any, selectedId: number) {
-    this.modalService.open(content);
-    const selectedStaff = this.permissions.find(
-      (permission) => permission.id === selectedId
-    );
-    if (selectedStaff) {
-      if ('username' in selectedStaff) {
-        this.purchaseForm2.patchValue({
-          username: selectedStaff.username,
-          firstname: selectedStaff.firstname,
-          lastname: selectedStaff.lastname,
-          email: selectedStaff.email,
-          password: selectedStaff.password,
-          permission: selectedStaff.permission,
-          status: selectedStaff.status,
-        });
-      } else {
-        console.error(
-          'Username property not found in selectedStaff object:',
-          selectedStaff
-        );
+  openUpdateModal(staff: any) {
+    Swal.fire({
+      title: 'Update Staff Detail',
+      html: `
+    <div class="update_form">
+      <div class="form-group ">
+        <div class="col">
+          <label for="supplierTitle" class="float-start my-2">Username:</label>
+          <input type="text" id="supplierTitle" class="form-control" placeholder="Username" value="${
+            staff.username
+          }">
+        </div>
+        <div class="col">
+          <label for="firstname" class="float-start my-2">Firstname:</label>
+          <input type="text" id="firstname" class="form-control" placeholder="Firstname" value="${
+            staff.first_name
+          }">
+        </div>
+      </div><br>
+      <div class="form-group row">
+        <div class="col">
+          <label for="lastname" class="float-start my-2">Lastname:</label>
+          <input type="text" id="lastname" class="form-control" placeholder="Lastname" value="${
+            staff.last_name
+          }">
+        </div>
+      </div><br>
+      <div class="form-group row">
+        <div class="col">
+          <label for="email" class="float-start my-2">Email:</label>
+          <input type="text" id="email" class="form-control" placeholder="Email" value="${
+            staff.email
+          }">
+        </div>
+      </div><br>
+      <div class="form-group row">
+        <div class="col">
+          <label for="Status" class="float-start my-2">Status:</label>
+          <select id="Status" class="form-select">
+            <option value="1" ${
+              staff.is_active ? 'selected' : ''
+            }>Active</option>
+            <option value="0" ${
+              !staff.is_active ? 'selected' : ''
+            }>Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div><br>
+    `,
+      showCancelButton: true,
+      confirmButtonText: 'Update',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const updatedUsername = (<HTMLInputElement>(
+          document.querySelector('#supplierTitle')
+        )).value;
+        const updatedFirstname = (<HTMLInputElement>(
+          document.querySelector('#firstname')
+        )).value;
+        const updatedLastname = (<HTMLInputElement>(
+          document.querySelector('#lastname')
+        )).value;
+        const updatedEmail = (<HTMLInputElement>(
+          document.querySelector('#email')
+        )).value;
+        const updatedStatus =
+          (<HTMLSelectElement>document.querySelector('#Status')).value === '1';
+
+        this.http
+          .put(
+            `${this.api.localhost + '/inventory/staff_members/'}${
+              staff.id
+            }/`,
+            {
+              username: updatedUsername,
+              first_name: updatedFirstname,
+              last_name: updatedLastname,
+              email: updatedEmail,
+              is_active: updatedStatus,
+            }
+          )
+          .subscribe(() => {
+            Swal.fire(
+              'Updated!',
+              'Your staff member has been updated.',
+              'success'
+            );
+            this.getStaff();
+          });
       }
-    } else {
-      console.error('Selected staff not found:', selectedId);
-    }
-    console.log(this.purchaseForm2.value);
+    });
   }
 
   updateProduct: any;
   update_product(staff: any) {
     this.updateProduct = staff;
   }
+  username: any;
+  Search() {
+    if (this.username == '') {
+      this.ngOnInit();
+    } else {
+      this.staffs = this.staffs.filter((res) => {
+        return res.username.match(this.username);
+      });
+    }
+  }
+  generatePDF() {
+    const columns2 = { title: 'All Staff list' };
+
+    const columns = [
+      { title: 'S.N', dataKey: 'sn' },
+      { title: 'Username', dataKey: 'username' },
+      { title: 'Firstname', dataKey: 'first_name' },
+      { title: 'Lastname', dataKey: 'last_name' },
+      { title: 'Status', dataKey: 'status' },
+      { title: 'Email', dataKey: 'email' },
+    ];
+
+    const data = this.staffs.map((staff, index) => ({
+      sn: index + 1,
+      title: staff.username,
+      address: staff.first_name,
+      balance: staff.last_name,
+      status: staff.is_active,
+      email: staff.email,
+    }));
+
+    const doc = new jsPDF();
+    doc.text(columns2.title, 86, 8);
+
+    doc.setFontSize(22);
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(16);
+
+    (doc as any).autoTable({
+      columns: columns,
+      body: data,
+    });
+    doc.save('all_Staff.pdf');
+  }
+  currentPage: any;
+  p: any;
+  onPageChange(event: any) {
+    this.currentPage = event;
+    this.getStaff();
+  }
+  staff: any;
   product: any;
 }

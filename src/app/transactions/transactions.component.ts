@@ -45,13 +45,13 @@ export class TransactionsComponent {
       const fromDate = this.form.get('fromDate')?.value;
       const toDate = this.form.get('toDate')?.value;
       const accountId = this.form.get('accountId')?.value;
-  
+
       this.transaction.getTransactions(fromDate, toDate, accountId).subscribe(
         (response: any) => {
           if (response && response.results) {
             this.transactions = response.results;
             console.log(this.transactions);
-  
+
             // Check if no transactions found
             if (this.transactions.length === 0) {
               Swal.fire(
@@ -75,7 +75,7 @@ export class TransactionsComponent {
       );
     }
   }
-  
+
   open(content3: any) {
     this.modalService.open(content3, { size: 'lg', centered: true });
   }
@@ -85,9 +85,7 @@ export class TransactionsComponent {
   get_Stock_trans_details(item: number) {
     this.http
       .get(
-        `http://` +
-          this.api.localhost +
-          `/inventory/transactions_order/${item}/details/`
+      this.api.localhost + `/inventory/transactions_order/${item}/details/`
       )
       .subscribe((resp: any) => {
         const { data, transactions, stocks } = resp;

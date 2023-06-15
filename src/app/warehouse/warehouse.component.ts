@@ -19,7 +19,7 @@ export interface Product {
   styleUrls: ['./warehouse.component.css'],
 })
 export class WarehouseComponent {
-  // api.localhost = '127.0.0.1:8000';
+ 
   taskToEdit: any;
   currentPage = 1;
   pageSize = 10;
@@ -29,7 +29,7 @@ export class WarehouseComponent {
   product: Product = { id: 0, name: '', address: '', status: '' };
   closeResult: any;
 
-  public url = 'http://' + this.api.localhost + '/inventory/warehouses/';
+  public url =  this.api.localhost + '/inventory/warehouses/';
   totalItems: any;
 
   constructor(

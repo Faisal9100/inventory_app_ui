@@ -7,8 +7,8 @@ import { LocalhostApiService } from './localhost-api.service';
   providedIn: 'root',
 })
 export class CustomerService {
-  constructor(public http: HttpClient,public api:LocalhostApiService) {}
-  public url = 'http://' + this.api.localhost + '/inventory/customers/';
+  constructor(public http: HttpClient, public api: LocalhostApiService) {}
+  public url = this.api.localhost + '/inventory/customers/';
 
   getAllPurchase(): Observable<any> {
     const httpOptions = {
@@ -17,6 +17,6 @@ export class CustomerService {
         Authorization: `JWT  ${localStorage.getItem('token')}`, // Access token stored in localStorage
       }),
     };
-    return this.http.get<any>(this.url,httpOptions);
+    return this.http.get<any>(this.url, httpOptions);
   }
 }

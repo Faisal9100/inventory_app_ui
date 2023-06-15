@@ -26,7 +26,7 @@ export class DashboardComponent implements OnInit {
   daily_Sale_amount: number = 0;
   getDailySale() {
     this.http
-      .get<any>('http://' + this.api.localhost + '/inventory/daily_sale/')
+      .get<any>( this.api.localhost + '/inventory/daily_sale/')
       .subscribe((res) => {
         this.daily_Sale_amount = res.amount;
       });
@@ -35,7 +35,7 @@ export class DashboardComponent implements OnInit {
   monthly_sale_amount: number = 0;
   getMonthlySale() {
     this.http
-      .get<any>('http://' + this.api.localhost + '/inventory/montly_sale/')
+      .get<any>( this.api.localhost + '/inventory/montly_sale/')
       .subscribe((response) => {
         this.monthly_sale_amount = response.amount;
       });
@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
   yearly_Sale_amount: number = 0;
   get_Cash_In_Hand() {
     this.http
-      .get<any>('http://' + this.api.localhost + '/inventory/cashinhand/')
+      .get<any>( this.api.localhost + '/inventory/cashinhand/')
       .subscribe((res) => {
         this.yearly_Sale_amount = res.amount;
       });
@@ -53,7 +53,7 @@ export class DashboardComponent implements OnInit {
   daily_Purchase_amount: number = 0;
   getDailyPurchase() {
     this.http
-      .get<any>('http://' + this.api.localhost + '/inventory/daily_purchase/')
+      .get<any>( this.api.localhost + '/inventory/daily_purchase/')
       .subscribe((res) => {
         this.daily_Purchase_amount = res.amount;
       });
@@ -62,7 +62,7 @@ export class DashboardComponent implements OnInit {
   monthly_Purchase_amount: number = 0;
   getmonthlyPurchase() {
     this.http
-      .get<any>('http://' + this.api.localhost + '/inventory/montly_purchase/')
+      .get<any>( this.api.localhost + '/inventory/montly_purchase/')
       .subscribe((res) => {
         this.monthly_Purchase_amount = res.amount;
       });
@@ -70,7 +70,7 @@ export class DashboardComponent implements OnInit {
   all_Customer: number = 0;
   get_All_Customer() {
     this.http
-      .get<any>('http://' + this.api.localhost + '/inventory/customer_count/')
+      .get<any>( this.api.localhost + '/inventory/customer_count/')
       .subscribe((res) => {
         this.all_Customer = res.count;
       });
@@ -78,7 +78,7 @@ export class DashboardComponent implements OnInit {
   total_Expense: { [month: string]: number } = {};
   get_Total_Expense() {
     this.http
-      .get<any>('http://' + this.api.localhost + '/inventory/year_expense/')
+      .get<any>( this.api.localhost + '/inventory/year_expense/')
       .subscribe((res) => {
         this.total_Expense = res;
         console.log(this.total_Expense);
@@ -93,7 +93,7 @@ export class DashboardComponent implements OnInit {
   yearly_Purchase: { [month: string]: number } = {};
   get_Yearly_Purchase() {
     this.http
-      .get<any>('http://' + this.api.localhost + '/inventory/year_purchase/')
+      .get<any>( this.api.localhost + '/inventory/year_purchase/')
       .subscribe((res) => {
         this.yearly_Purchase = res;
         this.addCharts(
@@ -107,7 +107,7 @@ export class DashboardComponent implements OnInit {
   yearly_Sale: { [month: string]: number } = {};
   get_Yearly_sale() {
     this.http
-      .get<any>('http://' + this.api.localhost + '/inventory/year_sale/')
+      .get<any>( this.api.localhost + '/inventory/year_sale/')
       .subscribe((res) => {
         this.yearly_Sale = res;
         this.addCharts(

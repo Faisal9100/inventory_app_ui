@@ -51,8 +51,8 @@ export class ProductsComponent {
   formBuilder: any;
   selectedFile: any;
   productData1: any;
-  public url = 'http://' + this.api.localhost + '/inventory/products/';
-  public url2 = 'http://' + this.api.localhost + '/inventory/products/${id}';
+  public url =  this.api.localhost + '/inventory/products/';
+  public url2 =  this.api.localhost + '/inventory/products/${id}';
 
   productForm = new FormGroup({
     name: new FormControl(),
@@ -365,7 +365,6 @@ export class ProductsComponent {
       formData.append('image', this.selectedFile, this.selectedFile.name);
 
     const url =
-      `http://` +
       this.api.localhost +
       `/inventory/products/${this.updateProduct?.id}/`;
 

@@ -6,7 +6,7 @@ import { LocalhostApiService } from './localhost-api.service';
   providedIn: 'root',
 })
 export class WarehouseService {
-  public url = 'http://' + this.api.localhost + '/inventory/warehouses/';
+  public url = this.api.localhost + '/inventory/warehouses/';
   pageSize = 10;
 
   currentPage = 1;
@@ -15,7 +15,7 @@ export class WarehouseService {
   totalItems: any;
   itemsPerPage: any;
   suppliers: any;
-  constructor(public http: HttpClient, public api:LocalhostApiService) {}
+  constructor(public http: HttpClient, public api: LocalhostApiService) {}
 
   GetWarehouse() {
     let skip = (this.currentPage - 1) * this.pageSize;

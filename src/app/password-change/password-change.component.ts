@@ -56,7 +56,7 @@ export class PasswordChangeComponent implements OnInit {
 
     this.http
       .post(
-        'http://' + this.api.localhost + '/auth/users/set_password/',
+        this.api.localhost + '/auth/users/set_password/',
         requestBody
       )
       .subscribe(

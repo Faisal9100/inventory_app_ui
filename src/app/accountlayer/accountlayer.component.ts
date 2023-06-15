@@ -28,17 +28,17 @@ export class AccountlayerComponent implements OnInit {
   selectedMainLayer?: string;
 
   public create_account_url =
-    'http://' + this.api.localhost + '/inventory/layer2s/';
+      this.api.localhost + '/inventory/layer2s/';
 
   public addLayer1 =
-    'http://' + this.api.localhost + '/inventory/layer1s/11/?main_layer=assets';
+      this.api.localhost + '/inventory/layer1s/11/?main_layer=assets';
 
-  public account_url = 'http://' + this.api.localhost + '/inventory/accounts/';
+  public account_url =   this.api.localhost + '/inventory/accounts/';
 
   public selectedProductId: number = 5;
 
   public url =
-    'http://' +
+     
     this.api.localhost +
     '/inventory/layer2s/' +
     this.selectedProductId +
@@ -515,7 +515,7 @@ export class AccountlayerComponent implements OnInit {
           this.http
 
             .post<Account>(
-              `http://` +
+              
                 this.api.localhost +
                 `/inventory/layer1s/?main_layer=${selectedMainLayer}`,
               newLayeraccount
@@ -561,7 +561,7 @@ export class AccountlayerComponent implements OnInit {
   //         this.http
   //           // `${this.url_layer1}?main_layer=${selectedMainLayer}`
   //           .put<Account>(
-  //             `http://` +
+  //             
   //               this.api.localhost +
   //               `/inventory/layer1s/?main_layer=${this.selectedMainLayer}`,
   //             newLayeraccount
@@ -595,7 +595,7 @@ export class AccountlayerComponent implements OnInit {
         }
         return this.http
           .delete(
-            `http://` +
+            
               this.api.localhost +
               `/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
           )
@@ -650,7 +650,7 @@ export class AccountlayerComponent implements OnInit {
           };
           this.http
             .post<Account>(
-              `http://` +
+              
                 this.api.localhost +
                 `/inventory/layer1s/${selectedLayer2}/layer2s/`,
               newLayeraccount
@@ -744,7 +744,7 @@ export class AccountlayerComponent implements OnInit {
           );
           return;
         }
-        const url = `http://${this.api.localhost}/inventory/layer1s/${selectedLayer2}/layer2s/${selectedLayer1}`;
+        const url = this.api.localhost+ `inventory/layer1s/${selectedLayer2}/layer2s/${selectedLayer1}`;
         this.http
           .delete(url)
           .pipe(

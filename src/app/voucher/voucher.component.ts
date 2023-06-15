@@ -150,7 +150,7 @@ export class VoucherComponent implements OnInit {
       vocuher_type: this.voucher_type?.value,
     };
   
-    const apiUrl = 'http://' + this.api.localhost + '/inventory/vouchar/';
+    const apiUrl = this.api.localhost + '/inventory/vouchar/';
   
     console.log(JSON.stringify(requestBody));
     this.http.post(apiUrl, requestBody).subscribe(

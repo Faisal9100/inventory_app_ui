@@ -158,11 +158,7 @@ export class AllPurchaseComponent implements OnInit {
   getStockList(id: number) {
     this.isLoading = true;
     this.http
-      .get(
-        `http://` +
-          this.api.localhost +
-          `/inventory/stocks_purchase/${id}/stocks/`
-      )
+      .get(this.api.localhost + `/inventory/stocks_purchase/${id}/stocks/`)
       .subscribe((response: any) => {
         this.stocks = response;
         this.isLoading = false;
@@ -183,8 +179,7 @@ export class AllPurchaseComponent implements OnInit {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://` +
-              this.api.localhost +
+            this.api.localhost +
               `/inventory/stocks_purchase/${purchasedId}/stocks/` +
               stockid +
               '/'
@@ -332,7 +327,7 @@ export class AllPurchaseComponent implements OnInit {
       if (result.isConfirmed) {
         this.http
           .delete(
-            'http://' +
+            
               this.api.localhost +
               '/inventory/stocks_purchase/' +
               purchaseId +
@@ -387,7 +382,7 @@ export class AllPurchaseComponent implements OnInit {
 
     this.http
       .post<{ id: number }>(
-        'http://' + this.api.localhost + '/inventory/stocks_purchase/',
+         this.api.localhost + '/inventory/stocks_purchase/',
         payload
       )
       .subscribe((response) => {
@@ -436,9 +431,7 @@ export class AllPurchaseComponent implements OnInit {
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://` +
-            this.api.localhost +
-            `/inventory/stocks_purchase/${id}/stocks/`,
+          this.api.localhost + `/inventory/stocks_purchase/${id}/stocks/`,
           product
         )
         .subscribe(
@@ -477,7 +470,7 @@ export class AllPurchaseComponent implements OnInit {
 
   //     this.http
   //       .post(
-  //         `http://` +
+  //
   //           this.api.localhost +
   //           `/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
   //         requestBody
@@ -535,8 +528,7 @@ export class AllPurchaseComponent implements OnInit {
 
       this.http
         .post(
-          `http://` +
-            this.api.localhost +
+          this.api.localhost +
             `/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
           requestBody
         )
@@ -586,9 +578,7 @@ export class AllPurchaseComponent implements OnInit {
 
   getStock(id: any) {
     return this.http.get(
-      `http://` +
-        this.api.localhost +
-        `/inventory/stocks_purchase/${id}/stocks/`
+      this.api.localhost + `/inventory/stocks_purchase/${id}/stocks/`
     );
   }
 

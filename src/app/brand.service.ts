@@ -7,10 +7,10 @@ import { LocalhostApiService } from './localhost-api.service';
   providedIn: 'root',
 })
 export class BrandService {
-  private url2 = 'http://' + this.api.localhost + '/inventory/brands/${id}';
-  public url = 'http://' + this.api.localhost + '/inventory/brands/';
+  private url2 = this.api.localhost + '/inventory/brands/${id}';
+  public url = this.api.localhost + '/inventory/brands/';
 
-  constructor(private http: HttpClient,public api:LocalhostApiService) {}
+  constructor(private http: HttpClient, public api: LocalhostApiService) {}
   //  code for brand
   getBrand(pageIndex: number, pageSize: number): Observable<any> {
     return this.http.get<any>(this.url);
@@ -19,8 +19,9 @@ export class BrandService {
     // Create the headers object
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
-      'Authorization': 'JWT <access_token>'
-    });}
+      Authorization: 'JWT <access_token>',
+    });
+  }
   createBrand(id: number, name: string) {
     const data = { id, name };
     return this.http.post(this.url, data);
@@ -40,7 +41,7 @@ export class BrandService {
     return this.http.put<any>(url, category);
   }
   // brand code ended
-  public url3 = 'http://'+this.api.localhost+'/inventory/products/';
+  public url3 = this.api.localhost + '/inventory/products/';
 
   getProducts(): Observable<any> {
     return this.http.get<any>(this.url3);

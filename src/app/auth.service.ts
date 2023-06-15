@@ -18,7 +18,7 @@ import { LocalhostApiService } from './localhost-api.service';
 })
 export class AuthService {
   private tokenKey = 'auth_token';
-  private apiUrl = 'http://' + this.api.localhost + '/auth/jwt/create/';
+  private apiUrl =  this.api.localhost + '/auth/jwt/create/';
   loginFormVisible: boolean = true;
 
   constructor(

@@ -8,8 +8,8 @@ import { LocalhostApiService } from './localhost-api.service';
   providedIn: 'root',
 })
 export class UnitService {
-  public url = 'http://' + this.api.localhost + '/inventory/units/';
-  public url2 = 'http://' + this.api.localhost + '/inventory/units/${id}';
+  public url = this.api.localhost + 'inventory/units/';
+  public url2 = this.api.localhost + '/inventory/units/${id}';
 
   getproducts(pageIndex: any, pageSize: number) {
     throw new Error('Method not implemented.');

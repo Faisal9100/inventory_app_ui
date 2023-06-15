@@ -8,7 +8,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class SupplierService {
-  public url = 'http://' + this.api.localhost + '/inventory/Suppliers/';
+  public url = this.api.localhost + '/inventory/Suppliers/';
   pageSize = 10;
   currentPage = 1;
   totalPages!: number;

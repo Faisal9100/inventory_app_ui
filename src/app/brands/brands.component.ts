@@ -168,7 +168,7 @@ export class BrandsComponent {
   }
   taskToEdit: any;
 
-  public url = 'http://' +this.api.localhost + '/inventory/brands/';
+  public url = this.api.localhost + '/inventory/brands/';
 
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);

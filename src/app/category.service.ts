@@ -18,8 +18,8 @@ export class CategoryService {
   }
   public ip_address = '' + this.api.localhost + '';
 
-  private url2 = 'http://' + this.api.localhost + '/inventory/categories/${id}';
-  public url = 'http://' + this.api.localhost + '/inventory/categories/';
+  private url2 = this.api.localhost + '/inventory/categories/${id}';
+  public url = this.api.localhost + '/inventory/categories/';
 
   constructor(private http: HttpClient, public api: LocalhostApiService) {}
   //  code for categories
@@ -81,7 +81,7 @@ export class CategoryService {
     return this.http.put<any>(url, category, httpOptions);
   }
   // categories code ended
-  public url3 = 'http://' + this.api.localhost + '/inventory/products/';
+  public url3 = this.api.localhost + '/inventory/products/';
 
   getProducts(): Observable<any> {
     const httpOptions = {

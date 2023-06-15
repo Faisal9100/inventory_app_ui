@@ -9,15 +9,15 @@ import { LocalhostApiService } from './localhost-api.service';
 export class TransactionService {
 ;
 
-  public url = 'http://' + this.api.localhost + '/inventory/accounts';
+  public url =  this.api.localhost + '/inventory/accounts';
   constructor(private http: HttpClient,public api:LocalhostApiService) {}
 
   getTransactions(fromDate: string, toDate: string, accountId: string) {
-    const url = `http://`+ this.api.localhost +`/inventory/transactions/?from_date=${fromDate}&to_date=${toDate}&account_id=${accountId}`;
+    const url =  this.api.localhost +`/inventory/transactions/?from_date=${fromDate}&to_date=${toDate}&account_id=${accountId}`;
     return this.http.get(url);
   }
   getAccounts(): Observable<any> {
-    const account_url = 'http://' + this.api.localhost + '/inventory/accounts';
+    const account_url =  this.api.localhost + '/inventory/accounts';
     return this.http.get(account_url);
   }
   // getStock_trans_detail(id: any) {

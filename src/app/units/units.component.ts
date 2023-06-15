@@ -174,7 +174,7 @@ export class UnitsComponent implements OnInit {
   }
   taskToEdit: any;
 
-  public url = 'http://' + this.api.localhost + '/inventory/Units/';
+  public url =  this.api.localhost + '/inventory/Units/';
 
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);

@@ -34,7 +34,7 @@ export class CustomerComponent {
   
   totalItems: any;
   itemsPerPage: any;
-  public url = 'http://' + this.api.localhost + '/inventory/customers/';
+  public url =  this.api.localhost + '/inventory/customers/';
   suppliers: any[] = [];
   supplier: Supplier = {
     id: 0,

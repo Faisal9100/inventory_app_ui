@@ -8,20 +8,19 @@ import { LocalhostApiService } from './localhost-api.service';
 })
 export class AllpurchasesService {
   constructor(public http: HttpClient,public api:LocalhostApiService) {}
-  // public ip_address='127.0.0.1:8000'
-  ip_address = '127.0.0.1:8000';
-  public supplier_url = 'http://' + this.api.localhost + '/inventory/Suppliers/';
+ 
+  public supplier_url =  this.api.localhost + '/inventory/Suppliers/';
 
-  public url = 'http://' + this.api.localhost + '/inventory/stocks_purchase';
+  public url =  this.api.localhost + '/inventory/stocks_purchase';
 
   public stock_url =
-    'http://' +
+    
     this.api.localhost +
     'inventory/stocks_purchase/${purchaseId}/stocks';
 
   public warehouse_url = 'http://'+this.api.localhost+'/inventory/warehouses/';
 
-  public product_url = 'http://' + this.api.localhost + '/inventory/products/';
+  public product_url =  this.api.localhost + '/inventory/products/';
 
   getAllPurchase(): Observable<any> {
     return this.http.get<any>(this.url);

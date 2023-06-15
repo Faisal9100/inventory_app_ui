@@ -34,7 +34,7 @@ export class SupplierComponent {
   id = 'pagination';
   closeResult: any;
 
-  public url = 'http://' + this.api.localhost + '/inventory/Suppliers/';
+  public url = this.api.localhost + '/inventory/Suppliers/';
   suppliers: any[] = [];
   supplier: Supplier = {
     id: 0,

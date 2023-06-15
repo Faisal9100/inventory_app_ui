@@ -172,7 +172,7 @@ export class CategoriesComponent {
   }
   taskToEdit: any;
 
-  public url = "http://" + this.api.localhost +"/inventory/categories/";
+  public url =  this.api.localhost +"/inventory/categories/";
 
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);

@@ -9,7 +9,7 @@ import { LocalhostApiService } from './localhost-api.service';
 export class ProductService {
 
   constructor(public http: HttpClient,public api:LocalhostApiService) {}
-  public url = 'http://' + this.api.localhost+ '/inventory/products/';
+  public url =  this.api.localhost+ '/inventory/products/';
 
   getProducts(): Observable<any> {
     return this.http.get<any>(this.url);

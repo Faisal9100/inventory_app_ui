@@ -20,15 +20,15 @@ export class AccountlayerService {
   pages: number[] = [];
   totalItems: any;
   itemsPerPage: any;
-  public ip_address = '127.0.0.1:8000';
+ 
 
   selectedMainLayer: any;
 
-  public url = 'http://' + this.api.localhost + '/inventory/accounts';
+  public url =  this.api.localhost + '/inventory/accounts';
 
-  public url_layer2 = 'http://' + this.api.localhost + '/inventory/layer1s';
+  public url_layer2 =  this.api.localhost + '/inventory/layer1s';
 
-  private url_layer1 = 'http://' + this.api.localhost + '/inventory/layer1s';
+  private url_layer1 =  this.api.localhost + '/inventory/layer1s';
 
   constructor(private http: HttpClient, public api: LocalhostApiService) {}
 

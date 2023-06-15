@@ -175,7 +175,7 @@ export class AllSaleComponent {
   getStockList(id: number) {
     this.isLoading = true; // Set isLoading to true
     this.http
-      .get(`http://` + this.api.localhost + `/inventory/sales/${id}/sale_items`)
+      .get(this.api.localhost + `/inventory/sales/${id}/sale_items`)
       .subscribe((response: any) => {
         this.stocks = response.results;
         console.log(this.stocks);
@@ -241,11 +241,7 @@ export class AllSaleComponent {
 
   getProductById(warehouseId: number) {
     this.http
-      .get(
-        `http://` +
-          this.api.localhost +
-          `/inventory/warehouses/${warehouseId}/stocks/`
-      )
+      .get(this.api.localhost + `/inventory/warehouses/${warehouseId}/stocks/`)
       .subscribe((resp: any) => {
         this.productSale = resp['results'];
         console.log(this.productSale);
@@ -371,10 +367,7 @@ export class AllSaleComponent {
     };
 
     this.http
-      .post<{ id: number }>(
-        'http://' + this.api.localhost + '/inventory/sales/',
-        payload
-      )
+      .post<{ id: number }>(this.api.localhost + '/inventory/sales/', payload)
       .subscribe(
         (response) => {
           console.log(response);
@@ -408,13 +401,7 @@ export class AllSaleComponent {
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
         this.http
-          .delete(
-            'http://' +
-              this.api.localhost +
-              '/inventory/sales/' +
-              purchaseId +
-              '/'
-          )
+          .delete(this.api.localhost + '/inventory/sales/' + purchaseId + '/')
           .subscribe(
             () => {
               Swal.fire(
@@ -460,7 +447,7 @@ export class AllSaleComponent {
     return new Promise((resolve, reject) => {
       this.http
         .post(
-          `http://` + this.api.localhost + `/inventory/sales/${id}/sale_items/`,
+          this.api.localhost + `/inventory/sales/${id}/sale_items/`,
           product
         )
         .subscribe(
@@ -504,8 +491,7 @@ export class AllSaleComponent {
       if (result.isConfirmed) {
         this.http
           .delete(
-            `http://` +
-              this.api.localhost +
+            this.api.localhost +
               `/inventory/sales/${this.stock_list_id?.id}/sale_items/${saleId}/`
           )
           .subscribe(
@@ -614,8 +600,7 @@ export class AllSaleComponent {
 
     this.http
       .post(
-        `http://` +
-          this.api.localhost +
+        this.api.localhost +
           `/inventory/sales/${this.update_purchase_id}/sale_items/`,
         requestBody
       )

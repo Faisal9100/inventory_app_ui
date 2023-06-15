@@ -8,19 +8,23 @@ import { LocalhostApiService } from './localhost-api.service';
 export class WarehouseServiceService {
   public ip_address = '127.0.0.1:8000';
 
-  constructor(private httpService: HttpClient,public api:LocalhostApiService) {}
+  constructor(
+    private httpService: HttpClient,
+    public api: LocalhostApiService
+  ) {}
   getData() {
     const token = localStorage.getItem('token');
     const accessKey = 'access'; // Replace with your access key
-  
+
     const headers = new HttpHeaders({
-      'Authorization': 'JWT ' + token,
-      'access-key': accessKey
+      Authorization: 'JWT ' + token,
+      'access-key': accessKey,
     });
-  
-    const options = { headers }
+
+    const options = { headers };
     return this.httpService.get(
-      'http://' + this.api.localhost+ '/inventory/warehouses/',options
+      this.api.localhost + '/inventory/warehouses/',
+      options
     );
   }
 }
