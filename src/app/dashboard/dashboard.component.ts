@@ -174,4 +174,5 @@ export class DashboardComponent implements OnInit {
       this.chart.destroy();
     }
   }
+  
 }

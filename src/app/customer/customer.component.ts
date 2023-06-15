@@ -31,10 +31,10 @@ export class CustomerComponent {
   pages: number[] = [];
   id = 'pagination';
   closeResult: any;
-  
+
   totalItems: any;
   itemsPerPage: any;
-  public url =  this.api.localhost + '/inventory/customers/';
+  public url = this.api.localhost + '/inventory/customers/';
   suppliers: any[] = [];
   supplier: Supplier = {
     id: 0,
@@ -47,7 +47,12 @@ export class CustomerComponent {
     credit: 0,
     debit: 0,
   };
-  constructor(private modalService: NgbModal, public http: HttpClient,public customerservice:CustomerService,public api:LocalhostApiService) {
+  constructor(
+    private modalService: NgbModal,
+    public http: HttpClient,
+    public customerservice: CustomerService,
+    public api: LocalhostApiService
+  ) {
     this.getCustomers();
   }
   ngOnInit(): void {
@@ -107,7 +112,7 @@ export class CustomerComponent {
         const supplierAddress = (<HTMLInputElement>(
           document.getElementById('supplierAddress')
         )).value;
-       
+
         const supplierStatus = (<HTMLSelectElement>(
           document.getElementById('supplierStatus')
         )).value;
@@ -120,14 +125,10 @@ export class CustomerComponent {
 
         if (!supplierTitle) {
           Swal.showValidationMessage('Customer title is required');
-        }
-        else if (!supplierContact){
+        } else if (!supplierContact) {
           Swal.showValidationMessage('Customer Contact is required');
-
-        }
-       else if (!supplierEmail){
+        } else if (!supplierEmail) {
           Swal.showValidationMessage('Customer Email is required');
-
         } else {
           const newsupplier = {
             title: supplierTitle,
@@ -142,30 +143,30 @@ export class CustomerComponent {
               Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
             }),
           };
-          this.http.post<Supplier>(this.url, newsupplier,httpOptions).subscribe(() => {
-            this.newsupplier = {
-              title: '',
-              address: '',
-              status: '',
-              contact: '',
-              email: '',
-            };
-            this.getCustomers();
-            Swal.fire('Added!', 'Your Customer has been added.', 'success');
-          });
+          this.http
+            .post<Supplier>(this.url, newsupplier, httpOptions)
+            .subscribe(() => {
+              this.newsupplier = {
+                title: '',
+                address: '',
+                status: '',
+                contact: '',
+                email: '',
+              };
+              this.getCustomers();
+              Swal.fire('Added!', 'Your Customer has been added.', 'success');
+            });
         }
       },
     });
   }
 
- 
-
   // <--------------------------------------- code for getting customers ------------------------------------>
 
-  getCustomers(){
-    this.customerservice.getAllPurchase().subscribe(response =>{
+  getCustomers() {
+    this.customerservice.getAllPurchase().subscribe((response) => {
       this.suppliers = <any>response.results;
-    })
+    });
   }
 
   onPageChange(event: any) {
@@ -201,7 +202,7 @@ export class CustomerComponent {
     this.supplierToEdit = newsupplier;
   }
   // <--------------------------------------- code for updating customers ------------------------------------>
- 
+
   openUpdateModal(supplier: Supplier) {
     Swal.fire({
       title: 'Update Customer Detail',
@@ -268,9 +269,9 @@ export class CustomerComponent {
           
           <div class="form-group overflow-hidden">
             <label for="supplierAddress" class="float-start my-2">Address:</label>
-            <textarea class="form-control" id="supplierAddress" placeholder="Supplier Address"  rows="3" value="${
+            <input class="form-control" id="supplierAddress" placeholder="Supplier Address"  rows="3" value="${
               supplier.address
-            }"></textarea>
+            }"></input>
           </div><br>
           </div>
       
@@ -286,7 +287,7 @@ export class CustomerComponent {
         const updatedAddress = (<HTMLInputElement>(
           document.querySelector('#supplierAddress')
         )).value;
-        
+
         const updatedBalance = parseInt(
           (<HTMLInputElement>document.querySelector('#supplierBalance')).value
         );
@@ -302,36 +303,65 @@ export class CustomerComponent {
         const updatedEmail = (<HTMLInputElement>(
           document.querySelector('#supplierEmail')
         )).value;
-       
+
         const updatedStatus =
-          (<HTMLSelectElement>document.querySelector('.swal2-select')).value ===
-          'true';
-          const httpOptions = {
-            headers: new HttpHeaders({
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
-            }),
-          };
+          (<HTMLSelectElement>document.querySelector('#supplierStatus'))
+            .value === 'true';
+        const httpOptions = {
+          headers: new HttpHeaders({
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+          }),
+        };
         this.http
-          .put(`${this.url}${supplier.id}/`, {
-            title: updatedTitle,
-            address: updatedAddress,
-            contact: updatedContact,
-            email: updatedEmail,
-            
-            status: updatedStatus,
-          })
-          .subscribe(() => {
-            console.log(
-              `Customer with ID ${supplier.id} updated successfully!`
-            );
-            this.getCustomers();
-            Swal.fire(
-              'Updated!',
-              'Your Customer list has been updated.',
-              'success'
-            );
-          });
+          .put(
+            `${this.url}${supplier.id}/`,
+            {
+              title: updatedTitle,
+              address: updatedAddress,
+              contact: updatedContact,
+              email: updatedEmail,
+              status: updatedStatus,
+            },
+            httpOptions
+          )
+          .subscribe(
+            () => {
+              console.log(
+                `Customer with ID ${supplier.id} updated successfully!`
+              );
+              this.getCustomers();
+              Swal.fire(
+                'Updated!',
+                'Your Customer list has been updated.',
+                'success'
+              );
+            },
+            (error) => {
+              console.error(error);
+              let errorMessage = 'Failed to update customer details.';
+
+              if (error && error.error) {
+                const fieldErrors = error.error;
+                const errorFields = Object.keys(fieldErrors);
+
+                if (errorFields.length > 0) {
+                  errorMessage = '';
+
+                  for (const field of errorFields) {
+                    const fieldError = fieldErrors[field];
+                    errorMessage += `${field}: ${fieldError.join('. ')}\n`;
+                  }
+                }
+              }
+
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+              });
+            }
+          );
       }
     });
   }
@@ -374,15 +404,14 @@ export class CustomerComponent {
     });
     doc.save('all_customers.pdf');
   }
-  p:any;
-  title:any;
+  p: any;
+  title: any;
   Search() {
     if (this.title == '') {
       this.ngOnInit();
     } else {
       this.suppliers = this.suppliers.filter((res) => {
-        return res.title
-          .match(this.title);
+        return res.title.match(this.title);
       });
     }
   }

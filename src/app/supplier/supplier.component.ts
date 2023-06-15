@@ -23,7 +23,6 @@ export interface Supplier {
   styleUrls: ['./supplier.component.css'],
 })
 export class SupplierComponent {
- 
   supplierToEdit: any;
   pageSize = 10;
   currentPage = 1;
@@ -51,12 +50,13 @@ export class SupplierComponent {
     private modalService: NgbModal,
     public http: HttpClient,
     public supplierService: SupplierService,
-    public api:LocalhostApiService
+    public api: LocalhostApiService
   ) {
     this.getsupplier();
   }
   ngOnInit(): void {
     this.getsupplier();
+
   }
 
   newsupplier = {
@@ -66,77 +66,9 @@ export class SupplierComponent {
     contact: '',
     email: '',
   };
-  // addSupplier() {
-  //   Swal.fire({
-  //     title: 'Add Supplier',
-  //     html: `
-  //        <label>title:</label>
-  //         <input type="text" id="supplierTitle" class="swal2-input" placeholder="Supplier Title">
 
-  //         <label>Address:</label>
-  //         <input type="text" id="supplierAddress" class="swal2-input" placeholder="Supplier Address ">
+  // <========================== CODE FOR ADDING SUPPLIER ====================================>
 
-  //         <label>Balance:</label>
-  //         <input type="text" id="supplierBalance" class="swal2-input" placeholder="Supplier Balance">
-
-  //         <label>Status:</label>
-
-  //         <select id="supplierStatus" class="swal2-select">
-  //       <option value="true">Enabled</option>
-  //       <option value="false">Disabled</option>
-  //     </select>
-
-  //         <br><label>Contact:</label>
-  //         <input type="text" id="supplierContact" class="swal2-input" placeholder="Supplier Contact">
-
-  //         <br><label>Email:</label>
-  //         <input type="text" id="supplierEmail" class="swal2-input" placeholder="Supplier Email">
-
-  //         `,
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Add',
-  //     preConfirm: () => {
-  //       const supplierTitle = (<HTMLInputElement>(
-  //         document.getElementById('supplierTitle')
-  //       )).value;
-  //       const supplierAddress = (<HTMLInputElement>(
-  //         document.getElementById('supplierAddress')
-  //       )).value;
-  //       const supplierBalance = (<HTMLInputElement>(
-  //         document.getElementById('supplierBalance')
-  //       )).value;
-  //       const supplierStatus = (<HTMLSelectElement>(
-  //         document.getElementById('supplierStatus')
-  //       )).value;
-  //       const supplierContact = (<HTMLInputElement>(
-  //         document.getElementById('supplierContact')
-  //       )).value;
-  //       const supplierEmail = (<HTMLInputElement>(
-  //         document.getElementById('supplierEmail')
-  //       )).value;
-
-  //       if (!supplierTitle) {
-  //         Swal.showValidationMessage('Supplier title is required');
-  //       } else {
-  //         const newsupplier = {
-  //           title: supplierTitle,
-  //         };
-  //         this.http.post<Supplier>(this.url, newsupplier).subscribe(() => {
-  //           this.newsupplier = {
-  //             title: '',
-  //             address: '',
-  //             balance: '',
-  //             status: '',
-  //             contact: '',
-  //             email: '',
-  //           };
-  //           this.getsupplier();
-  //           Swal.fire('Added!', 'Your Supplier has been added.', 'success');
-  //         });
-  //       }
-  //     },
-  //   });
-  // }
   addSupplier() {
     Swal.fire({
       title: 'Add Supplier',
@@ -191,17 +123,16 @@ export class SupplierComponent {
 
         if (!supplierTitle) {
           Swal.showValidationMessage('Supplier Title is required');
-        } 
+        }
         if (!supplierContact) {
           Swal.showValidationMessage('Supplier Contact is required');
-        } 
+        }
         if (!supplierAddress) {
           Swal.showValidationMessage('Supplier Address is required');
-        } 
+        }
         if (!supplierEmail) {
           Swal.showValidationMessage('Supplier Email is required');
-        } 
-        else {
+        } else {
           const newsupplier = {
             title: supplierTitle,
             address: supplierAddress,
@@ -225,6 +156,8 @@ export class SupplierComponent {
     });
   }
 
+  // <========================== CODE FOR GETTING SUPPLIER ====================================>
+
   getsupplier() {
     let skip = (this.currentPage - 1) * this.pageSize;
 
@@ -244,6 +177,9 @@ export class SupplierComponent {
     this.currentPage = event;
     this.getsupplier();
   }
+
+  // <========================== CODE FOR DELETING SUPPLIER ====================================>
+
   deleteSupplier(id: number) {
     Swal.fire({
       title: 'Are you sure?',
@@ -269,94 +205,9 @@ export class SupplierComponent {
     this.modalService.open(allcontent);
     this.supplierToEdit = newsupplier;
   }
-  // openUpdateModal(supplier: Supplier) {
-  //   Swal.fire({
-  //     title: 'Update Supplier Detail',
-  //     html: `
-  //       <label>Title:</label>
-  //       <input type="text" id="supplierTitle" class="swal2-input swal1" placeholder="Supplier Name"  value="${
-  //         supplier.title
-  //       }">
 
-  //       <br><label>Address:</label>
-  //       <input type="text" id="supplierAddress" class="swal2-input swal2" placeholder="Supplier Address"  value="${
-  //         supplier.address
-  //       }">
+  // <========================== CODE FOR UPDATING SUPPLIER ====================================>
 
-  //       <br><label>Balance:</label>
-  //       <input type="text" id="supplierBalance" class="swal2-input swal3" placeholder="Supplier Balance"  value="${
-  //         supplier.balance
-  //       }">
-
-  //       <label>Status:</label>
-  //       <select id="supplierStatus" class="swal2-select">
-  //         <option value="true" ${
-  //           supplier.status ? 'selected' : ''
-  //         }>Enabled</option>
-  //         <option value="false" ${
-  //           !supplier.status ? 'selected' : ''
-  //         }>Disabled</option>
-  //       </select>
-
-  //       <br><label>Contact:</label>
-  //       <input type="text" id="supplierContact" class="swal2-input swal5" placeholder="Supplier Contact"  value="${
-  //         supplier.contact
-  //       }">
-
-  //       <br><label>Email:</label>
-  //       <input type="text" id="supplierEmail" class="swal2-input swal4" placeholder="Supplier Email"  value="${
-  //         supplier.email
-  //       }">
-
-  //     `,
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Update',
-  //     cancelButtonText: 'Cancel',
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       const updatedTitle = (<HTMLInputElement>(
-  //         document.querySelector('.swal1')
-  //       )).value;
-  //       const updatedAddress = (<HTMLInputElement>(
-  //         document.querySelector('.swal2')
-  //       )).value;
-  //       const updatedBalance = parseInt(
-  //         (<HTMLInputElement>document.querySelector('.swal3')).value
-  //       );
-
-  //       const updatedContact = (<HTMLInputElement>(
-  //         document.querySelector('.swal5')
-  //       )).value;
-  //       const updatedEmail = (<HTMLInputElement>(
-  //         document.querySelector('.swal4')
-  //       )).value;
-  //       const updatedStatus =
-  //         (<HTMLSelectElement>document.querySelector('.swal2-select')).value ===
-  //         'true';
-
-  //       this.http
-  //         .put(`${this.url}${supplier.id}/`, {
-  //           title: updatedTitle,
-  //           address: updatedAddress,
-  //           contact: updatedContact,
-  //           email: updatedEmail,
-  //           balance: updatedBalance,
-  //           status: updatedStatus,
-  //         })
-  //         .subscribe(() => {
-  //           console.log(
-  //             `supplier with ID ${supplier.id} updated successfully!`
-  //           );
-  //           this.getsupplier();
-  //           Swal.fire(
-  //             'Updated!',
-  //             'Your Supplier list has been updated.',
-  //             'success'
-  //           );
-  //         });
-  //     }
-  //   });
-  // }
   openUpdateModal(supplier: Supplier) {
     Swal.fire({
       title: 'Update Supplier Detail',
@@ -422,9 +273,9 @@ export class SupplierComponent {
           </div><br>
           <div class="form-group overflow-hidden">
             <label for="supplierAddress" class="float-start my-2">Address:</label>
-            <textarea class="form-control" id="supplierAddress" placeholder="Supplier Address"  rows="3" value="${
+            <input class="form-control" id="supplierAddress" placeholder="Supplier Address"  rows="3" value="${
               supplier.address
-            }"></textarea>
+            }"></input>
           </div><br>
           </div>
           `,
@@ -439,6 +290,7 @@ export class SupplierComponent {
         const updatedAddress = (<HTMLInputElement>(
           document.querySelector('#supplierAddress')
         )).value;
+
         const updatedBalance = parseInt(
           (<HTMLInputElement>document.querySelector('#supplierBalance')).value
         );
@@ -462,21 +314,37 @@ export class SupplierComponent {
             balance: updatedBalance,
             status: updatedStatus,
           })
-          .subscribe(() => {
-            console.log(
-              `supplier with ID ${supplier.id} updated successfully!`
-            );
-            this.getsupplier();
-            Swal.fire(
-              'Updated!',
-              'Your Supplier list has been updated.',
-              'success'
-            );
-          });
+          .subscribe(
+            () => {
+              console.log(
+                `Supplier with ID ${supplier.id} updated successfully!`
+              );
+              this.getsupplier();
+              Swal.fire(
+                'Updated!',
+                'Your Supplier list has been updated.',
+                'success'
+              );
+            },
+            (error) => {
+              console.error(error);
+              let errorMessage = 'Failed to update supplier details.';
+
+              if (error && error.error && error.error.address) {
+                errorMessage = error.error.address.join('. ');
+              }
+
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: errorMessage,
+              });
+            }
+          );
       }
     });
   }
-
+  // <========================== CODE FOR PRINT RECIEPT====================================>
   generatePDF() {
     const columns2 = { title: 'All Suppliers list' };
 
@@ -515,6 +383,9 @@ export class SupplierComponent {
   }
   p: any;
   title: any;
+
+  // <========================== CODE FOR SEARCHING SUPPLIER ====================================>
+
   Search() {
     if (this.title == '') {
       this.ngOnInit();
@@ -524,4 +395,6 @@ export class SupplierComponent {
       });
     }
   }
+
+
 }
