@@ -59,7 +59,11 @@
         </td>
 
         <td>
-          <button class="btn btn-outline-primary mx-2 my-1">
+          <button
+            class="btn btn-outline-primary mx-2 my-1"
+            (click)="open(content, staff)"
+            (click)="update_product(staff)"
+          >
             <i class="bi bi-pencil-square"></i>
           </button>
           <button
@@ -132,17 +136,6 @@
             >
           </ng-select>
         </div>
-        <!-- <div class="col-sm">
-          <label for="isStaff" class="py-2">Is Staff:</label>
-          <ng-select
-            id="isStaff"
-            class="form-ng-select"
-            formControlName="isStaff"
-          >
-            <ng-option class=".ng-dropdown-panel" value="1">Staff</ng-option>
-            <ng-option class=".ng-dropdown-panel" value="0">Not Staff</ng-option>
-          </ng-select>
-        </div> -->
         <div class="col-sm">
           <label for="status" class="py-2">Status:</label>
           <ng-select
@@ -161,6 +154,93 @@
   <div class="modal-footer">
     <button type="button" class="btn btn-outline-dark" (click)="onSubmit()">
       Add Staff
+    </button>
+    <button type="button" class="btn btn-outline-dark" (click)="c('close')">
+      Close
+    </button>
+  </div>
+</ng-template>
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title text-center" id="modal-basic-title">Add Staff!</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="col-sm">
+      <form [formGroup]="purchaseForm2">
+        <label for="" class="p-2">Username:</label>
+        <input
+          type="text"
+          class="form-control"
+          name="username"
+          formControlName="username"
+        />
+        <label for="" class="p-2">First Name:</label>
+        <input
+          type="text"
+          class="form-control"
+          name="firstname"
+          formControlName="firstname"
+        />
+        <label for="" class="p-2">Last Name:</label>
+        <input
+          type="text"
+          class="form-control"
+          name="lastname"
+          formControlName="lastname"
+        />
+        <label for="" class="p-2">Email:</label>
+        <input
+          type="email"
+          class="form-control"
+          name="email"
+          formControlName="email"
+        />
+        <label for="" class="p-2">Password:</label>
+        <input
+          type="password"
+          class="form-control"
+          name="password"
+          formControlName="password"
+        />
+        <div class="col-sm">
+          <label for="permission" class="py-2">Permission Group:</label>
+          <ng-select
+            id="permission"
+            class="form-ng-select"
+            formControlName="permission"
+          >
+            <ng-option
+              [value]="permission.id"
+              class=".ng-dropdown-panel"
+              *ngFor="let permission of permissions"
+              >{{ permission.name }}</ng-option
+            >
+          </ng-select>
+        </div>
+        <div class="col-sm">
+          <label for="status" class="py-2">Status:</label>
+          <ng-select
+            id="status"
+            class="form-ng-select"
+            formControlName="status"
+          >
+            <ng-option class="ng-dropdown-panel" value="1">Active</ng-option>
+            <ng-option class="ng-dropdown-panel" value="0">Inactive</ng-option>
+          </ng-select>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="onSubmit()">
+      Update Staff
     </button>
     <button type="button" class="btn btn-outline-dark" (click)="c('close')">
       Close

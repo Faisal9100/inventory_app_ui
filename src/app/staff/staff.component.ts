@@ -16,18 +16,18 @@ export class StaffComponent implements OnInit {
     private fb: FormBuilder,
     public api: LocalhostApiService,
     private modalService: NgbModal
-  ) {
-    this.getStaff();
-  }
+  ) {}
   staffs: any[] = [];
   getStaff() {
     this.http
       .get<any>('http://' + this.api.localhost + '/inventory/staff_members/')
       .subscribe((response) => {
         this.staffs = response;
+        console.log(this.staffs);
       });
   }
   purchaseForm: any = FormGroup;
+  purchaseForm2: any = FormGroup;
 
   ngOnInit(): void {
     this.purchaseForm = this.fb.group({
@@ -40,7 +40,18 @@ export class StaffComponent implements OnInit {
       password: ['', Validators.required],
       // isStaff: ['', Validators.required],
     });
+    this.purchaseForm2 = this.fb.group({
+      username: ['', Validators.required],
+      firstname: ['', Validators.required],
+      lastname: ['', Validators.required],
+      email: ['', Validators.required],
+      status: ['', Validators.required],
+      permission: ['', Validators.required],
+      password: ['', Validators.required],
+      // isStaff: ['', Validators.required],
+    });
     this.getPermission();
+    this.getStaff();
   }
   update_purchase_id: any;
   openAddProductModal(content3: any, item: any) {
@@ -158,4 +169,51 @@ export class StaffComponent implements OnInit {
       }
     });
   }
+  // open(content: any, selectedId: number) {
+  //   this.modalService.open(content);
+  //   const selectedStaff = this.permissions.find(
+  //     (permission) => permission.id === selectedId
+  //   );
+  //   const formData = new FormData();
+  //   formData.append('username', this.purchaseForm2.get('username')?.value);
+  //   formData.append('firstname', this.purchaseForm2.get('first_name')?.value);
+  //   formData.append('last_name', this.purchaseForm2.get('last_name')?.value);
+  //   formData.append('email', this.purchaseForm2.get('email')?.value);
+  //   formData.append('permission', this.purchaseForm2.get('permission')?.value);
+  //   formData.append('status', this.purchaseForm2.get('status')?.value);
+  //   console.log(formData);
+  // }
+  open(content: any, selectedId: number) {
+    this.modalService.open(content);
+    const selectedStaff = this.permissions.find(
+      (permission) => permission.id === selectedId
+    );
+    if (selectedStaff) {
+      if ('username' in selectedStaff) {
+        this.purchaseForm2.patchValue({
+          username: selectedStaff.username,
+          firstname: selectedStaff.firstname,
+          lastname: selectedStaff.lastname,
+          email: selectedStaff.email,
+          password: selectedStaff.password,
+          permission: selectedStaff.permission,
+          status: selectedStaff.status,
+        });
+      } else {
+        console.error(
+          'Username property not found in selectedStaff object:',
+          selectedStaff
+        );
+      }
+    } else {
+      console.error('Selected staff not found:', selectedId);
+    }
+    console.log(this.purchaseForm2.value);
+  }
+
+  updateProduct: any;
+  update_product(staff: any) {
+    this.updateProduct = staff;
+  }
+  product: any;
 }

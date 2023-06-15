@@ -79,7 +79,7 @@
     ></button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="Permissions-form">
+    <!-- <form [formGroup]="Permissions-form"> -->
 
         <label for="name">Name</label>
         <input type="text" class="form-control" formControlName="name" />
@@ -91,14 +91,14 @@
             <div class="data-card-body">
                 <ul>
                     <li *ngFor="let item of permissions">
-                        <span class="data-item-name" [value]="item.id" form-control-name="permission"
+                        <span class="data-item-name"  form-control-name="permission"
                         ><input type="checkbox" class="form-check-inline" form-control-name="check" [value]="item.id"  />{{
                             item.model
                         }}</span
                         >
                     </li>
                 </ul>
-            </form>
+            <!-- </form> -->
       </div>
     </div>
   </div>

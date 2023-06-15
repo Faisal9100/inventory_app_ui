@@ -72,24 +72,24 @@
         <td>{{ item.date }}</td>
         <td>
           <button
-            class="btn btn-outline-success mx-1"
+            class="btn btn-outline-success mx-1 my-1"
             (click)="openXl2(content2)"
             (click)="getStockList(item.id)"
             (click)="setUpdatePurchaseId(item)"
-            >
+          >
             <i class="bi bi-eye-fill"></i>
           </button>
           <button
-          type="button"
-          class="btn btn-outline-dark"
-          (click)="openAddProductModal(content3, item)"
+            type="button"
+            class="btn btn-outline-dark"
+            (click)="openAddProductModal(content3, item)"
             (change)="onWarehouseChange(selectedWarehouse)"
           >
             <i class="bi bi-plus-circle"></i>
           </button>
 
           <button
-            class="btn btn-outline-danger mx-1"
+            class="btn btn-outline-danger mx-1 my-1"
             (click)="deleteSale(item.id)"
           >
             <i class="bi bi-trash3-fill"></i>
@@ -369,8 +369,7 @@
             <button
               class="btn btn-outline-danger"
               (click)="deleteStockList(stock.id)"
-              
-              >
+            >
               <i class="bi bi-trash3-fill"></i>
             </button>
           </td>
@@ -396,78 +395,95 @@
     ></button>
   </div>
   <div class="modal-body">
-    <div class="col-sm">
-      <label for="warehouse" class="py-2">Warehouse*:</label>
-      <ng-select
-        id="warehouse"
-        class="form-ng-select"
-        [(ngModel)]="selectedWarehouse"
-        (change)="onWarehouseChange(selectedWarehouse)"
-      >
-    
-        <ng-option class="ng-dropdown-panel" [value]="warehouse_ID">
-          {{ warehouse_Name }}
-        </ng-option>
-      </ng-select>
-    </div>
-    <div class="col-sm">
-      <label for="selectedProduct" class="py-2">Products*:</label>
-      <select
-        class="form-select"
-        id="selectedProduct"
-        #product
-        (change)="getProductTotalQuantity($event)"
-        (change)="totalproductTotalPrice($event)"
-        #update_stock_product
-      >
-        <option
-          class="option"
-          *ngFor="let product of productSale"
-          [value]="product.product_id"
+    <form [formGroup]="updateSaleForm">
+      <div class="col-sm">
+        <label for="warehouse" class="py-2">Warehouse*:</label>
+        <ng-select
+          id="warehouse"
+          class="form-ng-select"
+          formControlName="warehouse"
+          [(ngModel)]="selectedWarehouse"
+          (change)="onWarehouseChange(selectedWarehouse)"
         >
-          {{ product.product_name }}
-          {{ product.quantity }}
-        </option>
-      </select>
-    </div>
+          <ng-option class="ng-dropdown-panel" [value]="warehouse_ID">
+            {{ warehouse_Name }}
+          </ng-option>
+        </ng-select>
+      </div>
+      <div class="col-sm">
+        <label for="selectedProduct" class="py-2">Products*:</label>
+        <select
+          class="form-select"
+          id="selectedProduct"
+          formControlName="selectedProduct"
+          (change)="getProductTotalQuantity($event)"
+          (change)="totalproductTotalPrice($event)"
+          #update_stock_product
+        >
+          <option
+            class="option"
+            *ngFor="let product of productSale"
+            [value]="product.product_id"
+          >
+            {{ product.product_name }}
+            {{ product.quantity }}
+          </option>
+        </select>
+      </div>
 
-    <div>
-      <label for="" class="p-2">Quantity</label>
+      <div>
+        <label for="quantity" class="p-2">Quantity</label>
+        <input
+          type="number"
+          class="form-control"
+          id="quantity"
+          formControlName="quantity"
+          [(ngModel)]="quantity"
+          (input)="checkQuantity()"
+        />
+        <p class="" *ngIf="isQuantityInvalid" style="color: tomato">
+          Quantity cannot be greater than the total product quantity.
+        </p>
+        <p class="">
+          Total quantity of selected product:
+          <span style="color: tomato">{{ totalproductQuantity }}</span>
+        </p>
+      </div>
+
+      <label for="price" class="p-2">Price</label>
       <input
         type="number"
         class="form-control"
-        id="quantity"
-        [(ngModel)]="quantity"
-        #q
+        id="price"
+        formControlName="price"
+        #p
+        (input)="checkPrice()"
       />
-      <p class="">
-        Total quantity of selected product:
-        <span style="color: tomato">{{ totalproductQuantity }}</span>
+      <p class="" *ngIf="isPriceInvalid" style="color: tomato">
+        Price cannot be less than the default product price.
       </p>
-    </div>
+      <p class="">
+        Default Purchase Price:
+        <span style="color: tomato">{{ totalproductPrice }}</span>
+      </p>
 
-    <label for="" class="p-2">Price</label>
-    <input type="number" class="form-control" #p />
+      <label for="" class="p-2">date</label>
 
-    <p class="">
-      Default Purchase Price:
-      <span style="color: tomato">{{ totalproductPrice }}</span>
-    </p>
-    <label for="" class="p-2">date</label>
-
-    <input
-      type="date"
-      class="form-control"
-      #update_stock_date
-      [value]="currentDate"
-    />
+      <input
+        type="date"
+        class="form-control"
+        id="date"
+        formControlName="date"
+        [value]="currentDate"
+      />
+    </form>
   </div>
 
   <div class="modal-footer">
     <button
       type="button"
       class="btn btn-outline-dark"
-      (click)="postUpdateStock(update_stock_product, q, p, update_stock_date)"
+      (click)="postUpdateStock()"
     >
       Add Product
     </button>

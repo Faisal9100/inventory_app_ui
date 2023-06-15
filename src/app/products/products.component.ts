@@ -345,12 +345,12 @@ export class ProductsComponent {
   update_product(product: any) {
     this.updateProduct = product;
   }
+  product: any;
 
   onFileSelected2(event: any) {
     this.selectedFile = event.target.files[0];
     console.log(this.selectedFile);
   }
-  product: any;
 
   //  code for updatting product
 

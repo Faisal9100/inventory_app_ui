@@ -15,6 +15,7 @@ import { SupplierService } from '../supplier.service';
 import Swal from 'sweetalert2';
 import { CustomerService } from '../customer.service';
 import { LocalhostApiService } from '../localhost-api.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 export interface PurchaseData {
   id: number;
@@ -141,7 +142,15 @@ export class AllSaleComponent {
     config.backdrop = 'static';
     config.keyboard = false;
     this.currentDate = this.getCurrentDate();
+    this.updateSaleForm = new FormGroup({
+      warehouse: new FormControl(),
+      selectedProduct: new FormControl(),
+      quantity: new FormControl(),
+      price: new FormControl(),
+      date: new FormControl(),
+    });
   }
+  updateSaleForm: any = FormGroup;
 
   ngOnInit(): void {
     this.getWarehouse();
@@ -477,7 +486,7 @@ export class AllSaleComponent {
   }
 
   // <----------------------------- code for deleting stock from sale list ------------------------------------------->
-  
+
   saleId: any;
   stock_list_id: any;
   setUpdatePurchaseId(item: number) {
@@ -501,6 +510,7 @@ export class AllSaleComponent {
           )
           .subscribe(
             () => {
+              // this.addProduct();
               Swal.fire(
                 'Deleted!',
                 'Your product has been deleted.',
@@ -551,8 +561,8 @@ export class AllSaleComponent {
   // <-------------------------- CODE FOR UPDATING STOCK IN SALE LIST---------------------------------------------->
 
   selectedProductQuantity: number = 0;
-  postUpdateStock(product: any, q: any, p: any, date: any) {
-    if (!product.value || !q.value || !p.value || !date.value) {
+  postUpdateStock() {
+    if (this.updateSaleForm.invalid) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -560,13 +570,10 @@ export class AllSaleComponent {
       });
       return;
     }
-    const selectedProductId = product.value;
-    const selectedProductQuantity = q.value;
-    const selectedProductPrice = p.value;
 
-    // const m: any = this.productSale.find(
-    //   (item) => item.product_id == product.value
-    // );
+    const selectedProductId = this.updateSaleForm.get('selectedProduct')?.value;
+    const selectedProductQuantity = this.updateSaleForm.get('quantity')?.value;
+    const selectedProductPrice = this.updateSaleForm.get('price')?.value;
 
     const n: any = this.productSale.find(
       (item) => item.product_id == selectedProductId
@@ -591,52 +598,49 @@ export class AllSaleComponent {
       });
       return;
     }
-    if (product && product.id) {
-      const currentDate = new Date().toISOString().split('T')[0];
-      const requestBody = {
-        date: currentDate,
-        product: product.value,
-        quantity: q.value,
-        price: p.value,
-        amount: p.value * q.value,
-        stock: purchase_id,
-      };
-      console.log(requestBody);
 
-      this.http
-        .post(
-          `http://` +
-            this.api.localhost +
-            `/inventory/sales/${this.update_purchase_id}/sale_items/`,
-          requestBody
-        )
-        .subscribe(
-          (response) => {
-            console.log(response);
-            product.id = '';
-            product.value = '';
-            q.value = '';
-            p.value = '';
-            date.value = '';
+    const currentDate = new Date().toISOString().split('T')[0];
+    const requestBody = {
+      date: currentDate,
+      product: this.updateSaleForm.get('selectedProduct')?.value,
+      quantity: this.updateSaleForm.get('quantity')?.value,
+      price: this.updateSaleForm.get('price')?.value,
+      amount:
+        this.updateSaleForm.get('price')?.value *
+        this.updateSaleForm.get('quantity')?.value,
+      stock: purchase_id,
+    };
+    console.log(requestBody);
 
-            this.modalService.dismissAll();
-            Swal.fire({
-              icon: 'success',
-              title: 'Success',
-              text: 'Product added successfully.',
-            });
-          },
-          (error) => {
-            console.error(error);
-            // Handle the error here, show an error message, etc.
-            Swal.fire({
-              icon: 'error',
-              title: 'Error',
-              text: 'Failed to add the product.',
-            });
-          }
-        );
-    }
+    this.http
+      .post(
+        `http://` +
+          this.api.localhost +
+          `/inventory/sales/${this.update_purchase_id}/sale_items/`,
+        requestBody
+      )
+      .subscribe(
+        (response) => {
+          // Reset the form
+          this.updateSaleForm.reset();
+          this.modalService.dismissAll();
+          Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Product added successfully.',
+          });
+          this.addProduct();
+        },
+        (error) => {
+          console.error(error);
+          // Handle the error here, show an error message, etc.
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to add the product.',
+          });
+        }
+      );
   }
 
   //  <--------------------------- CODE FOR GETTING TOTAL QUANTITY ------------------------------------>
@@ -708,7 +712,6 @@ export class AllSaleComponent {
 
   //  <------------------------ CODE FOR GETTING TOTAL PRODUCT QUANTITY ------------------------>
 
-
   getProductQuantity(productId: number) {
     const selectedProduct22 = this.productSale.find(
       (product) => product.product_id === productId
@@ -731,7 +734,6 @@ export class AllSaleComponent {
 
   //  <------------------------ CODE FOR GETTING TOTAL PRODUCT PRICE  ----------------------------->
 
-
   totalproductTotalPrice(event: any) {
     let q: any = this.productSale.find(
       (item) => item.product_id == event.target.value
@@ -746,13 +748,24 @@ export class AllSaleComponent {
     this.getProductPurchase_id = i.purchase_id;
   }
 
- 
-
   selectedProduct22: any;
   quantity22: any;
   producttotalQuantity: number = 0;
   selectedProductPrice: number = 0;
   q: any;
+
+  isQuantityInvalid = false;
+
+  checkQuantity() {
+    const inputQuantity = this.updateSaleForm.get('quantity')?.value;
+    this.isQuantityInvalid = inputQuantity > this.totalproductQuantity;
+  }
+  isPriceInvalid = false;
+
+  checkPrice() {
+    const inputPrice = this.updateSaleForm.get('price')?.value;
+    this.isPriceInvalid = inputPrice < this.totalproductPrice;
+  }
 }
 
 //  <---------------------------SALE ALL WORK END HERE------------------------------------>

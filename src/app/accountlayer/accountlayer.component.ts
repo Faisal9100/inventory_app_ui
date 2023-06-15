@@ -4,6 +4,7 @@ import { AccountlayerService } from '../accountlayer.service';
 import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import { LocalhostApiService } from '../localhost-api.service';
+import { catchError, of } from 'rxjs';
 
 export interface Account {
   id: number;
@@ -623,51 +624,6 @@ export class AccountlayerComponent implements OnInit {
 
   //  <------------------------ CODE FOR ADDING LAYER TWO ACCOUNT  ------------------------>
 
-  // addLayer_two_new_account(selectedLayer2: any) {
-  //   Swal.fire({
-  //     title: 'Add Layer Two',
-  //     html: `
-  //       <div class="form-group">
-  //         <label for="Title" class="float-start my-2">Name:</label>
-  //         <input type="text" id="accountName" class="form-control" placeholder="Name" >
-  //         </div>
-
-  //           `,
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Add',
-  //     preConfirm: () => {
-  //       const accountName = (<HTMLInputElement>(
-  //         document.getElementById('accountName')
-  //       )).value;
-  //       if (!accountName || !selectedLayer2) {
-  //         Swal.showValidationMessage(
-  //           'Layer Two Name is required and Layer One must be selected.'
-  //         );
-  //       } else {
-  //         const newLayeraccount = {
-  //           name: accountName,
-  //         };
-  //         this.http
-  //           // `${this.url_layer1}?main_layer=${selectedMainLayer}`
-  //           .post<Account>(
-  //             `http://` +
-  //               this.api.localhost +
-  //               `/inventory/layer1s/${selectedLayer2}/layer2s/`,
-  //             newLayeraccount
-  //           )
-  //           .subscribe(() => {
-  //             this.newLayerAccount = {
-  //               name: '',
-  //             };
-  //             this.getAccountsData();
-
-  //             Swal.fire('Added!', 'Your Account has been added.', 'success');
-  //             this.accountLayerservice.accountAdded.emit(this.account);
-  //           });
-  //       }
-  //     },
-  //   });
-  // }
   addLayer_two_new_account(selectedLayer2: any) {
     this.errorMessage = '';
     Swal.fire({
@@ -775,42 +731,57 @@ export class AccountlayerComponent implements OnInit {
 
   //  <------------------------ CODE FOR DELETING LAYER TWO ACCOUNT ------------------------>
 
-  DeleteLayer_two_new_account(accountId: number) {
+  DeleteLayer_two_new_account(selectedLayer2: number, selectedLayer1: number) {
     Swal.fire({
       title: 'Delete Account',
       text: 'Are you sure you want to delete this account?',
       showCancelButton: true,
       confirmButtonText: 'Delete',
       preConfirm: () => {
-        if (!this.selectedLayer1) {
+        if (!selectedLayer2 || !selectedLayer1) {
           Swal.showValidationMessage(
-            'Layer One Name and Layer Two must be Selected.'
+            'Layer Two and Layer One must be selected.'
           );
+          return;
         }
+        const url = `http://${this.api.localhost}/inventory/layer1s/${selectedLayer2}/layer2s/${selectedLayer1}`;
         this.http
-          .delete(
-            `http://` +
-              this.api.localhost +
-              `/inventory/layer1s/${this.selectedLayer1}/layer2s/${accountId}`
+          .delete(url)
+          .pipe(
+            catchError((error) => {
+              console.error(error);
+              let errorMessage = 'Failed to delete the account.';
+              if (error.error && error.error.delete) {
+                errorMessage = error.error.delete;
+              }
+              Swal.fire('Error', errorMessage, 'error');
+              return of(null);
+            })
           )
-          .subscribe(() => {
-            this.getAccountsData();
-            Swal.fire('Deleted!', 'Your Account has been deleted.', 'success');
-            this.accountLayerservice.accountAdded.emit(this.account);
+          .subscribe((response) => {
+            if (response !== null) {
+              this.getAccountsData();
+              Swal.fire(
+                'Deleted!',
+                'Your Account has been deleted.',
+                'success'
+              );
+              this.accountLayerservice.accountAdded.emit(this.account);
+            }
           });
       },
     });
   }
   // Search() {
-    //   if (this.account_type === '') {
-      //     this.ngOnInit();
-      //   } else {
-        //     this.accountData = this.accountData.filter((res) => {
-          //       return res.account_type.match(this.account_type);
-          //     });
-          //   }
-          // }
-          title: any;
+  //   if (this.account_type === '') {
+  //     this.ngOnInit();
+  //   } else {
+  //     this.accountData = this.accountData.filter((res) => {
+  //       return res.account_type.match(this.account_type);
+  //     });
+  //   }
+  // }
+  title: any;
   Search() {
     if (this.title === '') {
       this.ngOnInit();
