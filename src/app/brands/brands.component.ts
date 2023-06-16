@@ -75,10 +75,16 @@ export class BrandsComponent {
       });
     }
   }
-  pageChanged(event: any): void {
-    const pageIndex = event.pageIndex;
-    const pageSize = event.pageSize;
-    this.getBrand(pageIndex, pageSize);
+  // pageChanged(event: any): void {
+  //   const pageIndex = event.pageIndex;
+  //   const pageSize = event.pageSize;
+  //   this.getBrand(pageIndex, pageSize);
+  // }
+  
+  p: any;
+  pageChanged(event: any) {
+    this.currentPage = event;
+    this.getBrand(this.pageIndex, this.pageSize);
   }
 
 

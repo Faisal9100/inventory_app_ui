@@ -109,6 +109,8 @@ export class AccountlayerComponent implements OnInit {
     this.accountLayerservice.getAccounts().subscribe(
       (data) => {
         this.accountData = data.results;
+        this.totalItems = data.totalItems;
+        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
       },
       (error) => {
         // Handle the error response
@@ -116,6 +118,29 @@ export class AccountlayerComponent implements OnInit {
       }
     );
   }
+ 
+
+  // goToPage(page: number): void {
+  //   if (page >= 1 && page <= this.totalPages) {
+  //     this.currentPage = page;
+      
+  //   }
+  // }
+
+  // nextPage(): void {
+  //   if (this.currentPage < this.totalPages) {
+  //     this.currentPage++;
+     
+  //   }
+  // }
+
+  previousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+    
+    }
+  }
+
 
   // <_____________________________________________code for pagination__________________________________________>
 

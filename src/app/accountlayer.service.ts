@@ -14,29 +14,28 @@ export class AccountlayerService {
     throw new Error('Method not implemented.');
   }
   accountAdded = new EventEmitter<Account>();
-  pageSize = 10;
+  pageSize?:number;
   currentPage = 1;
   totalPages!: number;
   pages: number[] = [];
   totalItems: any;
   itemsPerPage: any;
- 
 
   selectedMainLayer: any;
 
-  public url =  this.api.localhost + '/inventory/accounts';
+  public url = this.api.localhost + '/inventory/accounts';
 
-  public url_layer2 =  this.api.localhost + '/inventory/layer1s';
+  public url_layer2 = this.api.localhost + '/inventory/layer1s';
 
-  private url_layer1 =  this.api.localhost + '/inventory/layer1s';
+  private url_layer1 = this.api.localhost + '/inventory/layer1s';
 
   constructor(private http: HttpClient, public api: LocalhostApiService) {}
+  page?: number; 
+ 
+
 
   getAccounts(): Observable<any> {
-    let skip = (this.currentPage - 1) * this.pageSize;
-
-    let limit = 20;
-    let url = `${this.url}?skip=${skip}&limit=${limit}`;
+    const url = `${this.url}?page=${this.page}&pageSize=${this.pageSize}`
     return this.http.get(url).pipe(catchError(this.handleError));
   }
 

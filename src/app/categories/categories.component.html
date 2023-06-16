@@ -29,15 +29,15 @@
       <tr>
         <th style="width: 25%">S.N</th>
         <th>Name</th>
-        <th>Product</th>
+        <!-- <th>Product</th> -->
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let category of categories; let i = index">
+      <tr *ngFor="let category of categories | paginate : { itemsPerPage: 4, currentPage: p }">
         <td>{{ category.id }}</td>
         <td>{{ category.name }}</td>
-        <td>{{ productData?.[i]?.quantity ?? 0 }}</td>
+        <!-- <td>{{ productData?.[i]?.quantity ?? 0 }}</td> -->
 
         <td>
           <button
@@ -55,14 +55,10 @@
         </td>
       </tr>
     </tbody>
+    <pagination-controls
+    class="my-pagination"
+    (pageChange)="p = $event"
+  ></pagination-controls>
   </table>
 </div>
-<mat-paginator
-  [length]="totalCategories"
-  [pageSize]="10"
-  [pageSizeOptions]="[5, 10, 25, 100]"
-  (page)="pageChanged($event)"
-  (page)="getCategories($event.pageIndex, $event.pageSize)"
-  aria-label="Select page"
->
-</mat-paginator>
+

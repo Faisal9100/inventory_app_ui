@@ -8,16 +8,16 @@ import { LocalhostApiService } from './localhost-api.service';
   providedIn: 'root',
 })
 export class UnitService {
-  public url = this.api.localhost + 'inventory/units/';
+  public url = this.api.localhost + '/inventory/units/';
   public url2 = this.api.localhost + '/inventory/units/${id}';
 
-  getproducts(pageIndex: any, pageSize: number) {
-    throw new Error('Method not implemented.');
-  }
+  // getproducts(pageIndex: any, pageSize: number) {
+  //   throw new Error('Method not implemented.');
+  // }
 
-  deleteCategory(unitId: string) {
-    throw new Error('Method not implemented.');
-  }
+  // deleteCategory(unitId: string) {
+  //   throw new Error('Method not implemented.');
+  // }
 
   constructor(private http: HttpClient, public api: LocalhostApiService) {}
 

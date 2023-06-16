@@ -335,8 +335,10 @@ export class AllSaleComponent {
   // <---------------------- code for Removing product when adding new sale ----------------------------->
 
   removeProduct(index: number) {
-    this.rows.splice(index, 1);
-    this.updateTotal();
+    if (index >= 0 && index < this.rows.length) {
+      this.rows.splice(index, 1);
+      this.updateTotal();
+    }
   }
   i: any;
 
@@ -372,10 +374,26 @@ export class AllSaleComponent {
         (response) => {
           console.log(response);
           const purchaseId = response.id;
-          this.addStock(purchaseId);
-          this.getAllPurchase();
-          this.addProduct();
-          this.handleQuantityChange(this.productData);
+          this.addStock(purchaseId).then(() => {
+            this.getAllPurchase();
+            this.addProduct();
+            this.handleQuantityChange(this.productData);
+            this.modalService.dismissAll();
+
+            // Clear the form fields
+            this.purchaseDate = new Date();
+            this.selectedCustomer = null;
+            this.selectedWarehouse = null;
+            this.grandTotal = 0;
+            this.totalQuantity = 0;
+            this.remarks = null;
+            this.rows = []; // Clear the product rows
+            Swal.fire({
+              icon: 'success',
+              title: 'Success',
+              text: 'Sale added successfully.',
+            });
+          });
         },
         (error) => {
           console.error('An error occurred:', error);
@@ -387,6 +405,14 @@ export class AllSaleComponent {
         }
       );
   }
+  // this.purchaseDate = new Date();
+  // this.selectedCustomer = '';
+  // this.selectedWarehouse = '';
+  // this.selectedRemark = '';
+  // this.totalQuantity = 0;
+  // this.rows = []; // Clear the product rows
+  // this.grandTotal = 0;
+  // this.discount = 0;
 
   // <--------------------------------- code for deleting Sale --------------------------------------->
 
@@ -409,8 +435,8 @@ export class AllSaleComponent {
                 'Your product has been deleted.',
                 'success'
               );
-
-              this.getAllPurchase();
+              this.getAllPurchase(); // Refresh the stock list
+              this.addSale();
             },
             () => {
               Swal.fire(
@@ -456,6 +482,8 @@ export class AllSaleComponent {
           },
           (error) => reject(error)
         );
+      this.modalService.dismissAll();
+      this.getAllPurchase();
     });
   }
   warehouse: any;

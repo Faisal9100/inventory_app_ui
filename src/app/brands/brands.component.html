@@ -28,15 +28,14 @@
       <tr>
         <th>S.N</th>
         <th>Name</th>
-        <th>Product</th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let brand of brands; let i = index">
+      <tr *ngFor="let brand of brands | paginate : { itemsPerPage: 4, currentPage: p }">
         <td style="width: 25%">{{ brand.id }}</td>
         <td>{{ brand.name }}</td>
-        <td>{{ productData?.[i]?.quantity ?? 0 }}</td>
+        <!-- <td>{{ productData?.quantity ?? 0 }}</td> -->
 
         <td>
           <button
@@ -54,14 +53,9 @@
         </td>
       </tr>
     </tbody>
-    <mat-paginator
-      [length]="totalCategories"
-      [pageSize]="10"
-      [pageSizeOptions]="[5, 10, 25, 100]"
-      (page)="pageChanged($event)"
-      (page)="getBrand($event.pageIndex, $event.pageSize)"
-      aria-label="Select page"
-    >
-    </mat-paginator>
+    <pagination-controls
+    class="my-pagination"
+    (pageChange)="p = $event"
+  ></pagination-controls>
   </table>
 </div>

@@ -306,11 +306,18 @@ export class AllPurchaseComponent implements OnInit {
   }
 
   // <============================ code for removing product from the table ==================================>
+  // removeProduct(index: number): void {
+  //     this.rows.splice(index, 1);
+  //     this.updateTotal();
+  //   }
 
   removeProduct(index: number) {
-    this.rows.splice(index, 1);
-    this.updateTotal();
+    if (index >= 0 && index < this.rows.length) {
+      this.rows.splice(index, 1);
+      this.updateTotal();
+    }
   }
+
   i: any;
 
   // <=================================== code for deleting stock purchase ====================================>
@@ -327,8 +334,7 @@ export class AllPurchaseComponent implements OnInit {
       if (result.isConfirmed) {
         this.http
           .delete(
-            
-              this.api.localhost +
+            this.api.localhost +
               '/inventory/stocks_purchase/' +
               purchaseId +
               '/'
@@ -371,6 +377,7 @@ export class AllPurchaseComponent implements OnInit {
       });
       return; // Stop the execution if the form is empty
     }
+
     const payload: any = {
       date: this.purchaseDate,
       account: this.selectedSupplier,
@@ -382,7 +389,7 @@ export class AllPurchaseComponent implements OnInit {
 
     this.http
       .post<{ id: number }>(
-         this.api.localhost + '/inventory/stocks_purchase/',
+        this.api.localhost + '/inventory/stocks_purchase/',
         payload
       )
       .subscribe((response) => {
@@ -390,12 +397,23 @@ export class AllPurchaseComponent implements OnInit {
         const purchaseId = response.id;
         this.addStock(purchaseId).then((res) => {
           this.getAllPurchaseData();
+          this.modalService.dismissAll();
         });
         Swal.fire({
           icon: 'success',
           title: 'Success',
           text: 'Purchase added successfully.',
         });
+
+        // Clear the form fields
+        // this.purchaseDate = null;
+        this.purchaseDate = new Date();
+        this.selectedSupplier = null;
+        this.selectedWarehouse = null;
+        this.selectedRemark = null;
+        this.rows = []; // Clear the product rows
+        this.grandTotal = 0;
+        this.discount = 0;
       });
   }
 
@@ -440,66 +458,14 @@ export class AllPurchaseComponent implements OnInit {
           },
           (error) => reject(error)
         );
+      this.getAllPurchaseData();
+      this.modalService.dismissAll();
     });
   }
 
   //   <=================================== adding another product =========================================>
 
   update_purchase_id: any;
-
-  // postUpdateStock(product: any, q: any, p: any, date: any) {
-  //   if (!product.value || !q.value || !p.value || !date.value) {
-  //     Swal.fire({
-  //       icon: 'error',
-  //       title: 'Error',
-  //       text: 'Please fill in all the required fields.',
-  //     });
-  //     return;
-  //   }
-
-  //   if (product && product.id) {
-  //     const requestBody = {
-  //       date: date.value,
-  //       product: product.value,
-  //       quantity: q.value,
-  //       price: p.value,
-  //       amount: p.value * q.value,
-  //     };
-
-  //     console.log(requestBody);
-
-  //     this.http
-  //       .post(
-  //
-  //           this.api.localhost +
-  //           `/inventory/stocks_purchase/${this.update_purchase_id}/stocks/`,
-  //         requestBody
-  //       )
-  //       .subscribe(
-  //         (response) => {
-  //           console.log(response);
-  //           Swal.fire({
-  //             icon: 'success',
-  //             title: 'Success',
-  //             text: 'Stock added successfully.',
-  //           });
-  //           product.value = '';
-  //           q.value = '';
-  //           p.value = '';
-  //           date.value = '';
-  //         },
-  //         (error) => {
-  //           console.error(error);
-  //           Swal.fire({
-  //             icon: 'error',
-  //             title: 'Error',
-  //             text: 'Failed to add stock.',
-  //           });
-  //         }
-  //       );
-  //     // this.modalService.dismissAll();
-  //   }
-  // }
   postUpdateStock() {
     if (this.purchaseForm.invalid) {
       Swal.fire({

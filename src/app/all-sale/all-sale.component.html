@@ -190,7 +190,7 @@
         <tbody>
           <tr
             class="text-center m-auto justify-content-center"
-            *ngFor="let row of rows"
+            *ngFor="let row of rows; let i = index"
           >
             <td>{{ row.purchase_id }}</td>
             <td class="text-center my-3" #prn>{{ row.product_name }}</td>

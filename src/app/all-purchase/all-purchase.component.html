@@ -210,7 +210,7 @@
         <tbody>
           <tr
             class="text-center m-auto justify-content-center"
-            *ngFor="let row of rows"
+            *ngFor="let row of rows; let i = index"
           >
             <td class="text-center my-3">{{ row.product.name }}</td>
             <td>
@@ -338,28 +338,27 @@
       <thead class="table-head">
         <tr *ngIf="searchedPurchaseData.length > 0">
           <th>Id</th>
-          <th>Account Supplier</th>
-          <th>Stock Purchase</th>
-          <th>Product</th>
-          <th>Amount</th>
-          <th>Date</th>
+
           <th>Account Name</th>
           <th>Product Name</th>
           <th>Warehouse Name</th>
+          <th>Stock Purchase</th>
+          <!-- <th>Product_ID</th> -->
+          <th>Amount</th>
+          <th>Date</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let stock of stocks">
           <td>{{ stock.id }}</td>
-          <td>{{ stock.stock_purchase }}</td>
-          <td>{{ stock.product }}</td>
+          <td>{{ stock.account_name }}</td>
+          <td>{{ stock.product_name }}</td>
+          <!-- <td>{{ stock.product }}</td> -->
+          <td>{{ stock.warehouse_name }}</td>
           <td>{{ stock.quantity }}</td>
           <td>{{ stock.amount }}</td>
           <td>{{ stock.date }}</td>
-          <td>{{ stock.account_name }}</td>
-          <td>{{ stock.product_name }}</td>
-          <td>{{ stock.warehouse_name }}</td>
           <td>
             <button
               class="btn btn-outline-danger"

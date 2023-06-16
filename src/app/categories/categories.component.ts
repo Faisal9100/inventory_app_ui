@@ -83,12 +83,7 @@ export class CategoriesComponent {
     }
   }
 
-  pageChanged(event: any): void {
-    const pageIndex = event.pageIndex;
-    const pageSize = event.pageSize;
-    this.getCategories(pageIndex, pageSize);
-  }
-
+ 
   addCategory() {
     Swal.fire({
       title: 'Add New Category',
@@ -201,5 +196,11 @@ export class CategoriesComponent {
           });
       }
     });
+  }
+  p: any;
+  pageChanged(event: any) {
+    this.currentPage = event;
+    this.getCategories(this.pageIndex, this.pageSize);
+
   }
 }

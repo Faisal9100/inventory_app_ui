@@ -96,16 +96,16 @@ const routes: Routes = [
     component: PasswordChangeComponent,
     canActivate: [AuthguardGuard],
   },
-  {
-    path: 'staff',
-    component: StaffComponent,
-    canActivate: [AuthguardGuard],
-  },
-  {
-    path: 'permission',
-    component: PermissionComponent,
-    canActivate: [AuthguardGuard],
-  },
+  // {
+  //   path: 'staff',
+  //   component: StaffComponent,
+  //   canActivate: [AuthguardGuard],
+  // },
+  // {
+  //   path: 'permission',
+  //   component: PermissionComponent,
+  //   canActivate: [AuthguardGuard],
+  // },
 ];
 
 @NgModule({

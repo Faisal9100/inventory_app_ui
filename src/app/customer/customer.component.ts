@@ -68,41 +68,38 @@ export class CustomerComponent {
   };
 
   // <--------------------------------------- code for adding customers ------------------------------------>
-
   addSupplier() {
     Swal.fire({
       title: 'Add Customer',
       html: `   
-      <div class="form-group">
-      <label for="supplierTitle" class="float-start my-2">Title:</label>
-      <input type="text" id="supplierTitle" class="form-control" placeholder="Customer Name" >
-    </div>
-
-    <div class="form-group">
-      <label for="supplierAddress" class="float-start my-2">Address:</label>
-      <input type="text" id="supplierAddress" class="form-control" placeholder="Supplier Address" >
-    </div>
-
-    
-
-    <div class="form-group">
-      <label for="supplierStatus" class="float-start my-2">Status:</label> 
-      <select id="supplierStatus" class="form-select">
-        <option value="true"}>Enabled</option>
-        <option value="false"}>Disabled</option>
-      </select>
-    </div>
-    
-    <div class="form-group">
-      <label for="supplierContact" class="float-start my-2">Contact:</label>
-      <input type="number" id="supplierContact" class="form-control" placeholder="Customer Contact">
-    </div>
-    
-    <div class="form-group">
-      <label for="supplierEmail" class="float-start my-2">Email:</label>
-      <input type="email" id="supplierEmail" class="form-control" placeholder="Customer Email" >
-    </div>
-          `,
+        <div class="form-group">
+          <label for="supplierTitle" class="float-start my-2">Title:</label>
+          <input type="text" id="supplierTitle" class="form-control" placeholder="Customer Name">
+        </div>
+  
+        <div class="form-group">
+          <label for="supplierAddress" class="float-start my-2">Address:</label>
+          <input type="text" id="supplierAddress" class="form-control" placeholder="Supplier Address">
+        </div>
+  
+        <div class="form-group">
+          <label for="supplierStatus" class="float-start my-2">Status:</label> 
+          <select id="supplierStatus" class="form-select">
+            <option value="true">Enabled</option>
+            <option value="false">Disabled</option>
+          </select>
+        </div>
+      
+        <div class="form-group">
+          <label for="supplierContact" class="float-start my-2">Contact:</label>
+          <input type="number" id="supplierContact" class="form-control" placeholder="Customer Contact">
+        </div>
+      
+        <div class="form-group">
+          <label for="supplierEmail" class="float-start my-2">Email:</label>
+          <input type="email" id="supplierEmail" class="form-control" placeholder="Customer Email">
+        </div>
+      `,
       showCancelButton: true,
       confirmButtonText: 'Add',
       preConfirm: () => {
@@ -112,7 +109,6 @@ export class CustomerComponent {
         const supplierAddress = (<HTMLInputElement>(
           document.getElementById('supplierAddress')
         )).value;
-
         const supplierStatus = (<HTMLSelectElement>(
           document.getElementById('supplierStatus')
         )).value;
@@ -129,6 +125,8 @@ export class CustomerComponent {
           Swal.showValidationMessage('Customer Contact is required');
         } else if (!supplierEmail) {
           Swal.showValidationMessage('Customer Email is required');
+        } else if (!validateEmail(supplierEmail)) {
+          Swal.showValidationMessage('Enter a valid email address');
         } else {
           const newsupplier = {
             title: supplierTitle,
@@ -140,25 +138,46 @@ export class CustomerComponent {
           const httpOptions = {
             headers: new HttpHeaders({
               'Content-Type': 'application/json',
-              Authorization: `Bearer ${localStorage.getItem('token')}`, // Access token stored in localStorage
+              Authorization: `Bearer ${localStorage.getItem('token')}`,
             }),
           };
           this.http
             .post<Supplier>(this.url, newsupplier, httpOptions)
-            .subscribe(() => {
-              this.newsupplier = {
-                title: '',
-                address: '',
-                status: '',
-                contact: '',
-                email: '',
-              };
-              this.getCustomers();
-              Swal.fire('Added!', 'Your Customer has been added.', 'success');
-            });
+            .subscribe(
+              () => {
+                this.newsupplier = {
+                  title: '',
+                  address: '',
+                  status: '',
+                  contact: '',
+                  email: '',
+                };
+                this.getCustomers();
+                Swal.fire('Added!', 'Your Customer has been added.', 'success');
+              },
+              (error) => {
+                if (error.error.email) {
+                  Swal.showValidationMessage(error.error.email[0]);
+                } else {
+                  Swal.fire(
+                    'Error',
+                    'An error occurred while adding the customer.',
+                    'error'
+                  );
+                }
+                console.error(error);
+              }
+            );
         }
       },
     });
+
+    function validateEmail(email: string) {
+      // Regular expression to validate email address
+      const emailRegex =
+        /^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/;
+      return emailRegex.test(email);
+    }
   }
 
   // <--------------------------------------- code for getting customers ------------------------------------>
@@ -305,8 +324,8 @@ export class CustomerComponent {
         )).value;
 
         const updatedStatus =
-          (<HTMLSelectElement>document.querySelector('#supplierStatus'))
-            .value === 'true';
+          (<HTMLSelectElement>document.querySelector('.swal2-select')).value ===
+          'true';
         const httpOptions = {
           headers: new HttpHeaders({
             'Content-Type': 'application/json',
@@ -314,54 +333,25 @@ export class CustomerComponent {
           }),
         };
         this.http
-          .put(
-            `${this.url}${supplier.id}/`,
-            {
-              title: updatedTitle,
-              address: updatedAddress,
-              contact: updatedContact,
-              email: updatedEmail,
-              status: updatedStatus,
-            },
-            httpOptions
-          )
-          .subscribe(
-            () => {
-              console.log(
-                `Customer with ID ${supplier.id} updated successfully!`
-              );
-              this.getCustomers();
-              Swal.fire(
-                'Updated!',
-                'Your Customer list has been updated.',
-                'success'
-              );
-            },
-            (error) => {
-              console.error(error);
-              let errorMessage = 'Failed to update customer details.';
+          .put(`${this.url}${supplier.id}/`, {
+            title: updatedTitle,
+            address: updatedAddress,
+            contact: updatedContact,
+            email: updatedEmail,
 
-              if (error && error.error) {
-                const fieldErrors = error.error;
-                const errorFields = Object.keys(fieldErrors);
-
-                if (errorFields.length > 0) {
-                  errorMessage = '';
-
-                  for (const field of errorFields) {
-                    const fieldError = fieldErrors[field];
-                    errorMessage += `${field}: ${fieldError.join('. ')}\n`;
-                  }
-                }
-              }
-
-              Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: errorMessage,
-              });
-            }
-          );
+            status: updatedStatus,
+          })
+          .subscribe(() => {
+            console.log(
+              `Customer with ID ${supplier.id} updated successfully!`
+            );
+            this.getCustomers();
+            Swal.fire(
+              'Updated!',
+              'Your Customer list has been updated.',
+              'success'
+            );
+          });
       }
     });
   }
