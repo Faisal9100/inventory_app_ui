@@ -1,0 +1,25 @@
+<nav aria-label="Page navigation example">
+    <ul class="pagination">
+      <li
+        class="page-item"
+        [class.disabled]="!data?.previous"
+        (click)="loadPrev(data)"
+      >
+        <a class="page-link">Previous</a>
+      </li>
+      <li
+        class="page-item"
+        [class.active]="data?.current == num"
+        *ngFor="let num of data?.pages"
+      >
+        <a class="page-link">{{ num }}</a>
+      </li>
+      <li
+        class="page-item"
+        [class.disabled]="!data?.next"
+        (click)="loadNext(data)"
+      >
+        <a class="page-link">Next</a>
+      </li>
+    </ul>
+  </nav>

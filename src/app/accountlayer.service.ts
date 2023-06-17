@@ -14,7 +14,7 @@ export class AccountlayerService {
     throw new Error('Method not implemented.');
   }
   accountAdded = new EventEmitter<Account>();
-  pageSize?:number;
+  pageSize?: number;
   currentPage = 1;
   totalPages!: number;
   pages: number[] = [];
@@ -30,18 +30,25 @@ export class AccountlayerService {
   private url_layer1 = this.api.localhost + '/inventory/layer1s';
 
   constructor(private http: HttpClient, public api: LocalhostApiService) {}
-  page?: number; 
- 
+  page?: number;
 
+  public changeLayer = this.api.localhost + '/inventory/accounts/';
+  //    http://127.0.0.1:3000/inventory/accounts/?layer1_id=1
+  //  http://127.0.0.1:3000/inventory/accounts/?layer2_id=1
 
   getAccounts(): Observable<any> {
-    const url = `${this.url}?page=${this.page}&pageSize=${this.pageSize}`
-    return this.http.get(url).pipe(catchError(this.handleError));
+    // const url = `${this.url}?page=${this.page}&pageSize=${this.pageSize}`
+    return this.http.get(this.url).pipe(catchError(this.handleError));
   }
 
   getLayer1(selectedMainLayer: any): Observable<any> {
     return this.http
       .get(`${this.url_layer1}?main_layer=${selectedMainLayer}`)
+      .pipe(catchError(this.handleError));
+  }
+  getMainData(selectedMainLayer2: any) {
+    return this.http
+      .get(`${this.changeLayer}?main_layer=${selectedMainLayer2}`)
       .pipe(catchError(this.handleError));
   }
   // postAddLayer1(selectedMainLayer: any): Observable<any> {

@@ -26,7 +26,7 @@ export interface Product {
 export class UnitsComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
   products: Product[] = [];
-  Units: any[] = [];
+  Units: any = [];
   newCategory: any = {};
   modalService: any;
   totalUnits: number = 0;
@@ -58,12 +58,12 @@ export class UnitsComponent implements OnInit {
   }
 
   name: any;
-  
+
   Search() {
     if (this.name == '') {
       this.ngOnInit();
     } else {
-      this.Units = this.Units.filter((res) => {
+      this.Units = this.Units.filter((res: any) => {
         return res.name.match(this.name);
       });
     }
@@ -73,21 +73,29 @@ export class UnitsComponent implements OnInit {
     this.productService.getProducts().subscribe((data) => {
       this.productData = data.results;
     });
-    console.log(this.productData);
+    // console.log(this.productData);
   }
 
   getUnit() {
-    this.unitService.getUnit().subscribe((response) => {
-      this.Units = response.results;
-    });
+    this.unitService.getUnit().subscribe((response:any) => {
+      this.Units = <any>response;
+    }); 
+    this.addCount(this.Units);
   }
-  onPageChange(event: any) {
-    this.currentPage = event;
-    this.getUnit();
+  addCount(data: any) {
+    let pageSize = 10;
+    let pages = Math.ceil(data['count'] / pageSize);
+    let nums: any[] = [];
+    for (let i = 1; i <= pages; i++) nums.push(i);
+    data['pages'] = nums;
+    data['current'] = 1;
   }
+
+  itemPerPage: number = 10;
+  totalRecord: any;
   p: any;
-  pages: number[] = [];
-  
+  pages: number = 1;
+
   addUnit() {
     Swal.fire({
       title: 'Add New Unit',
@@ -150,7 +158,7 @@ export class UnitsComponent implements OnInit {
     })
       .then((result) => {
         if (result.isConfirmed) {
-          this.Units = this.Units.filter((category) => {
+          this.Units = this.Units.filter((category: any) => {
             return category.id !== categoryId;
           });
 
@@ -174,7 +182,7 @@ export class UnitsComponent implements OnInit {
   }
   taskToEdit: any;
 
-  public url =  this.api.localhost + '/inventory/Units/';
+  public url = this.api.localhost + '/inventory/Units/';
 
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);

@@ -26,19 +26,18 @@ export interface Account {
 })
 export class AccountlayerComponent implements OnInit {
   selectedMainLayer?: string;
+  selectedMainLayer2?: string;
 
-  public create_account_url =
-      this.api.localhost + '/inventory/layer2s/';
+  public create_account_url = this.api.localhost + '/inventory/layer2s/';
 
   public addLayer1 =
-      this.api.localhost + '/inventory/layer1s/11/?main_layer=assets';
+    this.api.localhost + '/inventory/layer1s/11/?main_layer=assets';
 
-  public account_url =   this.api.localhost + '/inventory/accounts/';
+  public account_url = this.api.localhost + '/inventory/accounts/';
 
   public selectedProductId: number = 5;
 
   public url =
-     
     this.api.localhost +
     '/inventory/layer2s/' +
     this.selectedProductId +
@@ -106,6 +105,7 @@ export class AccountlayerComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLayer1();
+    this.getLayerChange();
     this.accountLayerservice.getAccounts().subscribe(
       (data) => {
         this.accountData = data.results;
@@ -118,29 +118,26 @@ export class AccountlayerComponent implements OnInit {
       }
     );
   }
- 
 
   // goToPage(page: number): void {
   //   if (page >= 1 && page <= this.totalPages) {
   //     this.currentPage = page;
-      
+
   //   }
   // }
 
   // nextPage(): void {
   //   if (this.currentPage < this.totalPages) {
   //     this.currentPage++;
-     
+
   //   }
   // }
 
   previousPage(): void {
     if (this.currentPage > 1) {
       this.currentPage--;
-    
     }
   }
-
 
   // <_____________________________________________code for pagination__________________________________________>
 
@@ -151,6 +148,22 @@ export class AccountlayerComponent implements OnInit {
 
   // <________________________________ code for displaying data in Main layer ____________________________________>
 
+  // onMainLayerChange(event: any) {
+  //   this.selectedMainLayer = event.target.value;
+  //   if (this.selectedMainLayer !== 'null') {
+  //     this.accountLayerservice
+  //       .getLayer1(this.selectedMainLayer)
+  //       .subscribe((data) => {
+  //         this.layer1 = data;
+  //       });
+  //   } else {
+  //     this.layer1 = [];
+  //     this.layer2 = [];
+  //   }
+  // }
+  selectedMainLayerAccounts: any[] = [];
+  selectedMainLayerAccount: any;
+
   onMainLayerChange(event: any) {
     this.selectedMainLayer = event.target.value;
     if (this.selectedMainLayer !== 'null') {
@@ -158,10 +171,15 @@ export class AccountlayerComponent implements OnInit {
         .getLayer1(this.selectedMainLayer)
         .subscribe((data) => {
           this.layer1 = data;
+          this.selectedMainLayerAccount = null; // Clear the previously selected main layer account
+          this.selectedMainLayerAccounts = this.mainLayerchange; // Assign selected main layer accounts
+          console.log(this.accountData);
         });
     } else {
       this.layer1 = [];
       this.layer2 = [];
+      this.selectedMainLayerAccount = null; // Clear the selected main layer account when the main layer is set to 'null'
+      this.selectedMainLayerAccounts = []; // Clear the selected accounts when the main layer is set to 'null'
     }
   }
 
@@ -189,7 +207,13 @@ export class AccountlayerComponent implements OnInit {
       }
     );
   }
-
+  mainLayerchange: any[] = [];
+  getLayerChange() {
+    this.accountLayerservice.getMainData(this.selectedMainLayer2).subscribe((data: any) => {
+      this.mainLayerchange = data;
+      console.log(data);
+    });
+  }
   // <________________________________ code for adding layer2 data_____________________________________________>
 
   getLayer2(selectedLayer1: any) {
@@ -209,18 +233,11 @@ export class AccountlayerComponent implements OnInit {
   // <_______________________________________code for getting Account Data________________________________________>
 
   getAccountsData() {
-    // let skip = (this.currentPage - 1) * this.pageSize;
-    // let limit = 20;
     this.accountLayerservice.getAccounts().subscribe(
       (data) => {
         this.accountData = data.results;
-        // this.totalPages = Math.ceil(data.count / this.pageSize);
-        // this.totalItems = data.count;
-        // this.accountData.push(data);
-        // this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
       },
       (error) => {
-        // Handle the error response
         this.errorMessage = error;
       }
     );
@@ -540,8 +557,7 @@ export class AccountlayerComponent implements OnInit {
           this.http
 
             .post<Account>(
-              
-                this.api.localhost +
+              this.api.localhost +
                 `/inventory/layer1s/?main_layer=${selectedMainLayer}`,
               newLayeraccount
             )
@@ -586,7 +602,7 @@ export class AccountlayerComponent implements OnInit {
   //         this.http
   //           // `${this.url_layer1}?main_layer=${selectedMainLayer}`
   //           .put<Account>(
-  //             
+  //
   //               this.api.localhost +
   //               `/inventory/layer1s/?main_layer=${this.selectedMainLayer}`,
   //             newLayeraccount
@@ -620,8 +636,7 @@ export class AccountlayerComponent implements OnInit {
         }
         return this.http
           .delete(
-            
-              this.api.localhost +
+            this.api.localhost +
               `/inventory/layer1s/${selectedLayer1}/?main_layer=${selectedMainLayer}`
           )
           .toPromise()
@@ -675,8 +690,7 @@ export class AccountlayerComponent implements OnInit {
           };
           this.http
             .post<Account>(
-              
-                this.api.localhost +
+              this.api.localhost +
                 `/inventory/layer1s/${selectedLayer2}/layer2s/`,
               newLayeraccount
             )
@@ -769,7 +783,9 @@ export class AccountlayerComponent implements OnInit {
           );
           return;
         }
-        const url = this.api.localhost+ `inventory/layer1s/${selectedLayer2}/layer2s/${selectedLayer1}`;
+        const url =
+          this.api.localhost +
+          `inventory/layer1s/${selectedLayer2}/layer2s/${selectedLayer1}`;
         this.http
           .delete(url)
           .pipe(

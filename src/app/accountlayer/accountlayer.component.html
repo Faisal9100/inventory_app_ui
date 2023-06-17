@@ -41,15 +41,6 @@
         <i class="bi bi-plus-circle"></i>
       </button>
 
-      <!-- <button (click)="updateLayer_one_new_account(selectedMainLayer)"></button> -->
-      <!-- <button
-      class="btn btn-outline-success my-1"
-      data-bs-toggle="modal"
-      data-bs-target="#mainLayerModal"
-      (click)="updateLayer_one_new_account(selectedLayer1,item)"
-    >
-    <i class="bi bi-pencil-square"></i>
-    </button> -->
       <button
         class="btn btn-outline-danger my-1 mx-1"
         data-bs-toggle="modal"
@@ -135,69 +126,90 @@
       </button>
      
     </div> -->
-    <table class="table table-striped text-center table-bordered table-hover">
-      <thead class="table-head bg-primary text-white">
-        <tr>
-          <th>ID</th>
-          <th>Account Title</th>
-          <th>Contact</th>
-          <th>Status</th>
-          <th>Balance</th>
-          <th>Email</th>
-          <th>Address</th>
-          <th>Account Type</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          *ngFor="
-            let account of accountData
-              | paginate : { itemsPerPage: 10, currentPage: p }
-          "
-        >
-          <td>{{ account.id }}</td>
-          <td>{{ account.title }}</td>
-          <td>{{ account.contact }}</td>
+    <div *ngIf="selectedMainLayer">
+      <table class="table table-striped text-center table-bordered table-hover">
+        <thead class="table-head bg-primary text-white">
+          <tr>
+            <th>Account ID</th>
+            <th>Account Name</th>
+            <!-- Add more table headers if needed -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let account of selectedMainLayerAccounts">
+            <td>{{ account.id }}</td>
+            <td>{{ account.name }}</td>
+            <!-- Add more table cells for additional account data -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-          <td>
-            <button
-              class="btn btn-outline-success"
-              *ngIf="account.status === true"
-            >
-              Active
-            </button>
-            <button
-              class="btn btn-outline-warning"
-              *ngIf="account.status === false"
-            >
-              Inactive
-            </button>
-          </td>
-          <td>{{ account.balance }}</td>
-          <td>{{ account.email }}</td>
-          <td>{{ account.address }}</td>
-          <td>{{ account.account_type }}</td>
-          <td>
-            <button
-              class="btn btn-outline-primary mx-2"
-              (click)="updateAccount(account)"
-            >
-              <i class="bi bi-pencil-square"></i>
-            </button>
-            <button
-              class="btn btn-outline-danger"
-              (click)="deleteAccount(account.id)"
-            >
-              <i class="bi bi-trash3-fill"></i>
-            </button>
-          </td>
-        </tr>
-      </tbody>
-      <pagination-controls
-        class="my-pagination"
-        (pageChange)="p = $event"
-      ></pagination-controls>
-    </table>
+    <div *ngIf="!selectedMainLayer">
+      <table class="table table-striped text-center table-bordered table-hover">
+        <thead class="table-head bg-primary text-white">
+          <tr>
+            <th>ID</th>
+            <th>Account Title</th>
+            <th>Contact</th>
+            <th>Status</th>
+            <th>Balance</th>
+            <th>Email</th>
+            <th>Address</th>
+            <th>Account Type</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="
+              let account of accountData
+                | paginate : { itemsPerPage: 10, currentPage: p }
+            "
+          >
+            <td>{{ account.id }}</td>
+            <td>{{ account.title }}</td>
+            <td>{{ account.contact }}</td>
+
+            <td>
+              <button
+                class="btn btn-outline-success"
+                *ngIf="account.status === true"
+              >
+                Active
+              </button>
+              <button
+                class="btn btn-outline-warning"
+                *ngIf="account.status === false"
+              >
+                Inactive
+              </button>
+            </td>
+            <td>{{ account.balance }}</td>
+            <td>{{ account.email }}</td>
+            <td>{{ account.address }}</td>
+            <td>{{ account.account_type }}</td>
+            <td>
+              <button
+                class="btn btn-outline-primary mx-2"
+                (click)="updateAccount(account)"
+              >
+                <i class="bi bi-pencil-square"></i>
+              </button>
+              <button
+                class="btn btn-outline-danger"
+                (click)="deleteAccount(account.id)"
+              >
+                <i class="bi bi-trash3-fill"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+        <pagination-controls
+          class="my-pagination"
+          (pageChange)="p = $event"
+        ></pagination-controls>
+      </table>
+    </div>
   </div>
 </div>

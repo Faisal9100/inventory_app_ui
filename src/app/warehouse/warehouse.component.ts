@@ -9,7 +9,8 @@ import { LocalhostApiService } from '../localhost-api.service';
 export interface Product {
   id: number;
   name: string;
-  address: string;
+  contact: number;
+  email:string;
   status: string;
 }
 
@@ -19,24 +20,23 @@ export interface Product {
   styleUrls: ['./warehouse.component.css'],
 })
 export class WarehouseComponent {
- 
   taskToEdit: any;
   currentPage = 1;
   pageSize = 10;
   totalPages = 0;
   pages: number[] = [];
   products: any[] = [];
-  product: Product = { id: 0, name: '', address: '', status: '' };
+  product: Product = { id: 0, name: '', contact: 0,email:'', status: '' };
   closeResult: any;
 
-  public url =  this.api.localhost + '/inventory/warehouses/';
+  public url = this.api.localhost + '/inventory/warehouses/';
   totalItems: any;
 
   constructor(
     private modalService: NgbModal,
     public http: HttpClient,
     public warehouseService: WarehouseService,
-    public api:LocalhostApiService
+    public api: LocalhostApiService
   ) {
     this.getwarehouse();
   }
@@ -44,7 +44,7 @@ export class WarehouseComponent {
     this.getwarehouse();
   }
 
-  newProduct = { name: '', address: '', status: '' };
+  newProduct = { title: '', contact: '', email: '', status: '' };
   addProduct() {
     Swal.fire({
       title: 'Add Warehouse',
@@ -54,8 +54,12 @@ export class WarehouseComponent {
       <input type="text" id="productName" class="form-control" class="form-control" placeholder="Warehouse Name" >
     </div><br>
       <div class="form-group">
-      <label for="supplierTitle" class="float-start my-2"> Address:</label>
-      <input type="text"  id="productAddress" class="form-control" class="form-control" placeholder="Warehouse Address" >
+      <label for="supplierTitle" class="float-start my-2"> Contact:</label>
+      <input type="number"  id="productContact" class="form-control" class="form-control" placeholder="Warehouse Contact" >
+    </div><br>
+      <div class="form-group">
+      <label for="supplierTitle" class="float-start my-2"> Email:</label>
+      <input type="text"  id="productEmail" class="form-control" class="form-control" placeholder="Warehouse Email" >
     </div><br>
     <div class="form-group">
     <label for="supplierStatus" class="float-start my-2"> Status:</label> 
@@ -72,8 +76,11 @@ export class WarehouseComponent {
         const productName = (<HTMLInputElement>(
           document.getElementById('productName')
         )).value;
-        const productAddress = (<HTMLInputElement>(
-          document.getElementById('productAddress')
+        const productContact = (<HTMLInputElement>(
+          document.getElementById('productContact')
+        )).value;
+        const productEmail = (<HTMLInputElement>(
+          document.getElementById('productEmail')
         )).value;
         const productStatus = (<HTMLSelectElement>(
           document.getElementById('productStatus')
@@ -81,24 +88,20 @@ export class WarehouseComponent {
 
         if (!productName) {
           Swal.showValidationMessage('Warehouse Name is required');
-        }
-        if (!productAddress) {
-          Swal.showValidationMessage('Warehouse Address is required');
-        }
-        if (!productStatus) {
-          Swal.showValidationMessage('Warehouse Status is required');
         } else {
           const newProduct = {
-            name: productName,
-            address: productAddress,
+            title: productName,
+            email: productEmail,
+            contact: productContact,
             status: productStatus,
           };
           this.http.post<Product>(this.url, newProduct).subscribe(() => {
-            this.newProduct = { name: '', address: '', status: '' };
+            this.newProduct = { title: '', contact: '', email: '', status: '' };
             this.getwarehouse();
             Swal.fire('Added!', 'Your Warehouse has been added.', 'success');
           });
         }
+        this.getwarehouse();
       },
     });
   }
@@ -106,6 +109,7 @@ export class WarehouseComponent {
   getwarehouse() {
     this.warehouseService.GetWarehouse().subscribe((response) => {
       this.products = <any>response.results;
+      console.log(this.products);
     });
   }
 
@@ -146,8 +150,15 @@ export class WarehouseComponent {
       </div>
       <div class="form-group">
       <br><label class="float-start my-2">Address:</label>
-      <input type="text" id="productAddress" class="form-control swal2" placeholder="Address"  value="${
-        product.address
+      <input type="text" id="productEmail" class="form-control swal2" placeholder="Address"  value="${
+        product.email
+      }">
+      </div>
+      <br>
+      <div class="form-group">
+      <br><label class="float-start my-2">Address:</label>
+      <input type="text" id="productContact" class="form-control swal3" placeholder="Address"  value="${
+        product.contact
       }">
       </div>
       <br>
@@ -170,8 +181,11 @@ export class WarehouseComponent {
       if (result.isConfirmed) {
         const updatedName = (<HTMLInputElement>document.querySelector('.swal1'))
           .value;
-        const updatedAddress = (<HTMLInputElement>(
+        const productEmail = (<HTMLInputElement>(
           document.querySelector('.swal2')
+        )).value;
+        const updatedContact = (<HTMLInputElement>(
+          document.querySelector('.swal3')
         )).value;
         const updatedStatus = (<HTMLInputElement>(
           document.querySelector('.form-select')
@@ -179,7 +193,8 @@ export class WarehouseComponent {
         this.http
           .put(`${this.url}${product.id}/`, {
             name: updatedName,
-            address: updatedAddress,
+            email: productEmail,
+            contact: updatedContact,
             status: updatedStatus,
           })
           .subscribe(() => {
