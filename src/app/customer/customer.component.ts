@@ -35,7 +35,7 @@ export class CustomerComponent {
   totalItems: any;
   itemsPerPage: any;
   public url = this.api.localhost + '/inventory/customers/';
-  suppliers: any[] = [];
+  suppliers: any = {};
   supplier: Supplier = {
     id: 0,
     title: '',
@@ -184,9 +184,20 @@ export class CustomerComponent {
 
   getCustomers() {
     this.customerservice.getAllPurchase().subscribe((response) => {
-      this.suppliers = <any>response.results;
+      this.suppliers = <any>response;
+      this.addCount(this.suppliers);
     });
   }
+
+  addCount(data: any) {
+    let pageSize = 10;
+    let pages = Math.ceil(data['count'] / pageSize);
+    let nums: any[] = [];
+    for (let i = 1; i <= pages; i++) nums.push(i);
+    data['pages'] = nums;
+    data['current'] = 1;
+  }
+ 
 
   onPageChange(event: any) {
     this.currentPage = event;
@@ -371,7 +382,7 @@ export class CustomerComponent {
       { title: 'Email', dataKey: 'email' },
     ];
 
-    const data = this.suppliers.map((supplier, index) => ({
+    const data = this.suppliers.map((supplier:any, index:any) => ({
       sn: index + 1,
       title: supplier.title,
       address: supplier.address,
@@ -400,7 +411,7 @@ export class CustomerComponent {
     if (this.title == '') {
       this.ngOnInit();
     } else {
-      this.suppliers = this.suppliers.filter((res) => {
+      this.suppliers = this.suppliers.filter((res:any) => {
         return res.title.match(this.title);
       });
     }

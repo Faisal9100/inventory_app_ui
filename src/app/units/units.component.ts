@@ -26,7 +26,7 @@ export interface Product {
 export class UnitsComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
   products: Product[] = [];
-  Units: any = [];
+  Units: any = {};
   newCategory: any = {};
   modalService: any;
   totalUnits: number = 0;
@@ -52,9 +52,7 @@ export class UnitsComponent implements OnInit {
   ngOnInit() {
     this.getProducts();
 
-    this.unitService.getUnit().subscribe((response) => {
-      this.Units = response.results;
-    });
+   this.getUnit();
   }
 
   name: any;
@@ -79,8 +77,8 @@ export class UnitsComponent implements OnInit {
   getUnit() {
     this.unitService.getUnit().subscribe((response:any) => {
       this.Units = <any>response;
+      this.addCount(this.Units);
     }); 
-    this.addCount(this.Units);
   }
   addCount(data: any) {
     let pageSize = 10;
@@ -156,20 +154,18 @@ export class UnitsComponent implements OnInit {
         return this.unitService.deleteUnit(categoryId).toPromise();
       },
     })
-      .then((result) => {
-        if (result.isConfirmed) {
-          this.Units = this.Units.filter((category: any) => {
-            return category.id !== categoryId;
-          });
-
-          Swal.fire({
-            icon: 'success',
-            title: 'Unit Deleted!',
-            text: `The Unit has been deleted.`,
-            showConfirmButton: true,
-            timer: 1000,
-          });
-        }
+      .then(() => {
+        // Remove the deleted unit from the Units array
+   
+  
+        Swal.fire({
+          icon: 'success',
+          title: 'Unit Deleted!',
+          text: 'The Unit has been deleted.',
+          showConfirmButton: true,
+          timer: 1000,
+        });
+        this.getUnit();
       })
       .catch((error) => {
         Swal.fire({
@@ -180,6 +176,7 @@ export class UnitsComponent implements OnInit {
         });
       });
   }
+  
   taskToEdit: any;
 
   public url = this.api.localhost + '/inventory/Units/';

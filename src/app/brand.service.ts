@@ -12,7 +12,7 @@ export class BrandService {
 
   constructor(private http: HttpClient, public api: LocalhostApiService) {}
   //  code for brand
-  getBrand(pageIndex: number, pageSize: number): Observable<any> {
+  getBrand(): Observable<any> {
     return this.http.get<any>(this.url);
   }
   makeHttpRequestWithHeaders() {

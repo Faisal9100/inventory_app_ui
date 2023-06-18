@@ -25,7 +25,7 @@ export interface Product {
 })
 export class BrandsComponent {
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
-  brands: any[] = [];
+  brands: any = {};
   newCategory: any = {};
   modalService: any;
   totalCategories: number = 0;
@@ -40,53 +40,54 @@ export class BrandsComponent {
     private brandService: BrandService,
     private http: HttpClient,
     public productService: ProductService,
-    public api:LocalhostApiService
+    public api: LocalhostApiService
   ) {}
 
   ngOnInit() {
     this.getProducts();
-    this.getBrand(this.pageIndex, this.pageSize);
+    this.getBrand();
+  }
+
+  addCount(data: any) {
+    let pageSize = 10;
+    let pages = Math.ceil(data['count'] / pageSize);
+    let nums: any[] = [];
+    for (let i = 1; i <= pages; i++) nums.push(i);
+    data['pages'] = nums;
+    data['current'] = 1;
   }
   getProducts() {
     this.brandService.getProducts().subscribe((data) => {
       this.productData = data.results;
     });
   }
- name:any;
+  name: any;
   Search() {
     if (this.name == '') {
       this.ngOnInit();
     } else {
-      this.brands = this.brands.filter((res) => {
+      this.brands = this.brands.filter((res: any) => {
         return res.name.match(this.name);
       });
     }
   }
-  getBrand(pageIndex: number, pageSize: number) {
-    if (this.searchQuery.trim() === '') {
-      this.brandService.getBrand(pageIndex, pageSize).subscribe((response) => {
-        this.brands = response.results;
-        this.totalCategories = response.count;
-      });
-    } else {
-      this.brandService.searchBrand(this.searchQuery).subscribe((response) => {
-        this.brands = response.results;
-        this.totalCategories = response.count;
-      });
-    }
+  getBrand() {
+    this.brandService.getBrand().subscribe((res: any) => {
+      this.brands = res;
+      this.addCount(this.brands);
+    });
   }
   // pageChanged(event: any): void {
   //   const pageIndex = event.pageIndex;
   //   const pageSize = event.pageSize;
   //   this.getBrand(pageIndex, pageSize);
   // }
-  
+
   p: any;
   pageChanged(event: any) {
     this.currentPage = event;
-    this.getBrand(this.pageIndex, this.pageSize);
+    this.getBrand();
   }
-
 
   addBrand() {
     Swal.fire({
@@ -106,7 +107,7 @@ export class BrandsComponent {
             this.brandService.addBrand(newCategory).subscribe(
               (response) => {
                 resolve(response);
-                this.getBrand(this.pageIndex, this.pageSize);
+                this.getBrand();
               },
               (error) => {
                 reject(error);
@@ -150,7 +151,7 @@ export class BrandsComponent {
     })
       .then((result) => {
         if (result.isConfirmed) {
-          this.brands = this.brands.filter((brand) => {
+          this.brands = this.brands.filter((brand: any) => {
             return brand.id !== categoryId;
           });
 
@@ -198,7 +199,7 @@ export class BrandsComponent {
           .put(`${this.url}${product.id}/`, { name: updatedName })
           .subscribe(() => {
             console.log(`Product with ID ${product.id} updated successfully!`);
-            this.getBrand(this.pageIndex, this.pageSize);
+            this.getBrand();
             Swal.fire('Updated!', 'Your product has been updated.', 'success');
           });
       }

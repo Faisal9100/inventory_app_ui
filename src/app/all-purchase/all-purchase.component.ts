@@ -63,7 +63,7 @@ export class AllPurchaseComponent implements OnInit {
   pages: number[] = [];
   id: any;
   closeResult: any;
-  AllPurchaseData: any[] = [];
+  AllPurchaseData: any = {};
   stockPurchaseData: any[] = [];
 
   itemsPerPage: any;
@@ -146,11 +146,20 @@ export class AllPurchaseComponent implements OnInit {
     this.isLoading = true;
 
     this.allpurchasesService.getAllPurchase().subscribe((data) => {
-      this.AllPurchaseData = data.results;
-      this.searchedPurchaseData = this.AllPurchaseData;
+      this.AllPurchaseData = data;
+      this.addCount(this.AllPurchaseData);
+      
 
       this.isLoading = false;
     });
+  }
+  addCount(data: any) {
+    let pageSize = 10;
+    let pages = Math.ceil(data['count'] / pageSize);
+    let nums: any[] = [];
+    for (let i = 1; i <= pages; i++) nums.push(i);
+    data['pages'] = nums;
+    data['current'] = 1;
   }
 
   // <========================== code for getting StockList =================================>
@@ -534,7 +543,7 @@ export class AllPurchaseComponent implements OnInit {
     if (this.title == '') {
       this.ngOnInit();
     } else {
-      this.AllPurchaseData = this.AllPurchaseData.filter((res) => {
+      this.AllPurchaseData = this.AllPurchaseData.filter((res:any) => {
         return res.title.match(this.title);
       });
     }
@@ -588,7 +597,7 @@ export class AllPurchaseComponent implements OnInit {
       { title: 'date', dataKey: 'date' },
     ];
 
-    const data = this.AllPurchaseData.map((item, index) => ({
+    const data = this.AllPurchaseData.map((item:any, index:any) => ({
       sn: index + 1,
       id: item.id,
       ivoiceNo: item.invoice_no,

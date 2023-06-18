@@ -22,7 +22,7 @@ export interface Product {
 export class CategoriesComponent {
   @ViewChild(MatPaginator, { static: false }) paginator?: MatPaginator;
 
-  categories: any[] = [];
+  categories: any = {};
   newCategory: any = {};
   modalService: any;
   totalCategories: number = 0;
@@ -43,7 +43,7 @@ export class CategoriesComponent {
 
   ngOnInit() {
     this.getProducts();
-    this.getCategories(this.pageIndex, this.pageSize);
+    this.getCategories();
   }
   getProducts() {
     this.categoryService.getProducts().subscribe((data) => {
@@ -60,29 +60,25 @@ export class CategoriesComponent {
     if (this.name == '') {
       this.ngOnInit();
     } else {
-      this.categories = this.categories.filter((res) => {
+      this.categories = this.categories.filter((res:any) => {
         return res.name.match(this.name);
       });
     }
   }
-  getCategories(pageIndex: number, pageSize: number) {
-    if (this.searchQuery.trim() === '') {
-      this.categoryService
-        .getCategories(pageIndex, pageSize)
-        .subscribe((response) => {
-          this.categories = response.results;
-          this.totalCategories = response.count;
-        });
-    } else {
-      this.categoryService
-        .searchCategories(this.searchQuery)
-        .subscribe((response) => {
-          this.categories = response.results;
-          this.totalCategories = response.count;
-        });
-    }
+  getCategories() {
+  this.categoryService.getCategories().subscribe((res)=>{
+    this.categories = res;
+    this.addCount(this.categories);
+  })
   }
-
+  addCount(data: any) {
+    let pageSize = 10;
+    let pages = Math.ceil(data['count'] / pageSize);
+    let nums: any[] = [];
+    for (let i = 1; i <= pages; i++) nums.push(i);
+    data['pages'] = nums;
+    data['current'] = 1;
+  }
  
   addCategory() {
     Swal.fire({
@@ -101,7 +97,7 @@ export class CategoriesComponent {
             this.categoryService.addCategory(newCategory).subscribe(
               (response) => {
                 resolve(response);
-                this.getCategories(this.pageIndex, this.pageSize);
+                this.getCategories();
               },
               (error) => {
                 reject(error);
@@ -143,7 +139,7 @@ export class CategoriesComponent {
     })
       .then((result) => {
         if (result.isConfirmed) {
-          this.categories = this.categories.filter((category) => {
+          this.categories = this.categories.filter((category:any) => {
             return category.id !== categoryId;
           });
 
@@ -191,7 +187,7 @@ export class CategoriesComponent {
           .put(`${this.url}${product.id}/`, { name: updatedName })
           .subscribe(() => {
             console.log(`Product with ID ${product.id} updated successfully!`);
-            this.getCategories(this.pageIndex, this.pageSize);
+            this.getCategories();
             Swal.fire('Updated!', 'Your product has been updated.', 'success');
           });
       }
@@ -200,7 +196,7 @@ export class CategoriesComponent {
   p: any;
   pageChanged(event: any) {
     this.currentPage = event;
-    this.getCategories(this.pageIndex, this.pageSize);
+    this.getCategories();
 
   }
 }

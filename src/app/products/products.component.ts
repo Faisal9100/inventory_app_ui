@@ -94,10 +94,10 @@ export class ProductsComponent {
   ngOnInit(): void {
     this.getProducts();
     this.categoryService
-      .getCategories(this.pageIndex, this.pageSize)
+      .getCategories()
       .subscribe((categories) => (this.categories = categories.results));
     this.brandService
-      .getBrand(this.pageIndex, this.pageSize)
+      .getBrand()
       .subscribe((brands) => (this.brands = brands.results));
     this.unitService
       .getUnit()
@@ -108,7 +108,7 @@ export class ProductsComponent {
 
   getBrand() {
     this.brandService
-      .getBrand(this.pageIndex, this.pageSize)
+      .getBrand()
       .subscribe((data) => {
         this.brands = data.results;
       });
@@ -126,7 +126,7 @@ export class ProductsComponent {
 
   getCategories() {
     this.categoryService
-      .getCategories(this.pageIndex, this.pageSize)
+      .getCategories()
       .subscribe((response) => {
         this.categories = response.results;
       });
@@ -136,8 +136,20 @@ export class ProductsComponent {
 
   getProducts() {
     this.productService.getProducts().subscribe((data) => {
-      this.productData1 = data.results;
+      this.productData1 = data;
+      this.addCount(this.productData1);
     });
+  }
+
+  
+
+ addCount(data: any) {
+    let pageSize = 10;
+    let pages = Math.ceil(data['count'] / pageSize);
+    let nums: any[] = [];
+    for (let i = 1; i <= pages; i++) nums.push(i);
+    data['pages'] = nums;
+    data['current'] = 1;
   }
 
   formData = {

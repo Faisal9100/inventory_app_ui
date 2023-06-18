@@ -34,7 +34,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let category of categories | paginate : { itemsPerPage: 4, currentPage: p }">
+      <tr *ngFor="let category of categories?.results">
         <td>{{ category.id }}</td>
         <td>{{ category.name }}</td>
         <!-- <td>{{ productData?.[i]?.quantity ?? 0 }}</td> -->
@@ -55,10 +55,7 @@
         </td>
       </tr>
     </tbody>
-    <pagination-controls
-    class="my-pagination"
-    (pageChange)="p = $event"
-  ></pagination-controls>
+   
   </table>
+  <app-pagination [data]="categories"></app-pagination>
 </div>
-

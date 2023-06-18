@@ -25,7 +25,7 @@ export class WarehouseComponent {
   pageSize = 10;
   totalPages = 0;
   pages: number[] = [];
-  products: any[] = [];
+  products: any = {};
   product: Product = { id: 0, name: '', contact: 0,email:'', status: '' };
   closeResult: any;
 
@@ -108,11 +108,20 @@ export class WarehouseComponent {
 
   getwarehouse() {
     this.warehouseService.GetWarehouse().subscribe((response) => {
-      this.products = <any>response.results;
-      console.log(this.products);
+      this.products = <any>response;
+     this.addCount(this.products);
     });
   }
+  
 
+  addCount(data: any) {
+    let pageSize = 10;
+    let pages = Math.ceil(data['count'] / pageSize);
+    let nums: any[] = [];
+    for (let i = 1; i <= pages; i++) nums.push(i);
+    data['pages'] = nums;
+    data['current'] = 1;
+  }
   deleteProduct(id: number) {
     Swal.fire({
       title: 'Are you sure?',
@@ -219,7 +228,7 @@ export class WarehouseComponent {
       { title: 'Status', dataKey: 'status' },
     ];
 
-    const data = this.products.map((product, index) => ({
+    const data = this.products.map((product:any, index:any) => ({
       sn: index + 1,
       name: product.name,
       address: product.address,
@@ -244,7 +253,7 @@ export class WarehouseComponent {
     if (this.name == '') {
       this.ngOnInit();
     } else {
-      this.products = this.products.filter((res) => {
+      this.products = this.products.filter((res:any) => {
         return res.name.match(this.name);
       });
     }

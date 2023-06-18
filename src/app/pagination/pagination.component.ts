@@ -26,4 +26,13 @@ export class PaginationComponent {
       data['current'] -= 1;
     });
   }
+  loadPage(pageNumber: number) {
+  
+    this.http.get(this.data.pageNumber).subscribe((res: any) => {
+      this.data.results = res.results;
+      this.data.next = res.next;
+      this.data.previous = res.previous;
+      this.data.current = pageNumber;
+    });
+  }
 }

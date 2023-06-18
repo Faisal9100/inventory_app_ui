@@ -39,7 +39,7 @@
     <tbody>
       <tr
         *ngFor="
-          let unit of Units
+          let unit of Units?.results
         "
       >
         <td style="width: 25%">{{ unit.id }}</td>

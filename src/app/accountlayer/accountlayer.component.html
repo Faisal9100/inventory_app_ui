@@ -163,8 +163,7 @@
         <tbody>
           <tr
             *ngFor="
-              let account of accountData
-                | paginate : { itemsPerPage: 10, currentPage: p }
+              let account of accountData?.results
             "
           >
             <td>{{ account.id }}</td>
@@ -205,11 +204,9 @@
             </td>
           </tr>
         </tbody>
-        <pagination-controls
-          class="my-pagination"
-          (pageChange)="p = $event"
-        ></pagination-controls>
+       
       </table>
+      <app-pagination [data]="accountData"></app-pagination>
     </div>
   </div>
 </div>

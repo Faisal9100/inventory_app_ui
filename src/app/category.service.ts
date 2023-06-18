@@ -23,7 +23,7 @@ export class CategoryService {
 
   constructor(private http: HttpClient, public api: LocalhostApiService) {}
   //  code for categories
-  getCategories(pageIndex: number, pageSize: number): Observable<any> {
+  getCategories(): Observable<any> {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',

@@ -11,6 +11,7 @@
         class="page-item"
         [class.active]="data?.current == num"
         *ngFor="let num of data?.pages"
+        (click)="loadPage(num)"
       >
         <a class="page-link">{{ num }}</a>
       </li>

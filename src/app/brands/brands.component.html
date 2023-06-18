@@ -32,7 +32,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let brand of brands | paginate : { itemsPerPage: 4, currentPage: p }">
+      <tr *ngFor="let brand of brands?.results">
         <td style="width: 25%">{{ brand.id }}</td>
         <td>{{ brand.name }}</td>
         <!-- <td>{{ productData?.quantity ?? 0 }}</td> -->
@@ -53,9 +53,7 @@
         </td>
       </tr>
     </tbody>
-    <pagination-controls
-    class="my-pagination"
-    (pageChange)="p = $event"
-  ></pagination-controls>
+   
   </table>
+  <app-pagination [data]="brands"></app-pagination>
 </div>

@@ -76,7 +76,7 @@ export class AllSaleComponent {
   pages: number[] = [];
   id: any;
   closeResult: any;
-  AllPurchaseData: any[] = [];
+  AllPurchaseData: any = {};
   stockPurchaseData: any[] = [];
   totalItems: any;
   itemsPerPage: any;
@@ -163,11 +163,19 @@ export class AllSaleComponent {
   getAllPurchase() {
     this.isLoading = true;
     this.SaleService.getAllPurchase().subscribe((data) => {
-      this.AllPurchaseData = data.results;
+      this.AllPurchaseData = data;
+      this.addCount(this.AllPurchaseData);
       this.isLoading = false;
     });
   }
-
+  addCount(data: any) {
+    let pageSize = 10;
+    let pages = Math.ceil(data['count'] / pageSize);
+    let nums: any[] = [];
+    for (let i = 1; i <= pages; i++) nums.push(i);
+    data['pages'] = nums;
+    data['current'] = 1;
+  }
   isLoading: boolean = false;
 
   //  <------------------------ CODE FOR GETTING STOCK LIST ------------------------>
@@ -494,7 +502,7 @@ export class AllSaleComponent {
     if (this.remarks === '') {
       this.ngOnInit();
     } else {
-      this.AllPurchaseData = this.AllPurchaseData.filter((res) => {
+      this.AllPurchaseData = this.AllPurchaseData.filter((res:any) => {
         return res.remarks.includes(this.remarks);
       });
     }

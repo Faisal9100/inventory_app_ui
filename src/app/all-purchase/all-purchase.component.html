@@ -58,8 +58,8 @@
     <tbody>
       <tr
         *ngFor="
-          let item of AllPurchaseData
-            | paginate : { itemsPerPage: 9, currentPage: p };
+          let item of AllPurchaseData?.results
+           ;
           let i = index
         "
       >
@@ -97,11 +97,9 @@
         </td>
       </tr>
     </tbody>
-    <pagination-controls
-      class="my-pagination"
-      (pageChange)="p = $event"
-    ></pagination-controls>
+   
   </table>
+  <app-pagination [data]="AllPurchaseData"></app-pagination>
 </div>
 
 <!-- code for adding purchase -->

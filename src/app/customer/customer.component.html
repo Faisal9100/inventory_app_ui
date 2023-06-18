@@ -43,8 +43,7 @@
     <tbody>
       <tr
         *ngFor="
-          let supplier of suppliers
-            | paginate : { itemsPerPage: 8, currentPage: p }
+          let supplier of suppliers?.results
         "
       >
         <td>{{ supplier.id }}</td>
@@ -84,8 +83,5 @@
       </tr>
     </tbody>
   </table>
-  <pagination-controls
-    class="my-pagination"
-    (pageChange)="p = $event"
-  ></pagination-controls>
+  <app-pagination [data]="suppliers"></app-pagination>
 </div>

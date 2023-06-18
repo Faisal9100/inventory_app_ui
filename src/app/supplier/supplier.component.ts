@@ -34,7 +34,7 @@ export class SupplierComponent {
   closeResult: any;
 
   public url = this.api.localhost + '/inventory/Suppliers/';
-  suppliers: any[] = [];
+  suppliers: any = {};
   supplier: Supplier = {
     id: 0,
     title: '',
@@ -159,24 +159,21 @@ export class SupplierComponent {
   // <========================== CODE FOR GETTING SUPPLIER ====================================>
 
   getsupplier() {
-    let skip = (this.currentPage - 1) * this.pageSize;
-
-    let limit = 20;
-    let url = `${this.url}?skip=${skip}&limit=${limit}`;
-
     this.supplierService.fetchsupplier().subscribe((response) => {
-      this.suppliers = <any>response.results;
-      this.totalPages = Math.ceil(response.count / this.pageSize);
-      this.totalItems = response.count;
-
-      this.pages = Array.from(Array(this.totalPages), (_, i) => i + 1);
+      this.suppliers = <any>response;
+      this.addCount(this.suppliers);
     });
   }
 
-  onPageChange(event: any) {
-    this.currentPage = event;
-    this.getsupplier();
+  addCount(data: any) {
+    let pageSize = 10;
+    let pages = Math.ceil(data['count'] / pageSize);
+    let nums: any[] = [];
+    for (let i = 1; i <= pages; i++) nums.push(i);
+    data['pages'] = nums;
+    data['current'] = 1;
   }
+ 
 
   // <========================== CODE FOR DELETING SUPPLIER ====================================>
 
@@ -358,7 +355,7 @@ export class SupplierComponent {
       { title: 'Email', dataKey: 'email' },
     ];
 
-    const data = this.suppliers.map((supplier, index) => ({
+    const data = this.suppliers.map((supplier:any, index:any) => ({
       sn: index + 1,
       title: supplier.title,
       address: supplier.address,
@@ -390,7 +387,7 @@ export class SupplierComponent {
     if (this.title == '') {
       this.ngOnInit();
     } else {
-      this.suppliers = this.suppliers.filter((res) => {
+      this.suppliers = this.suppliers.filter((res:any) => {
         return res.title.match(this.title);
       });
     }

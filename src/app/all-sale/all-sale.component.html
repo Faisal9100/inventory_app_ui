@@ -56,8 +56,8 @@
     <tbody>
       <tr
         *ngFor="
-          let item of AllPurchaseData
-            | paginate : { itemsPerPage: 8, currentPage: p }
+          let item of AllPurchaseData?.results
+           
         "
       >
         <td>{{ item.id }}</td>
@@ -97,9 +97,9 @@
         </td>
       </tr>
     </tbody>
-    <pagination-controls class="my-pagination" (pageChange)="p = $event">
-    </pagination-controls>
+  
   </table>
+  <app-pagination [data]="AllPurchaseData"></app-pagination>
 </div>
 
 <ng-template #content let-c="close" let-d="dismiss">

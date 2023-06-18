@@ -56,7 +56,7 @@ export class AccountlayerComponent implements OnInit {
 
   selectedLayer2: any;
 
-  accountData: any[] = [];
+  accountData: any = {};
 
   pageSize = 10;
 
@@ -235,7 +235,8 @@ export class AccountlayerComponent implements OnInit {
   getAccountsData() {
     this.accountLayerservice.getAccounts().subscribe(
       (data) => {
-        this.accountData = data.results;
+        this.accountData = data;
+        this.addCount(this.accountData);
       },
       (error) => {
         this.errorMessage = error;
@@ -243,6 +244,14 @@ export class AccountlayerComponent implements OnInit {
     );
   }
   errorMessage: any;
+  addCount(data: any) {
+    let pageSize = 10;
+    let pages = Math.ceil(data['count'] / pageSize);
+    let nums: any[] = [];
+    for (let i = 1; i <= pages; i++) nums.push(i);
+    data['pages'] = nums;
+    data['current'] = 1;
+  }
   // <________________________________code for deleting Accounts_____________________________________________>
 
   deleteAccount(id: number) {
@@ -500,7 +509,7 @@ export class AccountlayerComponent implements OnInit {
       { title: 'Address', dataKey: 'address' },
     ];
 
-    const data = this.accountData.map((account, index) => ({
+    const data = this.accountData.map((account:any, index:any) => ({
       sn: index + 1,
       title: account.title,
       contact: account.contact,
@@ -829,7 +838,7 @@ export class AccountlayerComponent implements OnInit {
     } else {
       // const capitalizedTitle =
       // this.title.charAt(0).toUpperCase() + this.title.slice(1);
-      this.accountData = this.accountData.filter((res) => {
+      this.accountData = this.accountData.filter((res:any) => {
         return res.title.includes(this.title);
       });
     }
