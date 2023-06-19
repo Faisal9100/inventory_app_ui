@@ -54,12 +54,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="
-          let item of AllPurchaseData?.results
-           
-        "
-      >
+      <tr *ngFor="let item of AllPurchaseData?.results">
         <td>{{ item.id }}</td>
         <td>{{ item.invoice_no }}</td>
         <td>{{ item.remarks }}</td>
@@ -97,7 +92,6 @@
         </td>
       </tr>
     </tbody>
-  
   </table>
   <app-pagination [data]="AllPurchaseData"></app-pagination>
 </div>
@@ -150,7 +144,7 @@
               class=".ng-dropdown-panel"
               *ngFor="let data of warehouses"
               [value]="data.id"
-              >{{ data.name }}</ng-option
+              >{{ data.title }}</ng-option
             >
           </ng-select>
         </div>

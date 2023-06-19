@@ -192,16 +192,17 @@ export class AllPurchaseComponent implements OnInit {
               `/inventory/stocks_purchase/${purchasedId}/stocks/` +
               stockid +
               '/'
-          )
-          .subscribe(
-            () => {
+              )
+              .subscribe(
+                () => {
+              this.getStockList(purchasedId);
+              this.addPurchase();
               Swal.fire(
                 'Deleted!',
                 'Your product has been deleted.',
                 'success'
               );
 
-              this.getStockList(purchasedId);
             },
             () => {
               Swal.fire(

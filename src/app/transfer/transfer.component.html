@@ -1,5 +1,4 @@
-<h1 class="fs-3 mt-5">All Purchases</h1>
-
+<h1 class="fs-3 mt-5">Transfer To</h1>
 <div
   *ngIf="isLoading"
   class="spinner-border text-primary my-1 spinneer"
@@ -8,15 +7,14 @@
   <span class="visually-hidden">Loading...</span>
 </div>
 <br />
-
 <div class="add-categories">
   <div class="input-group mb-3">
     <input
       type="text"
       class="form-control w-25"
-      placeholder="Search Stock Purchase"
-      name="title"
-      [(ngModel)]="title"
+      placeholder="Search All Sale"
+      name="remarks"
+      [(ngModel)]="remarks"
       (ngModelChange)="Search()"
     />
     <button class="btn btn-primary">
@@ -24,14 +22,14 @@
     </button>
     <button
       type="button"
-      class="btn btn-outline-primary mx-2"
+      class="btn btn-outline-primary mx-1"
       (click)="openXl(content)"
     >
       <i class="bi bi-plus-circle"></i> Add new
     </button>
-    <button class="btn btn-outline-danger" (click)="generatePDF()">
+    <!-- <button class="btn btn-outline-danger">
       <i class="bi bi-arrow-down-circle"></i> PDF
-    </button>
+    </button> -->
     <button class="btn btn-outline-dark mx-1" (click)="refreshPage()">
       <i class="bi bi-arrow-clockwise"></i>Load
     </button>
@@ -44,39 +42,35 @@
       <tr>
         <th>#</th>
         <th>Invoice No.</th>
-        <th>Title</th>
-        <th>Supplier</th>
+        <th>Remarks</th>
+        <th>Customer</th>
         <th>Warehouse</th>
         <th>Transaction_ID</th>
         <th>Quantity</th>
         <th>Amount</th>
-
+        <th>Sale_Amount</th>
         <th>Date</th>
         <th>Action</th>
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="
-          let item of AllPurchaseData?.results
-           ;
-          let i = index
-        "
-      >
+      <tr *ngFor="let item of AllPurchaseData?.results">
         <td>{{ item.id }}</td>
         <td>{{ item.invoice_no }}</td>
-        <td>{{ item.title }}</td>
-        <td>{{ item.account_name }}</td>
+        <td>{{ item.remarks }}</td>
+        <td>{{ item.account_customer }}</td>
         <td>{{ item.warehouse_name }}</td>
         <td>{{ item.transaction }}</td>
         <td>{{ item.quantity }}</td>
         <td>{{ item.amount }}</td>
+        <td>{{ item.sale_amount }}</td>
         <td>{{ item.date }}</td>
         <td>
           <button
             class="btn btn-outline-success mx-1 my-1"
             (click)="openXl2(content2)"
             (click)="getStockList(item.id)"
+            (click)="setUpdatePurchaseId(item)"
           >
             <i class="bi bi-eye-fill"></i>
           </button>
@@ -84,31 +78,27 @@
             type="button"
             class="btn btn-outline-dark"
             (click)="openAddProductModal(content3, item)"
+            (change)="onWarehouseChange(selectedWarehouse)"
           >
             <i class="bi bi-plus-circle"></i>
           </button>
 
           <button
             class="btn btn-outline-danger mx-1 my-1"
-            (click)="deletePurchase(item.id)"
+            (click)="deleteSale(item.id)"
           >
             <i class="bi bi-trash3-fill"></i>
           </button>
         </td>
       </tr>
     </tbody>
-   
   </table>
   <app-pagination [data]="AllPurchaseData"></app-pagination>
 </div>
 
-<!-- code for adding purchase -->
-
 <ng-template #content let-c="close" let-d="dismiss">
   <div class="modal-header">
-    <h4 class="modal-title text-center" id="modal-basic-title">
-      Add Purchase!
-    </h4>
+    <h4 class="modal-title text-center" id="modal-basic-title">Transfer!</h4>
     <button
       type="button"
       class="btn-close"
@@ -119,31 +109,6 @@
   <div class="modal-body">
     <div class="update_form">
       <div class="form-group row">
-        <!-- <div class="col-sm">
-          <label for="purchaseInvoice" class="float-start my-2"
-            >Invoice No:</label
-          >
-          <input
-            type="number"
-            id="purchaseInvoice"
-            class="form-control"
-            placeholder="Invoice Number"
-            [(ngModel)]="purchaseInvoice"
-          />
-        </div> -->
-        <div class="col-sm">
-          <label for="supplierContact" class="py-2">Supplier*:</label>
-          <ng-select
-            id="supplierStatus"
-            class="form-ng-select"
-            [(ngModel)]="selectedSupplier"
-          >
-            <ng-option *ngFor="let item of suppliers" [value]="item.id">{{
-              item.title
-            }}</ng-option>
-          </ng-select>
-        </div>
-
         <div class="col-sm">
           <label for="purchaseDate" class="float-start my-2">Date*:</label>
           <input
@@ -155,15 +120,28 @@
         </div>
 
         <div class="col-sm">
-          <label for="warehouse" class="py-2">Warehouse*:</label>
+          <label for="warehouse" class="py-2"> From Warehouse*:</label>
           <ng-select
             id="warehouse"
             class="form-ng-select"
             [(ngModel)]="selectedWarehouse"
+            (change)="onWarehouseChange(selectedWarehouse)"
+          >
+            <ng-option class=".ng-dropdown-panel" [value]="6"
+              >Head Office</ng-option
+            >
+          </ng-select>
+        </div>
+        <div class="col-sm">
+          <label for="supplierContact" class="py-2">To Warehouse*:</label>
+          <ng-select
+            id="selectedCustomer"
+            class="form-ng-select"
+            [(ngModel)]="selectedCustomer"
           >
             <ng-option
               class=".ng-dropdown-panel"
-              *ngFor="let data of products"
+              *ngFor="let data of warehouses"
               [value]="data.id"
               >{{ data.title }}</ng-option
             >
@@ -173,21 +151,16 @@
       <br />
       <div class="col-sm">
         <label for="selectedProduct" class="py-2">Products*:</label>
-        <ng-select
-          class="form-ng-select"
-          [(ngModel)]="selectedProduct"
-          id="selectedProduct"
-          [bindValue]="'name'"
-          [bindLabel]="'name'"
-          (change)="isProductSelected = true"
-        >
+        <ng-select class="form-ng-select" #prd [(ngModel)]="selectedProduct">
           <ng-option
             class="ng-option"
-            *ngFor="let value of productData"
-            [value]="value.id"
-            >{{ value.name }}</ng-option
+            *ngFor="let product of productSale"
+            [value]="product.product_id"
           >
+            {{ product.product_name }}
+          </ng-option>
         </ng-select>
+
         <button class="btn btn-primary my-2" (click)="addProduct()">
           add Product
         </button>
@@ -198,8 +171,10 @@
       <table class="table table-striped text-center table-bordered table-hover">
         <thead class="table-head">
           <tr>
+            <th>#</th>
             <th>Name</th>
             <th>Quantity</th>
+
             <th>Price</th>
             <th>Total</th>
             <th>Action</th>
@@ -210,31 +185,61 @@
             class="text-center m-auto justify-content-center"
             *ngFor="let row of rows; let i = index"
           >
-            <td class="text-center my-3">{{ row.product.name }}</td>
+            <td>{{ row.purchase_id }}</td>
+            <td class="text-center my-3" #prn>{{ row.product_name }}</td>
             <td>
               <input
                 class="form-control"
                 type="number"
                 [(ngModel)]="row.quantity"
                 (input)="updateTotal()"
+                (change)="handleQuantityChange(row)"
+                [ngClass]="{ 'is-invalid': row.quantity > row.totalQuantity }"
               />
+              <p>
+                Available Quantity:
+                <span style="color: tomato"> {{ row.totalQuantity }}</span>
+              </p>
+              <div
+                *ngIf="row.quantity > row.totalQuantity"
+                class="invalid-feedback"
+              >
+                Quantity cannot exceed available quantity.
+              </div>
             </td>
+
             <td>
               <input
                 class="form-control"
                 type="number"
-                [(ngModel)]="row.price"
+                [(ngModel)]="row.amount"
                 (input)="updateTotal()"
+                (change)="handlePriceChange(row)"
+                [ngClass]="{ 'is-invalid': row.amount <= row.product.price }"
+                #am
               />
+              <p class="">
+                Default Purchase Price:
+                <span style="color: tomato"> {{ row.product.price }}</span>
+              </p>
+              <div
+                *ngIf="row.amount <= row.product.price"
+                class="invalid-feedback"
+              >
+                Price must not be equal or less than Default Purchase Price.
+              </div>
             </td>
+
             <td>
               <input
                 class="form-control"
                 type="number"
-                [(ngModel)]="row.quantity * row.price"
+                #pr
+                [(ngModel)]="row.quantity * row.amount"
                 (input)="updateTotal()"
               />
             </td>
+
             <td>
               <button class="btn btn-outline-danger" (click)="removeProduct(i)">
                 Remove
@@ -249,16 +254,16 @@
           <textarea
             class="form-control"
             name=""
-            id=""
+            id="remarks"
             cols="100"
             rows="2"
             id="title"
-            [(ngModel)]="selectedRemark"
+            [(ngModel)]="remarks"
           ></textarea>
         </div>
         <div class="col-sm float-end">
           <div class="col-sm">
-            <label class="my-1">Grand Total</label>
+            <label class="my-1">Total price</label>
             <div class="input-group">
               <span class="input-group-text">$</span>
               <input
@@ -283,7 +288,7 @@
             />
           </div>
           <br />
-          <label class="my-1">Payable Amount</label>
+          <label class="my-1">Receivable Amount</label>
           <div class="input-group col-sm">
             <span class="input-group-text">$</span>
             <input
@@ -305,18 +310,18 @@
       type="button"
       class="btn btn-outline-dark"
       (click)="c('Save click')"
-      (click)="addPurchase()"
+      (click)="addSale()"
     >
       Add
     </button>
   </div>
 </ng-template>
 
-<!--  model for showing stock list data -->
+<!-- <---------------------------------------- code for displaying sale product list -------------------------------------->
 
 <ng-template #content2 let-c="close" let-d="dismiss">
   <div class="modal-header">
-    <h2 class="modal-title text-center" id="modal-basic-title">Stock List</h2>
+    <h2 class="modal-title text-center" id="modal-basic-title">Sale List</h2>
     <div class="loader">
       <div
         *ngIf="isLoading"
@@ -334,34 +339,29 @@
   <div class="modal-body">
     <table class="table table-striped text-center table-bordered table-hover">
       <thead class="table-head">
-        <!-- *ngIf="searchedPurchaseData.length > 0" -->
         <tr>
           <th>Id</th>
-
-          <th>Account Name</th>
+          <!-- <th>Sale</th> -->
           <th>Product Name</th>
-          <th>Warehouse Name</th>
-          <th>Stock Purchase</th>
-          <!-- <th>Product_ID</th> -->
+          <th>Quantity</th>
+          <th>Price</th>
           <th>Amount</th>
-          <th>Date</th>
+          <th>Sale_Amount</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let stock of stocks">
           <td>{{ stock.id }}</td>
-          <td>{{ stock.account_name }}</td>
           <td>{{ stock.product_name }}</td>
-          <!-- <td>{{ stock.product }}</td> -->
-          <td>{{ stock.warehouse_name }}</td>
           <td>{{ stock.quantity }}</td>
+          <td>{{ stock.price }}</td>
           <td>{{ stock.amount }}</td>
-          <td>{{ stock.date }}</td>
+          <td>{{ stock.sale_amount }}</td>
           <td>
             <button
               class="btn btn-outline-danger"
-              (click)="deleteStockList(stock.id, stock.stock_purchase)"
+              (click)="deleteStockList(stock.id)"
             >
               <i class="bi bi-trash3-fill"></i>
             </button>
@@ -373,75 +373,13 @@
 
   <div class="modal-footer"></div>
 </ng-template>
-<!-- <ng-template #content3 let-c="close" let-d="dismiss">
-  <div class="modal-header">
-    <h4 class="modal-title text-center" id="modal-basic-title">
-      Update Purchase!
-    </h4>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="d('Cross click')"
-    ></button>
-  </div>
-  <div class="modal-body">
-    <div class="col-sm">
-      <label for="selectedProduct" class="py-2">Products*:</label>
-      <select
-        class="form-select"
-        [(ngModel)]="selectedProduct"
-        id="selectedProduct"
-        #product
-        (change)="isProductSelected = true"
-        #update_stock_product
-      >
-        <option
-          class="ng-option"
-          *ngFor="let value of productData"
-          [value]="value.id"
-        >
-          {{ value.name }}
-        </option>
-      </select>
 
-      <label for="" class="p-2">Quantity</label>
-      <input
-        type="number"
-        class="form-control"
-        id="quantity"
-        s
-        [(ngModel)]="quantity"
-        #q
-      />
+<!-- <---------------------------------------- code for Adding aditional sale product -------------------------------------->
 
-      <label for="" class="p-2">Price</label>
-      <input type="number" class="form-control" #p />
-
-      <label for="" class="p-2">date</label>
-
-      <input type="date" class="form-control" #update_stock_date />
-    </div>
-  </div>
-
-  <div class="modal-footer">
-    <button
-      type="button"
-      class="btn btn-outline-dark"
-      (click)="postUpdateStock(update_stock_product, q, p, update_stock_date)"
-    >
-      Add Product
-    </button>
-    <button type="button" class="btn btn-outline-dark" (click)="c('close')">
-      Close
-    </button>
-  </div>
-</ng-template> -->
 <ng-template #content3 let-c="close" let-d="dismiss">
+  <!-- Modal content -->
   <div class="modal-header">
-    <h4 class="modal-title text-center" id="modal-basic-title">
-      Update Purchase!
-    </h4>
+    <h4 class="modal-title text-center" id="modal-basic-title">Update Sale!</h4>
     <button
       type="button"
       class="btn-close"
@@ -450,40 +388,87 @@
     ></button>
   </div>
   <div class="modal-body">
-    <div class="col-sm">
-      <form [formGroup]="purchaseForm">
+    <form [formGroup]="updateSaleForm">
+      <div class="col-sm">
+        <label for="warehouse" class="py-2">Warehouse*:</label>
+        <ng-select
+          id="warehouse"
+          class="form-ng-select"
+          formControlName="warehouse"
+          [(ngModel)]="selectedWarehouse"
+          (change)="onWarehouseChange(selectedWarehouse)"
+        >
+          <ng-option class="ng-dropdown-panel" [value]="6">
+            Head Offices
+          </ng-option>
+        </ng-select>
+      </div>
+      <div class="col-sm">
         <label for="selectedProduct" class="py-2">Products*:</label>
         <select
           class="form-select"
-          formControlName="selectedProduct"
           id="selectedProduct"
-          (change)="isProductSelected = true"
+          formControlName="selectedProduct"
+          (change)="getProductTotalQuantity($event)"
+          (change)="totalproductTotalPrice($event)"
           #update_stock_product
         >
           <option
-            class="ng-option"
-            *ngFor="let value of productData"
-            [value]="value.id"
+            class="option"
+            *ngFor="let product of productSale"
+            [value]="product.product_id"
           >
-            {{ value.name }}
+            {{ product.product_name }}
           </option>
         </select>
+      </div>
 
-        <label for="" class="p-2">Quantity</label>
+      <div>
+        <label for="quantity" class="p-2">Quantity</label>
         <input
           type="number"
           class="form-control"
-          formControlName="quantity"
           id="quantity"
+          formControlName="quantity"
+          [(ngModel)]="quantity"
+          (input)="checkQuantity()"
         />
+        <p class="" *ngIf="isQuantityInvalid" style="color: tomato">
+          Quantity cannot be greater than the total product quantity.
+        </p>
+        <p class="">
+          Total quantity of selected product:
+          <span style="color: tomato">{{ totalproductQuantity }}</span>
+        </p>
+      </div>
 
-        <label for="" class="p-2">Price</label>
-        <input type="number" class="form-control" formControlName="price" />
+      <label for="price" class="p-2">Price</label>
+      <input
+        type="number"
+        class="form-control"
+        id="price"
+        formControlName="price"
+        #p
+        (input)="checkPrice()"
+      />
+      <p class="" *ngIf="isPriceInvalid" style="color: tomato">
+        Price cannot be less than the default product price.
+      </p>
+      <p class="">
+        Default Purchase Price:
+        <span style="color: tomato">{{ totalproductPrice }}</span>
+      </p>
 
-        <label for="" class="p-2">date</label>
-        <input type="date" class="form-control" formControlName="date" />
-      </form>
-    </div>
+      <label for="" class="p-2">date</label>
+
+      <input
+        type="date"
+        class="form-control"
+        id="date"
+        formControlName="date"
+        [value]="currentDate"
+      />
+    </form>
   </div>
 
   <div class="modal-footer">
@@ -491,7 +476,6 @@
       type="button"
       class="btn btn-outline-dark"
       (click)="postUpdateStock()"
-      [disabled]="purchaseForm.invalid"
     >
       Add Product
     </button>

@@ -1,21 +1,16 @@
-import { ProductService } from './../product.service';
-import { Account } from './../accountlayer/accountlayer.component';
-import { SaleService } from './../sale.service';
-
-import { AllpurchasesService } from './../allpurchases.service';
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
-import {
-  NgbActiveModal,
-  NgbModal,
-  NgbModalConfig,
-} from '@ng-bootstrap/ng-bootstrap';
+import { Component } from '@angular/core';
+import { NgbActiveModal, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import Swal from 'sweetalert2';
+import { AllpurchasesService } from '../allpurchases.service';
 import { WarehouseService } from '../warehouse.service';
 import { SupplierService } from '../supplier.service';
-import Swal from 'sweetalert2';
 import { CustomerService } from '../customer.service';
 import { LocalhostApiService } from '../localhost-api.service';
+import { ProductService } from '../product.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { SaleService } from './../sale.service';
+
 
 export interface PurchaseData {
   id: number;
@@ -55,11 +50,11 @@ interface Row {
   purchase_id: number;
 }
 @Component({
-  selector: 'app-all-sale',
-  templateUrl: './all-sale.component.html',
-  styleUrls: ['./all-sale.component.css'],
+  selector: 'app-transfer',
+  templateUrl: './transfer.component.html',
+  styleUrls: ['./transfer.component.css']
 })
-export class AllSaleComponent {
+export class TransferComponent {
   public isProductSelected: boolean = false;
   p: any;
   selectedProducts: {
@@ -76,7 +71,7 @@ export class AllSaleComponent {
   pages: number[] = [];
   id: any;
   closeResult: any;
-  AllPurchaseData: any = {};
+  AllPurchaseData: any = {} ;
   stockPurchaseData: any[] = [];
   totalItems: any;
   itemsPerPage: any;
@@ -162,12 +157,31 @@ export class AllSaleComponent {
 
   getAllPurchase() {
     this.isLoading = true;
-    this.SaleService.getAllPurchase().subscribe((data) => {
+    this.SaleService.getTransfer().subscribe((data) => {
       this.AllPurchaseData = data;
       this.addCount(this.AllPurchaseData);
       this.isLoading = false;
     });
   }
+  // getAllPurchase() {
+  //   this.isLoading = true;
+  //   this.SaleService.getTransfer().subscribe((data) => {
+  //     if (Array.isArray(data)) {
+  //       // Filter out the "Head Office" entry
+  //       this.AllPurchaseData = data.filter(item => item !== "Head Office");
+        
+  //       // Perform other operations on the filtered data
+  //       this.addCount(this.AllPurchaseData);
+  //     } else {
+  //       console.error("Data is not an array.");
+  //       // Handle the error or set this.AllPurchaseData to an appropriate value
+  //       // depending on your requirements
+  //     }
+  
+  //     this.isLoading = false;
+  //   });
+  // }
+  
   addCount(data: any) {
     let pageSize = 10;
     let pages = Math.ceil(data['count'] / pageSize);
@@ -219,29 +233,16 @@ export class AllSaleComponent {
 
   // <------------------------- code for getting warehouse ----------------------------------------------->
 
-  // getWarehouse() {
-  //   this.warehouseService.GetWarehouse().subscribe((response) => {
-  //     this.warehouses = <any>response.results;
-  //     if (this.warehouses.length > 0) {
-  //       this.selectedWarehouse = this.warehouses[0]; // Store the first warehouse object
-  //       this.warehouseId = this.selectedWarehouse.id; // Access the ID from the selected warehouse object
-  //     }
-  //   });
-  // }
   getWarehouse() {
     this.warehouseService.GetWarehouse().subscribe((response) => {
       this.warehouses = <any>response.results;
-      
-      // Remove warehouse with ID 6 from the array
       this.warehouses = this.warehouses.filter(warehouse => warehouse.id !== 6);
-      
       if (this.warehouses.length > 0) {
         this.selectedWarehouse = this.warehouses[0]; // Store the first warehouse object
         this.warehouseId = this.selectedWarehouse.id; // Access the ID from the selected warehouse object
       }
     });
   }
-  
 
   // <---------- code for getting warehouse by id to get products according to warehouse ID ---------------->
 
@@ -383,7 +384,7 @@ export class AllSaleComponent {
     const payload: any = {
       date: this.purchaseDate,
       account: this.selectedCustomer,
-      warehouse: this.selectedWarehouse,
+      // warehouse: this.selectedWarehouse,
       amount: this.grandTotal,
       quantity: this.totalQuantity,
       remarks: this.remarks,
@@ -391,7 +392,7 @@ export class AllSaleComponent {
     };
 
     this.http
-      .post<{ id: number }>(this.api.localhost + '/inventory/sales/', payload)
+      .post<{ id: number }>(this.api.localhost + '/inventory/transfers/', payload)
       .subscribe(
         (response) => {
           console.log(response);
@@ -449,7 +450,7 @@ export class AllSaleComponent {
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
         this.http
-          .delete(this.api.localhost + '/inventory/sales/' + purchaseId + '/')
+          .delete(this.api.localhost + '/inventory/transfers/' + purchaseId + '/')
           .subscribe(
             () => {
               Swal.fire(
@@ -804,3 +805,5 @@ export class AllSaleComponent {
 }
 
 //  <---------------------------SALE ALL WORK END HERE------------------------------------>
+
+

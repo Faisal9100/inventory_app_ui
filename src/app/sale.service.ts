@@ -19,9 +19,13 @@ export class SaleService {
   public product_url = this.api.localhost + '/inventory/products/';
 
   public customer_url = this.api.localhost + '/inventory/customers/';
+  public transfer = this.api.localhost + '/inventory/transfers/';
 
   getAllPurchase(): Observable<any> {
     return this.http.get<any>(this.url);
+  }
+  getTransfer(){
+    return this.http.get<any>(this.transfer);
   }
   getStockpurchase(): Observable<any> {
     return this.http.get<any>(this.stock_url);

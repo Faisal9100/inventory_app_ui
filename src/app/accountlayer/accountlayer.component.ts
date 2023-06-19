@@ -105,44 +105,7 @@ export class AccountlayerComponent implements OnInit {
 
   ngOnInit(): void {
     this.getLayer1();
-    this.getLayerChange();
-    this.accountLayerservice.getAccounts().subscribe(
-      (data) => {
-        this.accountData = data.results;
-        this.totalItems = data.totalItems;
-        this.totalPages = Math.ceil(this.totalItems / this.pageSize);
-      },
-      (error) => {
-        // Handle the error response
-        this.errorMessage = error;
-      }
-    );
-  }
-
-  // goToPage(page: number): void {
-  //   if (page >= 1 && page <= this.totalPages) {
-  //     this.currentPage = page;
-
-  //   }
-  // }
-
-  // nextPage(): void {
-  //   if (this.currentPage < this.totalPages) {
-  //     this.currentPage++;
-
-  //   }
-  // }
-
-  previousPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-  }
-
-  // <_____________________________________________code for pagination__________________________________________>
-
-  onPageChange(event: any) {
-    this.currentPage = event;
+    // this.getLayerChange();
     this.getAccountsData();
   }
 
@@ -155,33 +118,65 @@ export class AccountlayerComponent implements OnInit {
   //       .getLayer1(this.selectedMainLayer)
   //       .subscribe((data) => {
   //         this.layer1 = data;
+  //         this.selectedMainLayerAccount = data;
+  //         console.log(this.selectedMainLayerAccount);
   //       });
   //   } else {
   //     this.layer1 = [];
   //     this.layer2 = [];
   //   }
   // }
-  selectedMainLayerAccounts: any[] = [];
-  selectedMainLayerAccount: any;
-
+  mainLayerId: any;
   onMainLayerChange(event: any) {
     this.selectedMainLayer = event.target.value;
     if (this.selectedMainLayer !== 'null') {
       this.accountLayerservice
-        .getLayer1(this.selectedMainLayer)
+        .getAccounts(this.selectedMainLayer)
         .subscribe((data) => {
+          this.mainLayerId = this.selectedMainLayer;
           this.layer1 = data;
-          this.selectedMainLayerAccount = null; // Clear the previously selected main layer account
-          this.selectedMainLayerAccounts = this.mainLayerchange; // Assign selected main layer accounts
-          console.log(this.accountData);
+          this.selectedMainLayer = this.accountData;
+
+          // Ensure data is an array or iterable
+          if (Array.isArray(data) || typeof data === 'object') {
+            // Convert the data into an array if it's not already
+            this.layer1 = Array.isArray(data) ? data : [data];
+          } else {
+            this.layer1 = [];
+          }
+
+          console.log(this.mainLayerId);
+          console.log(this.layer1);
         });
     } else {
       this.layer1 = [];
       this.layer2 = [];
-      this.selectedMainLayerAccount = null; // Clear the selected main layer account when the main layer is set to 'null'
-      this.selectedMainLayerAccounts = []; // Clear the selected accounts when the main layer is set to 'null'
     }
   }
+
+  someValue: any;
+
+  selectedMainLayerAccounts: any = [];
+  selectedMainLayerAccount: any;
+
+  // onMainLayerChange(event: any) {
+  //   this.selectedMainLayer = event.target.value;
+  //   if (this.selectedMainLayer !== 'null') {
+  //     this.accountLayerservice
+  //       .getLayer1(this.selectedMainLayer)
+  //       .subscribe((data) => {
+  //         this.layer1 = data;
+  //         this.selectedMainLayerAccount = this.selectedMainLayer;
+  //         this.selectedMainLayerAccounts = data;
+  //         console.log(this.accountData);
+  //       });
+  //   } else {
+  //     this.layer1 = [];
+  //     this.layer2 = [];
+  //     this.selectedMainLayerAccount = null;
+  //     this.selectedMainLayerAccounts = [];
+  //   }
+  // }
 
   onLayer1Change(selectedLayer1: any) {
     this.accountLayerservice
@@ -208,12 +203,13 @@ export class AccountlayerComponent implements OnInit {
     );
   }
   mainLayerchange: any[] = [];
-  getLayerChange() {
-    this.accountLayerservice.getMainData(this.selectedMainLayer2).subscribe((data: any) => {
-      this.mainLayerchange = data;
-      console.log(data);
-    });
-  }
+  // getLayerChange() {
+  //   this.accountLayerservice.getMainData(this.selectedMainLayer2).subscribe((data: any) => {
+  //     this.mainLayerchange = data;
+  //     console.log(data);
+  //   });
+  // }
+
   // <________________________________ code for adding layer2 data_____________________________________________>
 
   getLayer2(selectedLayer1: any) {
@@ -232,17 +228,43 @@ export class AccountlayerComponent implements OnInit {
 
   // <_______________________________________code for getting Account Data________________________________________>
 
+  // getAccountsData() {
+  //   this.accountLayerservice
+  //     .getAccounts(
+  //       this.selectedMainLayer,
+  //       this.selectedLayer1,
+  //       this.selectedLayer2
+  //     )
+  //     .subscribe(
+  //       (data) => {
+  //         this.accountData = getAccounts( this.selectedMainLayer,
+  //           this.selectedLayer1,
+  //           this.selectedLayer2);
+  //         this.addCount(this.accountData);
+  //       },
+  //       (error) => {
+  //         this.errorMessage = error;
+  //       }
+  //     );
+  // }
   getAccountsData() {
-    this.accountLayerservice.getAccounts().subscribe(
-      (data) => {
-        this.accountData = data;
-        this.addCount(this.accountData);
-      },
-      (error) => {
-        this.errorMessage = error;
-      }
-    );
+    this.accountLayerservice
+      .getAccounts(
+        this.selectedMainLayer,
+        this.selectedLayer1,
+        this.selectedLayer2
+      )
+      .subscribe(
+        (response) => {
+          this.accountData = response;
+          this.addCount(this.accountData);
+        },
+        (error) => {
+          this.errorMessage = error;
+        }
+      );
   }
+
   errorMessage: any;
   addCount(data: any) {
     let pageSize = 10;
@@ -509,7 +531,7 @@ export class AccountlayerComponent implements OnInit {
       { title: 'Address', dataKey: 'address' },
     ];
 
-    const data = this.accountData.map((account:any, index:any) => ({
+    const data = this.accountData.map((account: any, index: any) => ({
       sn: index + 1,
       title: account.title,
       contact: account.contact,
@@ -575,6 +597,7 @@ export class AccountlayerComponent implements OnInit {
                 name: '',
               };
               this.getAccountsData();
+              this.getLayer1();
 
               Swal.fire('Added!', 'Your Account has been added.', 'success');
               this.accountLayerservice.accountAdded.emit(this.account);
@@ -651,6 +674,7 @@ export class AccountlayerComponent implements OnInit {
           .toPromise()
           .then(() => {
             this.getAccountsData();
+            this.getLayer1();
             Swal.fire('Deleted!', 'Your Account has been deleted.', 'success');
             this.accountLayerservice.accountAdded.emit(this.account);
           })
@@ -709,6 +733,7 @@ export class AccountlayerComponent implements OnInit {
                   name: '',
                 };
                 this.getAccountsData();
+                this.getLayer2(this.selectedLayer1);
 
                 Swal.fire('Added!', 'Your Account has been added.', 'success');
                 this.accountLayerservice.accountAdded.emit(this.account);
@@ -795,33 +820,26 @@ export class AccountlayerComponent implements OnInit {
         const url =
           this.api.localhost +
           `inventory/layer1s/${selectedLayer2}/layer2s/${selectedLayer1}`;
-        this.http
-          .delete(url)
-          .pipe(
-            catchError((error) => {
-              console.error(error);
-              let errorMessage = 'Failed to delete the account.';
-              if (error.error && error.error.delete) {
-                errorMessage = error.error.delete;
-              }
-              Swal.fire('Error', errorMessage, 'error');
-              return of(null);
-            })
-          )
-          .subscribe((response) => {
-            if (response !== null) {
-              this.getAccountsData();
-              Swal.fire(
-                'Deleted!',
-                'Your Account has been deleted.',
-                'success'
-              );
-              this.accountLayerservice.accountAdded.emit(this.account);
-            }
-          });
+        return this.http.delete(url).toPromise();
       },
-    });
+    })
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.getAccountsData();
+          Swal.fire('Deleted!', 'Your Account has been deleted.', 'success');
+          this.accountLayerservice.accountAdded.emit(this.account);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        let errorMessage = 'Failed to delete the account.';
+        if (error.error && error.error.delete) {
+          errorMessage = error.error.delete;
+        }
+        Swal.fire('Error', errorMessage, 'error');
+      });
   }
+
   // Search() {
   //   if (this.account_type === '') {
   //     this.ngOnInit();
@@ -838,7 +856,7 @@ export class AccountlayerComponent implements OnInit {
     } else {
       // const capitalizedTitle =
       // this.title.charAt(0).toUpperCase() + this.title.slice(1);
-      this.accountData = this.accountData.filter((res:any) => {
+      this.accountData = this.accountData.filter((res: any) => {
         return res.title.includes(this.title);
       });
     }
@@ -846,4 +864,11 @@ export class AccountlayerComponent implements OnInit {
   refresh() {
     window.location.reload();
   }
+}
+function getAccounts(
+  selectedMainLayer: string | undefined,
+  selectedLayer1: any,
+  selectedLayer2: any
+): any {
+  throw new Error('Function not implemented.');
 }

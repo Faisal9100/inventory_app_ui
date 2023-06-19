@@ -52,6 +52,7 @@ import { PasswordChangeComponent } from './password-change/password-change.compo
 import { StaffComponent } from './staff/staff.component';
 import { PermissionComponent } from './permission/permission.component';
 import { PaginationComponent } from './pagination/pagination.component';
+import { TransferComponent } from './transfer/transfer.component';
 // import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 // import { AuthQuardGuard } from './auth-quard.guard';
 
@@ -77,6 +78,7 @@ import { PaginationComponent } from './pagination/pagination.component';
     StaffComponent,
     PermissionComponent,
     PaginationComponent,
+    TransferComponent,
   ],
   imports: [
     NgChartsModule,

@@ -18,6 +18,7 @@ import { AuthguardGuard } from './authguard.guard';
 import { PasswordChangeComponent } from './password-change/password-change.component';
 import { StaffComponent } from './staff/staff.component';
 import { PermissionComponent } from './permission/permission.component';
+import { TransferComponent } from './transfer/transfer.component';
 
 const routes: Routes = [
   {
@@ -96,11 +97,11 @@ const routes: Routes = [
     component: PasswordChangeComponent,
     canActivate: [AuthguardGuard],
   },
-  // {
-  //   path: 'staff',
-  //   component: StaffComponent,
-  //   canActivate: [AuthguardGuard],
-  // },
+  {
+    path: 'transfer',
+    component: TransferComponent,
+    canActivate: [AuthguardGuard],
+  },
   // {
   //   path: 'permission',
   //   component: PermissionComponent,

@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 import { Account } from './accountlayer/accountlayer.component';
@@ -23,23 +23,41 @@ export class AccountlayerService {
 
   selectedMainLayer: any;
 
-  public url = this.api.localhost + '/inventory/accounts';
-
+  
   public url_layer2 = this.api.localhost + '/inventory/layer1s';
-
+  
   private url_layer1 = this.api.localhost + '/inventory/layer1s';
-
+  
   constructor(private http: HttpClient, public api: LocalhostApiService) {}
   page?: number;
-
+  
   public changeLayer = this.api.localhost + '/inventory/accounts/';
-  //    http://127.0.0.1:3000/inventory/accounts/?layer1_id=1
-  //  http://127.0.0.1:3000/inventory/accounts/?layer2_id=1
+  
+  // public url = this.api.localhost + '/inventory/accounts';
 
-  getAccounts(): Observable<any> {
-    // const url = `${this.url}?page=${this.page}&pageSize=${this.pageSize}`
-    return this.http.get(this.url).pipe(catchError(this.handleError));
+  // getAccounts(): Observable<any> {
+  //   return this.http.get(this.url).pipe(catchError(this.handleError));
+  // }
+  public url = this.api.localhost + '/inventory/accounts';
+
+getAccounts(mainLayer?: string, layer1?: number, layer2?: number): Observable<any> {
+  let params = new HttpParams();
+
+  if (mainLayer) {
+    params = params.set('main_layer', mainLayer);
   }
+
+  if (layer1) {
+    params = params.set('layer1_id', layer1.toString());
+  }
+
+  if (layer2) {
+    params = params.set('layer2_id', layer2.toString());
+  }
+
+  return this.http.get(this.url, { params }).pipe(catchError(this.handleError));
+}
+
 
   getLayer1(selectedMainLayer: any): Observable<any> {
     return this.http
