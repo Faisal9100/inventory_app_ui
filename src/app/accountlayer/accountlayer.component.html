@@ -54,7 +54,12 @@
 
     <div class="col">
       <label class="form-label">Layer Two:</label>
-      <select name="layer2" class="form-select" [(ngModel)]="selectedLayer2">
+      <select
+        name="layer2"
+        class="form-select"
+        (change)="onLayer2Change(selectedLayer2)"
+        [(ngModel)]="selectedLayer2"
+      >
         <option>Select Layer 2</option>
         <option [value]="value.id" *ngFor="let value of layer2">
           {{ value.name }}

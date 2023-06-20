@@ -156,6 +156,7 @@ export class AllSaleComponent {
     this.getWarehouse();
     this.getCustomer();
     this.getAllPurchase();
+    this.getDetails();
   }
 
   //  <------------------------ CODE FOR GETTING STOCK PURCHASE  ------------------------>
@@ -231,17 +232,18 @@ export class AllSaleComponent {
   getWarehouse() {
     this.warehouseService.GetWarehouse().subscribe((response) => {
       this.warehouses = <any>response.results;
-      
+
       // Remove warehouse with ID 6 from the array
-      this.warehouses = this.warehouses.filter(warehouse => warehouse.id !== 6);
-      
+      this.warehouses = this.warehouses.filter(
+        (warehouse) => warehouse.id !== 6
+      );
+
       if (this.warehouses.length > 0) {
         this.selectedWarehouse = this.warehouses[0]; // Store the first warehouse object
         this.warehouseId = this.selectedWarehouse.id; // Access the ID from the selected warehouse object
       }
     });
   }
-  
 
   // <---------- code for getting warehouse by id to get products according to warehouse ID ---------------->
 
@@ -516,7 +518,7 @@ export class AllSaleComponent {
     if (this.remarks === '') {
       this.ngOnInit();
     } else {
-      this.AllPurchaseData = this.AllPurchaseData.filter((res:any) => {
+      this.AllPurchaseData = this.AllPurchaseData.filter((res: any) => {
         return res.remarks.includes(this.remarks);
       });
     }
@@ -800,6 +802,15 @@ export class AllSaleComponent {
   checkPrice() {
     const inputPrice = this.updateSaleForm.get('price')?.value;
     this.isPriceInvalid = inputPrice < this.totalproductPrice;
+  }
+  details: any[] = [];
+  getDetails() {
+    this.http
+      .get(this.api.localhost + '/inventory/sales/14/sale_details/')
+      .subscribe((res: any) => {
+        this.details = res;
+        console.log(this.details);
+      });
   }
 }
 

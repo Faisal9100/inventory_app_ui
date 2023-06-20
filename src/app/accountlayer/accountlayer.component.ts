@@ -111,80 +111,48 @@ export class AccountlayerComponent implements OnInit {
 
   // <________________________________ code for displaying data in Main layer ____________________________________>
 
-  // onMainLayerChange(event: any) {
-  //   this.selectedMainLayer = event.target.value;
-  //   if (this.selectedMainLayer !== 'null') {
-  //     this.accountLayerservice
-  //       .getLayer1(this.selectedMainLayer)
-  //       .subscribe((data) => {
-  //         this.layer1 = data;
-  //         this.selectedMainLayerAccount = data;
-  //         console.log(this.selectedMainLayerAccount);
-  //       });
-  //   } else {
-  //     this.layer1 = [];
-  //     this.layer2 = [];
-  //   }
-  // }
   mainLayerId: any;
-  onMainLayerChange(event: any) {
-    this.selectedMainLayer = event.target.value;
-    if (this.selectedMainLayer !== 'null') {
-      this.accountLayerservice
-        .getAccounts(this.selectedMainLayer)
-        .subscribe((data) => {
-          this.mainLayerId = this.selectedMainLayer;
-          this.layer1 = data;
-          this.selectedMainLayer = this.accountData;
-
-          // Ensure data is an array or iterable
-          if (Array.isArray(data) || typeof data === 'object') {
-            // Convert the data into an array if it's not already
-            this.layer1 = Array.isArray(data) ? data : [data];
-          } else {
-            this.layer1 = [];
-          }
-
-          console.log(this.mainLayerId);
-          console.log(this.layer1);
-        });
-    } else {
-      this.layer1 = [];
-      this.layer2 = [];
-    }
-  }
 
   someValue: any;
 
   selectedMainLayerAccounts: any = [];
   selectedMainLayerAccount: any;
 
-  // onMainLayerChange(event: any) {
-  //   this.selectedMainLayer = event.target.value;
-  //   if (this.selectedMainLayer !== 'null') {
-  //     this.accountLayerservice
-  //       .getLayer1(this.selectedMainLayer)
-  //       .subscribe((data) => {
-  //         this.layer1 = data;
-  //         this.selectedMainLayerAccount = this.selectedMainLayer;
-  //         this.selectedMainLayerAccounts = data;
-  //         console.log(this.accountData);
-  //       });
-  //   } else {
-  //     this.layer1 = [];
-  //     this.layer2 = [];
-  //     this.selectedMainLayerAccount = null;
-  //     this.selectedMainLayerAccounts = [];
-  //   }
+  // onLayer1Change(selectedLayer1: any) {
+  //   this.accountLayerservice
+  //     .getLayer2(this.selectedLayer1)
+  //     .subscribe((data) => {
+  //       this.layer2 = data;
+  //       console.log(this.selectedLayer1);
+  //     });
   // }
-
   onLayer1Change(selectedLayer1: any) {
-    this.accountLayerservice
-      .getLayer2(this.selectedLayer1)
-      .subscribe((data) => {
+    this.selectedLayer1 = selectedLayer1;
+    this.accountLayerservice.getLayer2(this.selectedLayer1).subscribe(
+      (data) => {
         this.layer2 = data;
         console.log(this.selectedLayer1);
-      });
+        // Retrieve accounts based on selected main layer, layer 1, and layer 2
+        this.getAccountsData();
+      },
+      // this.layer1 = '';
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+  onLayer2Change(selectedLayer2: any) {
+    this.selectedLayer2 = selectedLayer2;
+    this.accountLayerservice.getLayer2(this.selectedLayer2).subscribe(
+      (data) => {
+        console.log(this.selectedLayer1);
+        // Retrieve accounts based on selected main layer, layer 1, and layer 2
+        this.getAccountsData();
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
   }
 
   // <______________________________________ code for adding layer1 data _____________________________________>
@@ -202,13 +170,6 @@ export class AccountlayerComponent implements OnInit {
       }
     );
   }
-  mainLayerchange: any[] = [];
-  // getLayerChange() {
-  //   this.accountLayerservice.getMainData(this.selectedMainLayer2).subscribe((data: any) => {
-  //     this.mainLayerchange = data;
-  //     console.log(data);
-  //   });
-  // }
 
   // <________________________________ code for adding layer2 data_____________________________________________>
 
@@ -216,7 +177,7 @@ export class AccountlayerComponent implements OnInit {
     this.accountLayerservice.getLayer2(selectedLayer1).subscribe(
       (data) => {
         this.layer2 = data;
-
+        this.getAccountsData();
         console.log(data);
       },
       (error) => {
@@ -228,25 +189,34 @@ export class AccountlayerComponent implements OnInit {
 
   // <_______________________________________code for getting Account Data________________________________________>
 
-  // getAccountsData() {
-  //   this.accountLayerservice
-  //     .getAccounts(
-  //       this.selectedMainLayer,
-  //       this.selectedLayer1,
-  //       this.selectedLayer2
-  //     )
-  //     .subscribe(
-  //       (data) => {
-  //         this.accountData = getAccounts( this.selectedMainLayer,
-  //           this.selectedLayer1,
-  //           this.selectedLayer2);
-  //         this.addCount(this.accountData);
-  //       },
-  //       (error) => {
-  //         this.errorMessage = error;
-  //       }
-  //     );
-  // }
+  onMainLayerChange(event: any) {
+    this.selectedMainLayer = event.target.value;
+    if (this.selectedMainLayer !== 'null') {
+      this.accountLayerservice.getLayer1(this.selectedMainLayer).subscribe(
+        (data) => {
+          this.layer1 = data;
+          // Update the selected layer 1 value
+          this.selectedLayer1 = '';
+          this.selectedLayer2 = ''; // Or set it to the default value you desire
+          this.accountData = []; // Clear the account data when changing the main layer
+
+          // Retrieve accounts based on selected main layer and layer 1
+          this.getAccountsData();
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+    } else {
+      this.layer1 = [];
+      this.layer2 = [];
+
+      this.selectedLayer2 = '';
+      this.selectedLayer1 = ''; // Reset the selected layer 1 value
+      this.accountData = []; // Clear the account data when changing the main layer
+    }
+  }
+
   getAccountsData() {
     this.accountLayerservice
       .getAccounts(
@@ -255,11 +225,12 @@ export class AccountlayerComponent implements OnInit {
         this.selectedLayer2
       )
       .subscribe(
-        (response) => {
-          this.accountData = response;
+        (data) => {
+          this.accountData = data;
           this.addCount(this.accountData);
         },
         (error) => {
+          // Handle the error response
           this.errorMessage = error;
         }
       );
@@ -757,50 +728,6 @@ export class AccountlayerComponent implements OnInit {
       },
     });
   }
-
-  // addLayer_two_new_account(selectedLayer2: any) {
-  //   Swal.fire({
-  //     title: 'Add Layer Two',
-  //     html: `
-  //       <div class="form-group">
-  //         <label for="Title" class="float-start my-2">Name:</label>
-  //         <input type="text" id="accountName" class="form-control" placeholder="Name" >
-  //       </div>
-  //     `,
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Add',
-  //     preConfirm: () => {
-  //       const accountName = (<HTMLInputElement>document.getElementById('accountName')).value;
-  //       if (!accountName || !selectedLayer2) {
-  //         Swal.showValidationMessage('Layer Two Name is required, and Layer One must be selected.');
-  //       } else {
-  //         const newLayerAccount = {
-  //           name: accountName,
-  //           main_layer: selectedLayer2, // Assuming 'main_layer' is a required field
-  //         };
-  //         return this.http
-  //           .post<Account>(`http://${this.api.localhost}/inventory/layer1s/${selectedLayer2}/layer2s/`, newLayerAccount)
-  //           .toPromise()
-  //           .catch((error: any) => {
-  //             Swal.fire({
-  //               icon: 'error',
-  //               title: 'Adding Failed',
-  //               text: error.error,
-  //             });
-  //           });
-  //       }
-  //     },
-  //   }).then((result) => {
-  //     if (result.value) {
-  //       this.newLayerAccount = {
-  //         name: '',
-  //       };
-  //       this.getAccountsData();
-  //       Swal.fire('Added!', 'Your Account has been added.', 'success');
-  //       this.accountLayerservice.accountAdded.emit(this.account);
-  //     }
-  //   });
-  // }
 
   //  <------------------------ CODE FOR DELETING LAYER TWO ACCOUNT ------------------------>
 
