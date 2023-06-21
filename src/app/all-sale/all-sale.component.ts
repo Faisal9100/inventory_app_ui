@@ -16,6 +16,8 @@ import Swal from 'sweetalert2';
 import { CustomerService } from '../customer.service';
 import { LocalhostApiService } from '../localhost-api.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 export interface PurchaseData {
   id: number;
@@ -30,7 +32,7 @@ export interface PurchaseData {
   amount: number;
   voucher_type: string;
   account_customer: string;
-  reamrks: string;
+  remarks: string;
 
   date: Date;
 }
@@ -39,6 +41,17 @@ interface Product {
   name: string;
   price: number;
   product: string;
+}
+interface SaleDetails {
+  account_customer: {
+    id: number;
+    title: string;
+    contact: string;
+    email: string;
+    status: boolean;
+    // Add more properties if needed
+  };
+  // Add other properties as needed
 }
 
 // Define a row interface to represent a row in the table
@@ -156,7 +169,6 @@ export class AllSaleComponent {
     this.getWarehouse();
     this.getCustomer();
     this.getAllPurchase();
-    this.getDetails();
   }
 
   //  <------------------------ CODE FOR GETTING STOCK PURCHASE  ------------------------>
@@ -804,13 +816,58 @@ export class AllSaleComponent {
     this.isPriceInvalid = inputPrice < this.totalproductPrice;
   }
   details: any[] = [];
-  getDetails() {
+  sale_ID: any;
+  getDetails(item: string) {
     this.http
-      .get(this.api.localhost + '/inventory/sales/14/sale_details/')
-      .subscribe((res: any) => {
-        this.details = res;
+      .get(this.api.localhost + `/inventory/sales/${item}/sale_details/`)
+      .subscribe((res) => {
+        this.details = <any>res;
+        // this.generatePDF(item);
         console.log(this.details);
       });
+  }
+
+  // generatePDF() {
+  //   const pdfElement = document.getElementById('pdf-content');
+
+  //   if (pdfElement) {
+  //     html2canvas(pdfElement).then((canvas) => {
+  //       const imgData = canvas.toDataURL('images/png');
+  //       const pdf = new jsPDF();
+  //       const imgProps = pdf.getImageProperties(imgData);
+  //       const pdfWidth = pdf.internal.pageSize.getWidth();
+  //       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+  //       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+  //       pdf.save('Sale Invoice.pdf');
+  //     });
+  //   }
+  // }
+  generatePDF() {
+    const pdfElement = document.getElementById('pdf-content');
+
+    if (pdfElement) {
+      const options = {
+        scale: 5, // Increase scale factor for higher resolution
+        dpi: 300, // Increase DPI for better quality
+        useCORS: true, // Enable CORS to prevent tainted canvas error
+      };
+
+      html2canvas(pdfElement, options).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('Sale Invoice.pdf');
+      });
+    }
+  }
+
+  open(invoice: any) {
+    this.modalService.open(invoice, { size: 'lg' });
   }
 }
 

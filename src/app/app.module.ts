@@ -7,7 +7,11 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpClientModule,
+} from '@angular/common/http';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -53,6 +57,7 @@ import { StaffComponent } from './staff/staff.component';
 import { PermissionComponent } from './permission/permission.component';
 import { PaginationComponent } from './pagination/pagination.component';
 import { TransferComponent } from './transfer/transfer.component';
+import { NgxPrintModule } from 'ngx-print';
 // import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 // import { AuthQuardGuard } from './auth-quard.guard';
 
@@ -102,7 +107,8 @@ import { TransferComponent } from './transfer/transfer.component';
     NgSelectModule,
     ReactiveFormsModule,
     FormsModule,
-    NgChartsModule
+    NgChartsModule,
+    NgxPrintModule,
   ],
   providers: [
     WarehouseServiceService,
@@ -116,9 +122,8 @@ import { TransferComponent } from './transfer/transfer.component';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptorInterceptor,
-      multi: true
-    }
-    
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

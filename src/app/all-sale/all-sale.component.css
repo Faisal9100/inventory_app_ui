@@ -24,3 +24,36 @@ ng-option {
   align-items: center;
   text-align: center;
 }
+.receipt {
+  display: flex;
+}
+
+.left-column {
+  flex: 1;
+}
+
+.right-column {
+  flex: 1;
+}
+.span {
+  font-weight: 600;
+}
+.Powered {
+  font-weight: 600;
+}
+.total {
+  font-weight: 600;
+  width: 200px;
+  padding: 8px;
+}
+.newtotal {
+  border-bottom: 1px solid rgb(184, 183, 183);
+}
+.NEW {
+  font-weight: 900;
+  /* margin-left: 204px; */
+  margin-right: 116px;
+}
+.price {
+  margin-right: 115px;
+}

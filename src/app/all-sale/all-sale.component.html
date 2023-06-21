@@ -89,6 +89,14 @@
           >
             <i class="bi bi-trash3-fill"></i>
           </button>
+          <button
+            class="btn btn-outline-secondary"
+            (click)="getDetails(item.id)"
+            (click)="open(invoice)"
+          >
+            <!-- (click)="generatePDF()" -->
+            <i class="bi bi-filetype-pdf"></i>
+          </button>
         </td>
       </tr>
     </tbody>
@@ -483,6 +491,104 @@
     </button>
     <button type="button" class="btn btn-outline-dark" (click)="c('close')">
       Close
+    </button>
+  </div>
+</ng-template>
+
+<!-- <================================== code for generating reciept ==========================================> -->
+<ng-template #invoice let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body" id="pdf-content">
+    <div class="d-flex">
+      <img src="assets/images/iva.png" width="100px" height="70px" alt="" />
+    </div>
+    <br /><br />
+
+    <div class="receipt">
+      <div class="left-column" *ngFor="let item of details">
+        <h2>Customer Details</h2>
+
+        <p>
+          <Span class="span">Name:</Span>
+          {{ item?.account_customer.title }}
+        </p>
+        <p>
+          <Span class="span">Contact:</Span>
+          {{ item?.account_customer.contact }}
+        </p>
+        <p>
+          <Span class="span">Email:</Span> {{ item?.account_customer.email }}
+        </p>
+        <p>
+          <Span class="span">Address: </Span
+          >{{ item?.account_customer.address }}
+        </p>
+      </div>
+      <h4 class="fs-5 justify-content-center NEW" id="modal-basic-title">
+        Sale Invoice!
+      </h4>
+      <div class="float-end" *ngFor="let item of details">
+        <h2>Bill From</h2>
+        <p><Span class="span">Invoice No:</Span> {{ item.invoice_no }}</p>
+        <p><Span class="span">Date:</Span> {{ item?.date }}</p>
+        <p>
+          <Span class="span">Warehouse Name:</Span> {{ item?.warehouse_name }}
+        </p>
+
+        <p><Span class="span">Remarks:</Span> {{ item?.remarks }}</p>
+      </div>
+    </div>
+    <div>
+      <table class="table table-striped text-center table-bordered table-hover">
+        <thead class="table-head">
+          <tr>
+            <th>#</th>
+            <th>Product Name</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let item of details; let i = index">
+            <tr *ngFor="let saleItem of item.sale_items; let j = index">
+              <td>{{ j + 1 }}</td>
+              <td>{{ saleItem.product_name }}</td>
+              <td>{{ saleItem.price }}</td>
+              <td>{{ saleItem.quantity }}</td>
+              <td>{{ saleItem.sale_amount }}</td>
+              <!-- <td *ngIf="j === 0">{{ item?.quantity }}</td>
+              <td *ngIf="j === 0">{{ item?.sale_amount }}</td> -->
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+    <br /><br />
+    <!-- <div *ngFor="let saleItem of data.sale_items; let j = index">
+      <p class="total">
+        <span>Total Per Product:</span>{{ saleItem?.price }}
+      </p>
+    </div> -->
+    <div class="float-end price " *ngFor="let data of details; let i = index">
+      <p class="newtotal">
+        <span class="total">Total Quantity:</span> {{ data.quantity }}
+      </p>
+      <p class="newtotal">
+        <span class="total">Total Amount:</span> {{ data.sale_amount }}
+      </p>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-outline-primary" (click)="generatePDF()">
+      Print
     </button>
   </div>
 </ng-template>
