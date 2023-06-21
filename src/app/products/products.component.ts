@@ -51,8 +51,8 @@ export class ProductsComponent {
   formBuilder: any;
   selectedFile: any;
   productData1: any;
-  public url =  this.api.localhost + '/inventory/products/';
-  public url2 =  this.api.localhost + '/inventory/products/${id}';
+  public url = this.api.localhost + '/inventory/products/';
+  public url2 = this.api.localhost + '/inventory/products/${id}';
 
   productForm = new FormGroup({
     name: new FormControl(),
@@ -93,25 +93,17 @@ export class ProductsComponent {
   }
   ngOnInit(): void {
     this.getProducts();
-    this.categoryService
-      .getCategories()
-      .subscribe((categories) => (this.categories = categories.results));
-    this.brandService
-      .getBrand()
-      .subscribe((brands) => (this.brands = brands.results));
-    this.unitService
-      .getUnit()
-      .subscribe((units) => (this.units = units.results));
+    this.getBrand();
+    this.getUnit();
+    this.getCategories();
   }
 
   // <-------------------------------------- CODE FOR GETTING BRAND ------------------------------------->
 
   getBrand() {
-    this.brandService
-      .getBrand()
-      .subscribe((data) => {
-        this.brands = data.results;
-      });
+    this.brandService.getBrand().subscribe((data) => {
+      this.brands = data.results;
+    });
   }
 
   // <-------------------------------------- CODE FOR GETTING UNIT ------------------------------------->
@@ -125,11 +117,9 @@ export class ProductsComponent {
   // <-------------------------------------- CODE FOR GETTING CATEGORY ------------------------------------->
 
   getCategories() {
-    this.categoryService
-      .getCategories()
-      .subscribe((response) => {
-        this.categories = response.results;
-      });
+    this.categoryService.getCategories().subscribe((response) => {
+      this.categories = response.results;
+    });
   }
 
   // <-------------------------------------- CODE FOR GETTING PRODUCTS ------------------------------------->
@@ -141,9 +131,7 @@ export class ProductsComponent {
     });
   }
 
-  
-
- addCount(data: any) {
+  addCount(data: any) {
     let pageSize = 10;
     let pages = Math.ceil(data['count'] / pageSize);
     let nums: any[] = [];
@@ -216,40 +204,44 @@ export class ProductsComponent {
       unit: this.productForm.get('unit')?.value,
       category: this.productForm.get('category')?.value,
     };
+
     if (
-      !this.name ||
-      !this.note ||
-      !this.brand ||
-      !this.unit ||
-      !this.category
+      !productData.name ||
+      !productData.brand ||
+      !productData.unit ||
+      !productData.category
     ) {
       Swal.fire({
         icon: 'error',
-        title: 'please fill all the fields',
-        text: 'please fill all the fields',
+        title: 'Please fill all the fields',
+        text: 'Please fill all the fields',
       });
+      return; // Stop execution if any field is missing
     }
+
     const formData = new FormData();
-    formData.append('name', this.productForm.get('name')?.value);
-    formData.append('note', this.productForm.get('note')?.value);
-    formData.append('brand', this.productForm.get('brand')?.value);
-    formData.append('unit', this.productForm.get('unit')?.value);
-    formData.append('category', this.productForm.get('category')?.value);
+    formData.append('name', productData.name);
+    formData.append('note', productData.note);
+    formData.append('brand', productData.brand);
+    formData.append('unit', productData.unit);
+    formData.append('category', productData.category);
     formData.append('image', this.selectedFile, this.selectedFile.name);
     formData.append('product', JSON.stringify(productData));
-    console.log(this.productForm.get('unit')?.value);
+
     this.productService.addProduct(formData).subscribe(
       (response) => {
-        const formData = {
+        const resetFormData = {
           name: '',
           note: '',
           brand: '',
           unit: '',
           category: '',
+          image: '',
         };
+
         console.log(response);
         this.getProducts();
-        this.productForm.reset();
+        this.productForm.reset(resetFormData);
         this.modalService.dismissAll();
         Swal.fire({
           icon: 'success',
@@ -258,8 +250,8 @@ export class ProductsComponent {
           timer: 2000,
         });
       },
-      (error) => console.log(error),
-      () => console.log('error adding product')
+      (error) => console.error(error),
+      () => console.log('Error adding product')
     );
   }
 
@@ -377,8 +369,7 @@ export class ProductsComponent {
       formData.append('image', this.selectedFile, this.selectedFile.name);
 
     const url =
-      this.api.localhost +
-      `/inventory/products/${this.updateProduct?.id}/`;
+      this.api.localhost + `/inventory/products/${this.updateProduct?.id}/`;
 
     this.http.patch(url, formData).subscribe(
       (response) => {
@@ -395,7 +386,6 @@ export class ProductsComponent {
       },
       (error) => {
         console.log(error);
-        
       }
     );
   }

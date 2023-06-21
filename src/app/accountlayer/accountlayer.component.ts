@@ -25,7 +25,7 @@ export interface Account {
   styleUrls: ['./accountlayer.component.css'],
 })
 export class AccountlayerComponent implements OnInit {
-  selectedMainLayer?: string;
+  selectedMainLayer?: any;
   selectedMainLayer2?: string;
 
   public create_account_url = this.api.localhost + '/inventory/layer2s/';
@@ -739,43 +739,38 @@ export class AccountlayerComponent implements OnInit {
       confirmButtonText: 'Delete',
       preConfirm: () => {
         if (!selectedLayer2 || !selectedLayer1) {
-          Swal.showValidationMessage(
-            'Layer Two and Layer One must be selected.'
+          return Promise.reject(
+            new Error('Layer Two and Layer One must be selected.')
           );
-          return;
         }
-        const url =
-          this.api.localhost +
-          `inventory/layer1s/${selectedLayer2}/layer2s/${selectedLayer1}`;
+        const url = `${this.api.localhost}inventory/layer1s/${selectedLayer2}/layer2s/${selectedLayer1}`;
         return this.http.delete(url).toPromise();
       },
     })
       .then((result) => {
         if (result.isConfirmed) {
-          this.getAccountsData();
           Swal.fire('Deleted!', 'Your Account has been deleted.', 'success');
           this.accountLayerservice.accountAdded.emit(this.account);
+          // Clear the input fields here
+          this.selectedLayer2 = null;
+          this.selectedLayer1 = null;
+          this.selectedMainLayer = null;
+          this.getAccountsData();
+          // Clear any other relevant form controls or variables
         }
+       
       })
       .catch((error) => {
         console.error(error);
         let errorMessage = 'Failed to delete the account.';
-        if (error.error && error.error.delete) {
-          errorMessage = error.error.delete;
+        if (error.message) {
+          errorMessage = error.message;
         }
         Swal.fire('Error', errorMessage, 'error');
       });
   }
 
-  // Search() {
-  //   if (this.account_type === '') {
-  //     this.ngOnInit();
-  //   } else {
-  //     this.accountData = this.accountData.filter((res) => {
-  //       return res.account_type.match(this.account_type);
-  //     });
-  //   }
-  // }
+
   title: any;
   Search() {
     if (this.title === '') {
