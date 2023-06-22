@@ -52,33 +52,44 @@ export class UnitsComponent implements OnInit {
   ngOnInit() {
     this.getProducts();
 
-   this.getUnit();
+    this.getUnit();
   }
 
-  name: any;
-
-  Search() {
-    if (this.name == '') {
-      this.ngOnInit();
-    } else {
-      this.Units = this.Units.filter((res: any) => {
-        return res.name.match(this.name);
-      });
-    }
-  }
+  // <===============================  CODE FOR GETTING PRODUCTS  ====================================>
 
   getProducts() {
     this.productService.getProducts().subscribe((data) => {
       this.productData = data.results;
     });
-    // console.log(this.productData);
   }
+  // <===============================  CODE FOR GETTING UNITS  ====================================>
 
   getUnit() {
-    this.unitService.getUnit().subscribe((response:any) => {
+    this.unitService.getUnit().subscribe((response: any) => {
       this.Units = <any>response;
       this.addCount(this.Units);
-    }); 
+    });
+  }
+
+  search() {
+    this.searchBrand(this.searchTerm);
+  }
+
+  Unit1: any[] = [];
+  searchTerm: any;
+  // <===============================  CODE FOR SEARCHING UNITS  ====================================>
+
+  searchBrand(searchTerm: any) {
+    const searchUrl = this.url + '?search=' + searchTerm;
+    this.http.get(searchUrl).subscribe(
+      (res: any) => {
+        this.Units = res;
+        this.addCount(this.Units);
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
   }
   addCount(data: any) {
     let pageSize = 10;
@@ -93,6 +104,9 @@ export class UnitsComponent implements OnInit {
   totalRecord: any;
   p: any;
   pages: number = 1;
+
+  // <===============================  CODE FOR ADDING UNITS  ====================================>
+
 
   addUnit() {
     Swal.fire({
@@ -144,8 +158,11 @@ export class UnitsComponent implements OnInit {
       });
   }
 
+  // <===============================  CODE FOR DELETING UNITS  ====================================>
+
   deleteUnit(categoryId: string) {
     Swal.fire({
+      icon: 'question',
       title: 'Are you sure you want to delete this Unit?',
       showCancelButton: true,
       confirmButtonText: 'Delete',
@@ -156,8 +173,7 @@ export class UnitsComponent implements OnInit {
     })
       .then(() => {
         // Remove the deleted unit from the Units array
-   
-  
+
         Swal.fire({
           icon: 'success',
           title: 'Unit Deleted!',
@@ -176,15 +192,21 @@ export class UnitsComponent implements OnInit {
         });
       });
   }
-  
+
   taskToEdit: any;
 
-  public url = this.api.localhost + '/inventory/Units/';
+  public url = this.api.localhost + '/inventory/units/';
 
+
+  // <======================  CODE FOR OPENING MODEL FOR UPDATING UNITS ===========================>
+  
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);
     this.taskToEdit = newProduct;
   }
+  
+  // <===============================  CODE FOR UPDATING  UNITS  ====================================>
+
   openUpdateModal(product: Product) {
     Swal.fire({
       title: 'Update Product',

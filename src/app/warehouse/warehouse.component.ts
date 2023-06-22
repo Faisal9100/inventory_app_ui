@@ -10,7 +10,7 @@ export interface Product {
   id: number;
   name: string;
   contact: number;
-  email:string;
+  email: string;
   status: string;
 }
 
@@ -26,7 +26,7 @@ export class WarehouseComponent {
   totalPages = 0;
   pages: number[] = [];
   products: any = {};
-  product: Product = { id: 0, name: '', contact: 0,email:'', status: '' };
+  product: Product = { id: 0, name: '', contact: 0, email: '', status: '' };
   closeResult: any;
 
   public url = this.api.localhost + '/inventory/warehouses/';
@@ -109,10 +109,22 @@ export class WarehouseComponent {
   getwarehouse() {
     this.warehouseService.GetWarehouse().subscribe((response) => {
       this.products = <any>response;
-     this.addCount(this.products);
+      this.addCount(this.products);
     });
   }
-  
+
+  search() {
+    this.searchSale(this.searchTerm);
+  }
+  public searchurl = this.api.localhost + '/inventory/warehouses/';
+  searchTerm: any;
+  searchSale(searchTerm: any) {
+    const searchUrl = this.url + '?search=' + searchTerm;
+    this.http.get(searchUrl).subscribe((res: any) => {
+      this.products = res;
+      this.addCount(this.products);
+    });
+  }
 
   addCount(data: any) {
     let pageSize = 10;
@@ -228,7 +240,7 @@ export class WarehouseComponent {
       { title: 'Status', dataKey: 'status' },
     ];
 
-    const data = this.products.map((product:any, index:any) => ({
+    const data = this.products.map((product: any, index: any) => ({
       sn: index + 1,
       name: product.name,
       address: product.address,
@@ -253,7 +265,7 @@ export class WarehouseComponent {
     if (this.name == '') {
       this.ngOnInit();
     } else {
-      this.products = this.products.filter((res:any) => {
+      this.products = this.products.filter((res: any) => {
         return res.name.match(this.name);
       });
     }

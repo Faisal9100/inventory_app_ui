@@ -56,38 +56,58 @@ export class BrandsComponent {
     data['pages'] = nums;
     data['current'] = 1;
   }
+
+  // <===============================  CODE FOR GETTING PRODUCTS  ====================================>
+
   getProducts() {
     this.brandService.getProducts().subscribe((data) => {
       this.productData = data.results;
     });
   }
-  name: any;
-  Search() {
-    if (this.name == '') {
-      this.ngOnInit();
-    } else {
-      this.brands = this.brands.filter((res: any) => {
-        return res.name.match(this.name);
-      });
-    }
-  }
-  getBrand() {
-    this.brandService.getBrand().subscribe((res: any) => {
-      this.brands = res;
-      this.addCount(this.brands);
-    });
-  }
-  // pageChanged(event: any): void {
-  //   const pageIndex = event.pageIndex;
-  //   const pageSize = event.pageSize;
-  //   this.getBrand(pageIndex, pageSize);
-  // }
 
-  p: any;
-  pageChanged(event: any) {
-    this.currentPage = event;
-    this.getBrand();
+  // <===============================  CODE FOR SEARCHING BRANDS  ====================================>
+
+  search() {
+    this.searchBrand(this.searchTerm);
   }
+  searchTerm: any;
+  showNoRecordsFound: boolean = false;
+
+  searchBrand(searchTerm: any) {
+    const searchUrl = this.url + '?search=' + searchTerm;
+    this.http.get(searchUrl).subscribe(
+      (res: any) => {
+        this.brands = res;
+        this.addCount(this.brands);
+        this.showNoRecordsFound = (this.brands.length === 0);
+      },
+      (error) => {
+        console.error(error);
+        this.showNoRecordsFound = true;
+      }
+    );
+  }
+  
+
+  // <===============================  CODE FOR GETTING  BRANDS  ====================================>
+
+  getBrand() {
+    this.brandService.getBrand().subscribe(
+      (res: any) => {
+        this.brands = res;
+        this.addCount(this.brands);
+        this.showNoRecordsFound = (this.brands.length === 0);
+      },
+      (error) => {
+        console.error(error);
+        this.showNoRecordsFound = true;
+      }
+    );
+  }
+  
+
+  // <===============================  CODE FOR ADDING BRANDS  ====================================>
+
 
   addBrand() {
     Swal.fire({
@@ -139,8 +159,12 @@ export class BrandsComponent {
       });
   }
 
+  // <===============================  CODE FOR DELETING BRANDS  ====================================>
+
+
   deleteBrand(categoryId: string) {
     Swal.fire({
+      icon: 'question',
       title: 'Are you sure you want to delete this brand?',
       showCancelButton: true,
       confirmButtonText: 'Delete',
@@ -151,18 +175,22 @@ export class BrandsComponent {
     })
       .then((result) => {
         if (result.isConfirmed) {
-          this.brands = this.brands.filter((brand: any) => {
-            return brand.id !== categoryId;
-          });
+          if (Array.isArray(this.brands)) {
+            // Update the brands array after successful deletion
+            this.brands = this.brands.filter((brand: any) => {
+              return brand.id !== categoryId;
+            });
+          }
 
           Swal.fire({
             icon: 'success',
             title: 'Brand Deleted!',
-            text: `The brand has been deleted.`,
+            text: 'The brand has been deleted.',
             showConfirmButton: true,
             timer: 1000,
           });
         }
+        this.getBrand();
       })
       .catch((error) => {
         Swal.fire({
@@ -173,14 +201,22 @@ export class BrandsComponent {
         });
       });
   }
+
   taskToEdit: any;
 
   public url = this.api.localhost + '/inventory/brands/';
+
+
+  // <==========================  CODE FOR OPENING MODEL FOR UPDATING BRANDS  ===============================>
 
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);
     this.taskToEdit = newProduct;
   }
+
+  // <==========================  CODE  FOR UPDATING BRANDS  ===============================>
+
+
   openUpdateModal(product: Product) {
     Swal.fire({
       title: 'Update Product',

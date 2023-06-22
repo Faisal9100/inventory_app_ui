@@ -131,6 +131,18 @@ export class ProductsComponent {
     });
   }
 
+  search() {
+    this.searchProduct(this.searchTerm);
+  }
+  searchTerm: any;
+  searchProduct(searchTerm: any) {
+    const searchUrl = this.url + '?search=' + searchTerm;
+    this.http.get(searchUrl).subscribe((res: any) => {
+      this.productData1 = res;
+      this.addCount(this.productData1);
+    });
+  }
+
   addCount(data: any) {
     let pageSize = 10;
     let pages = Math.ceil(data['count'] / pageSize);
@@ -225,11 +237,16 @@ export class ProductsComponent {
     formData.append('brand', productData.brand);
     formData.append('unit', productData.unit);
     formData.append('category', productData.category);
-    formData.append('image', this.selectedFile, this.selectedFile.name);
+
+    if (this.selectedFile) {
+      formData.append('image', this.selectedFile, this.selectedFile.name);
+    }
+
     formData.append('product', JSON.stringify(productData));
 
     this.productService.addProduct(formData).subscribe(
       (response) => {
+        this.selectedFile = null;
         const resetFormData = {
           name: '',
           note: '',

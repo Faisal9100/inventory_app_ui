@@ -4,13 +4,12 @@
   <div class="input-group mb-3">
     <input
       type="text"
-      class="form-control w-25"
-      placeholder="Search Products"
-      name="name"
-      [(ngModel)]="name"
-      (ngModelChange)="Search()"
+      class="form-control"
+      placeholder="Search Product"
+      [(ngModel)]="searchTerm"
+      (keydown)="search()"
     />
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" (click)="(search)">
       <i class="bi bi-search"></i>
     </button>
     <button
@@ -20,9 +19,9 @@
     >
       <i class="bi bi-plus-circle"></i> Add new
     </button>
-    <button class="btn btn-outline-danger" (click)="generatePDF()">
+    <!-- <button class="btn btn-outline-danger" (click)="generatePDF()">
       <i class="bi bi-arrow-down-circle"></i> PDF
-    </button>
+    </button> -->
   </div>
 </div>
 <div class="top-sellling">
@@ -39,14 +38,17 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="
-          let product of productData1?.results
-           
-        "
-      >
-        <td>
+      <tr *ngFor="let product of productData1?.results">
+        <td *ngIf="product.image != null">
           <img width="50px" height="50px" src="{{ product.image }}" alt="" />
+        </td>
+        <td *ngIf="product.image == null">
+          <img
+            width="50px"
+            height="50px"
+            src="assets/images/no_image.png"
+            alt=""
+          />
         </td>
         <td>{{ product.name }}</td>
         <td>{{ product.category_name }}</td>
@@ -76,11 +78,8 @@
 </div>
 
 <ng-template #content let-c="close" let-d="dismiss">
-  <div
-    class="modal-header"
-    style="background-color: var(--bs-primary-bg-subtle)"
-  >
-    <h4 class="modal-title mt-3 fs-3" id="modal-basic-title">Add Products</h4>
+  <div class="modal-header">
+    <h2 class="modal-title mt-3" id="modal-basic-title">Add Products</h2>
     <button
       type="button"
       class="btn-close"
@@ -102,16 +101,6 @@
             required
           />
         </div>
-        <!-- <div class="col">
-          <label class="form-label">Quantity:</label>
-          <input
-            type="number"
-            class="form-control"
-            name="quantity"
-            formControlName="quantity"
-            required
-          />
-        </div> -->
       </div>
       <div class="form-group mt-3">
         <div class="col">
@@ -191,11 +180,8 @@
   </div>
 </ng-template>
 <ng-template #content3 let-c="close" let-d="dismiss">
-  <div
-    class="modal-header"
-    style="background-color: var(--bs-primary-bg-subtle)"
-  >
-    <h4 class="modal-title mt-3 fs-3" id="modal-basic-title">Add Products</h4>
+  <div class="modal-header">
+    <h2 class="modal-title mt-3" id="modal-basic-title">Update Products</h2>
     <button
       type="button"
       class="btn-close"

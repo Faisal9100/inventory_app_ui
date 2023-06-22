@@ -1,6 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { NgbActiveModal, NgbModal, NgbModalConfig } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbActiveModal,
+  NgbModal,
+  NgbModalConfig,
+} from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2';
 import { AllpurchasesService } from '../allpurchases.service';
 import { WarehouseService } from '../warehouse.service';
@@ -10,7 +14,8 @@ import { LocalhostApiService } from '../localhost-api.service';
 import { ProductService } from '../product.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { SaleService } from './../sale.service';
-
+import html2canvas from 'html2canvas';
+import jsPDF from 'jspdf';
 
 export interface PurchaseData {
   id: number;
@@ -52,7 +57,7 @@ interface Row {
 @Component({
   selector: 'app-transfer',
   templateUrl: './transfer.component.html',
-  styleUrls: ['./transfer.component.css']
+  styleUrls: ['./transfer.component.css'],
 })
 export class TransferComponent {
   public isProductSelected: boolean = false;
@@ -71,7 +76,7 @@ export class TransferComponent {
   pages: number[] = [];
   id: any;
   closeResult: any;
-  AllPurchaseData: any = {} ;
+  AllPurchaseData: any = {};
   stockPurchaseData: any[] = [];
   totalItems: any;
   itemsPerPage: any;
@@ -83,6 +88,7 @@ export class TransferComponent {
   purchaseDate?: Date;
   selectedCustomer: any;
   selectedWarehouse: any;
+  selectedWarehouse2: any;
   payableAmount?: number;
   selectedRemark: any;
   purchaseId: any;
@@ -151,6 +157,7 @@ export class TransferComponent {
     this.getWarehouse();
     this.getCustomer();
     this.getAllPurchase();
+    this.getProductById(this.warehouseId);
   }
 
   //  <------------------------ CODE FOR GETTING STOCK PURCHASE  ------------------------>
@@ -163,25 +170,21 @@ export class TransferComponent {
       this.isLoading = false;
     });
   }
-  // getAllPurchase() {
-  //   this.isLoading = true;
-  //   this.SaleService.getTransfer().subscribe((data) => {
-  //     if (Array.isArray(data)) {
-  //       // Filter out the "Head Office" entry
-  //       this.AllPurchaseData = data.filter(item => item !== "Head Office");
-        
-  //       // Perform other operations on the filtered data
-  //       this.addCount(this.AllPurchaseData);
-  //     } else {
-  //       console.error("Data is not an array.");
-  //       // Handle the error or set this.AllPurchaseData to an appropriate value
-  //       // depending on your requirements
-  //     }
-  
-  //     this.isLoading = false;
-  //   });
-  // }
-  
+  // <---------------------------------- code for search ----------------------------------------->
+
+  search() {
+    this.searchTransfer(this.searchTerm);
+  }
+  public transfer = this.api.localhost + '/inventory/transfers/';
+  searchTerm: any;
+  searchTransfer(searchTerm: any) {
+    const searchUrl = this.transfer + '?search=' + searchTerm;
+    this.http.get(searchUrl).subscribe((res: any) => {
+      this.AllPurchaseData = res;
+      this.addCount(this.AllPurchaseData);
+    });
+  }
+
   addCount(data: any) {
     let pageSize = 10;
     let pages = Math.ceil(data['count'] / pageSize);
@@ -236,7 +239,9 @@ export class TransferComponent {
   getWarehouse() {
     this.warehouseService.GetWarehouse().subscribe((response) => {
       this.warehouses = <any>response.results;
-      this.warehouses = this.warehouses.filter(warehouse => warehouse.id !== 6);
+      this.warehouses = this.warehouses.filter(
+        (warehouse) => warehouse.id !== 6
+      );
       if (this.warehouses.length > 0) {
         this.selectedWarehouse = this.warehouses[0]; // Store the first warehouse object
         this.warehouseId = this.selectedWarehouse.id; // Access the ID from the selected warehouse object
@@ -252,12 +257,12 @@ export class TransferComponent {
     );
     if (selectedWarehouse) {
       this.warehouseId = selectedWarehouse.id;
-      this.getProductById(warehouseId);
       console.log(this.warehouseId);
+      this.getProductById(warehouseId);
     }
   }
   warehouses: any[] = [];
-  warehouseId: any;
+  warehouseId: number= 6;
   productSale: any[] = [];
 
   // <-------------------------- code for getting product according to warehouse ID ---------------------->
@@ -392,7 +397,10 @@ export class TransferComponent {
     };
 
     this.http
-      .post<{ id: number }>(this.api.localhost + '/inventory/transfers/', payload)
+      .post<{ id: number }>(
+        this.api.localhost + '/inventory/transfers/',
+        payload
+      )
       .subscribe(
         (response) => {
           console.log(response);
@@ -450,7 +458,9 @@ export class TransferComponent {
     }).then((result: { isConfirmed: any }) => {
       if (result.isConfirmed) {
         this.http
-          .delete(this.api.localhost + '/inventory/transfers/' + purchaseId + '/')
+          .delete(
+            this.api.localhost + '/inventory/transfers/' + purchaseId + '/'
+          )
           .subscribe(
             () => {
               Swal.fire(
@@ -510,18 +520,6 @@ export class TransferComponent {
     });
   }
   warehouse: any;
-
-  // <---------------------------------- code for search ----------------------------------------->
-
-  Search() {
-    if (this.remarks === '') {
-      this.ngOnInit();
-    } else {
-      this.AllPurchaseData = this.AllPurchaseData.filter((res:any) => {
-        return res.remarks.includes(this.remarks);
-      });
-    }
-  }
 
   // <----------------------------- code for deleting stock from sale list ------------------------------------------->
 
@@ -802,8 +800,44 @@ export class TransferComponent {
     const inputPrice = this.updateSaleForm.get('price')?.value;
     this.isPriceInvalid = inputPrice < this.totalproductPrice;
   }
+
+  // <====================================== code for print Reciept  ==============================================>
+
+  details: any[] = [];
+  sale_ID: any;
+  getDetails(item: string) {
+    this.http
+      .get(this.api.localhost + `/inventory/sales/${item}/sale_details`)
+      .subscribe((res) => {
+        this.details = <any>res;
+        console.log(this.details);
+      });
+  }
+
+  generatePDF() {
+    const pdfElement = document.getElementById('pdf-content');
+
+    if (pdfElement) {
+      const options = {
+        scale: 5, // Increase scale factor for higher resolution
+        dpi: 300, // Increase DPI for better quality
+        useCORS: true, // Enable CORS to prevent tainted canvas error
+      };
+
+      html2canvas(pdfElement, options).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('Stock Purchase Invoice.pdf');
+      });
+    }
+  }
+  open(invoice: any) {
+    this.modalService.open(invoice, { size: 'lg' });
+  }
 }
-
 //  <---------------------------SALE ALL WORK END HERE------------------------------------>
-
-

@@ -4,12 +4,12 @@
   <div class="input-group mb-3">
     <input
       type="text"
-      [(ngModel)]="name"
-      class="form-control w-25"
-      placeholder="Search Brands"
-      (ngModelChange)="Search()"
+      class="form-control"
+      placeholder="Search Brand"
+      [(ngModel)]="searchTerm"
+      (keydown)="search()"
     />
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" (click)="(search)">
       <i class="bi bi-search"></i>
     </button>
     <button
@@ -53,7 +53,6 @@
         </td>
       </tr>
     </tbody>
-   
   </table>
   <app-pagination [data]="brands"></app-pagination>
 </div>

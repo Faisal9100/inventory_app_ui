@@ -38,7 +38,7 @@ export class CategoriesComponent {
     private categoryService: CategoryService,
     private http: HttpClient,
     public productService: ProductService,
-    public api:LocalhostApiService
+    public api: LocalhostApiService
   ) {}
 
   ngOnInit() {
@@ -50,27 +50,30 @@ export class CategoriesComponent {
       this.productData = data.results;
     });
   }
-  
-  // searchCategories(): void {
-  //   this.pageIndex = 0;
-  //   this.getCategories(this.pageIndex, this.pageSize);
-  // }
-  name: any;
-  Search() {
-    if (this.name == '') {
-      this.ngOnInit();
-    } else {
-      this.categories = this.categories.filter((res:any) => {
-        return res.name.match(this.name);
-      });
-    }
-  }
+
+  // <==========================  CODE FOR GETTING CATEGORIES  ===============================>
+
   getCategories() {
-  this.categoryService.getCategories().subscribe((res)=>{
-    this.categories = res;
-    this.addCount(this.categories);
-  })
+    this.categoryService.getCategories().subscribe((res) => {
+      this.categories = res;
+      this.addCount(this.categories);
+    });
   }
+
+  // <==========================  CODE FOR SEARCHING CATEGORIES  ===============================>
+
+  search() {
+    this.searchCategory(this.searchTerm);
+  }
+  searchTerm: any;
+  searchCategory(searchTerm: any) {
+    const searchUrl = this.url + '?search=' + searchTerm;
+    this.http.get(searchUrl).subscribe((res: any) => {
+      this.categories = res;
+      this.addCount(this.categories);
+    });
+  }
+
   addCount(data: any) {
     let pageSize = 10;
     let pages = Math.ceil(data['count'] / pageSize);
@@ -79,7 +82,9 @@ export class CategoriesComponent {
     data['pages'] = nums;
     data['current'] = 1;
   }
- 
+
+  // <==========================  CODE FOR ADDING CATEGORIES  ===============================>
+
   addCategory() {
     Swal.fire({
       title: 'Add New Category',
@@ -90,7 +95,8 @@ export class CategoriesComponent {
       showLoaderOnConfirm: true,
       preConfirm: (name) => {
         return new Promise((resolve, reject) => {
-          if (!name) { // Check if category name is empty
+          if (!name) {
+            // Check if category name is empty
             reject('Category name cannot be empty.'); // Reject the promise with an error message
           } else {
             const newCategory = { name: name };
@@ -106,29 +112,68 @@ export class CategoriesComponent {
           }
         });
       },
-    }).then((result) => {
-      if (result.isConfirmed) {
+    })
+      .then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Category Added!',
+            text: `The category has been added.`,
+            showConfirmButton: true,
+            timer: 1500,
+          });
+        }
+      })
+      .catch((error) => {
+        // Catch any error from the promise rejection
         Swal.fire({
-          icon: 'success',
-          title: 'Category Added!',
-          text: `The category has been added.`,
+          icon: 'error',
+          title: 'Error',
+          text: error, // Display the error message
           showConfirmButton: true,
-          timer: 1500,
         });
-      }
-    }).catch((error) => { // Catch any error from the promise rejection
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: error, // Display the error message
-        showConfirmButton: true,
       });
-    });
   }
-  
 
+  // <==========================  CODE FOR DELETING CATEGORIES  ===============================>
+
+  // deleteCategory(categoryId: string) {
+  //   Swal.fire({
+  //     title: 'Are you sure you want to delete this category?',
+  //     showCancelButton: true,
+  //     confirmButtonText: 'Delete',
+  //     showLoaderOnConfirm: true,
+  //     preConfirm: () => {
+  //       return this.categoryService.deleteCategory(categoryId).toPromise();
+  //     },
+  //   })
+  //     .then((result) => {
+  //       if (result.isConfirmed) {
+  //         this.categories = this.categories.filter((category: any) => {
+  //           return category.id !== categoryId;
+  //         });
+
+  //         Swal.fire({
+  //           icon: 'success',
+  //           title: 'Category Deleted!',
+  //           text: `The category has been deleted.`,
+  //           showConfirmButton: true,
+  //           timer: 1000,
+  //         });
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       Swal.fire({
+  //         icon: 'error',
+  //         title: 'Error',
+  //         text: `An error occurred while deleting the category: ${error}`,
+  //         showConfirmButton: true,
+  //       });
+  //     });
+  // }
   deleteCategory(categoryId: string) {
     Swal.fire({
+      icon: 'question',
       title: 'Are you sure you want to delete this category?',
       showCancelButton: true,
       confirmButtonText: 'Delete',
@@ -139,36 +184,46 @@ export class CategoriesComponent {
     })
       .then((result) => {
         if (result.isConfirmed) {
-          this.categories = this.categories.filter((category:any) => {
-            return category.id !== categoryId;
-          });
+          if (Array.isArray(this.categories)) {
+            // Update the categories array after successful deletion
+            this.categories = this.categories.filter((category: any) => {
+              return category.id !== categoryId;
+            });
+          }
 
           Swal.fire({
             icon: 'success',
-            title: 'Category Deleted!',
-            text: `The category has been deleted.`,
+            title: 'Brand Deleted!',
+            text: 'The brand has been category.',
             showConfirmButton: true,
             timer: 1000,
           });
+          this.getCategories();
         }
       })
       .catch((error) => {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: `An error occurred while deleting the category: ${error}`,
+          text: `An error occurred while deleting the brand: ${error}`,
           showConfirmButton: true,
         });
       });
   }
+
   taskToEdit: any;
 
-  public url =  this.api.localhost +"/inventory/categories/";
+  public url = this.api.localhost + '/inventory/categories/';
+
+  // <==========================  CODE FOR OPENING MODEL FOR EDITING CATEGORIES  ===============================>
 
   openmodel(allcontent: any, newProduct: any) {
     this.modalService.open(allcontent);
     this.taskToEdit = newProduct;
   }
+
+  // <==========================  CODE FOR UPDATING CATEGORIES  ===============================>
+
   openUpdateModal(product: Product) {
     Swal.fire({
       title: 'Update Product',
@@ -192,11 +247,5 @@ export class CategoriesComponent {
           });
       }
     });
-  }
-  p: any;
-  pageChanged(event: any) {
-    this.currentPage = event;
-    this.getCategories();
-
   }
 }

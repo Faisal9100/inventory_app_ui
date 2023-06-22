@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import { LocalhostApiService } from '../localhost-api.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import html2canvas from 'html2canvas';
 
 export interface PurchaseData {
   id: number;
@@ -148,11 +149,30 @@ export class AllPurchaseComponent implements OnInit {
     this.allpurchasesService.getAllPurchase().subscribe((data) => {
       this.AllPurchaseData = data;
       this.addCount(this.AllPurchaseData);
-      
 
       this.isLoading = false;
     });
   }
+  
+  // <================================== code for search input field ===========================================>
+
+  search() {
+    this.searchBrand(this.searchTerm);
+  }
+  public url =  this.api.localhost + '/inventory/stocks_purchase';
+searchTerm:any;
+  searchBrand(searchTerm: any) {
+    const searchUrl = this.url + '?search=' + searchTerm;
+    this.http.get(searchUrl).subscribe((res: any) => {
+      this.AllPurchaseData = res;
+      this.addCount(this.AllPurchaseData);
+    });
+  }
+
+
+  // <========================== code for  ==============================>
+
+
   addCount(data: any) {
     let pageSize = 10;
     let pages = Math.ceil(data['count'] / pageSize);
@@ -192,9 +212,9 @@ export class AllPurchaseComponent implements OnInit {
               `/inventory/stocks_purchase/${purchasedId}/stocks/` +
               stockid +
               '/'
-              )
-              .subscribe(
-                () => {
+          )
+          .subscribe(
+            () => {
               this.getStockList(purchasedId);
               this.addPurchase();
               Swal.fire(
@@ -202,7 +222,6 @@ export class AllPurchaseComponent implements OnInit {
                 'Your product has been deleted.',
                 'success'
               );
-
             },
             () => {
               Swal.fire(
@@ -392,8 +411,6 @@ export class AllPurchaseComponent implements OnInit {
       date: this.purchaseDate,
       account: this.selectedSupplier,
       warehouse: this.selectedWarehouse,
-      // amount: this.grandTotal,
-      // quantity: this.totalQuantity,
       title: this.selectedRemark,
     };
 
@@ -538,17 +555,6 @@ export class AllPurchaseComponent implements OnInit {
   tableSizes: any = [5, 10, 25, 100];
   title: any;
 
-  // <================================== code for search input field ===========================================>
-
-  Search() {
-    if (this.title == '') {
-      this.ngOnInit();
-    } else {
-      this.AllPurchaseData = this.AllPurchaseData.filter((res:any) => {
-        return res.title.match(this.title);
-      });
-    }
-  }
 
   // <=========== code for getting stock data for a particular product in a particular purchase id =============>
 
@@ -583,45 +589,43 @@ export class AllPurchaseComponent implements OnInit {
 
   // <====================================== code for print Reciept  ==============================================>
 
+  details: any[] = [];
+  sale_ID: any;
+  getDetails(item: string) {
+    this.http
+      .get(
+        this.api.localhost + `/inventory/stocks_purchase/${item}/stock_details`
+      )
+      .subscribe((res) => {
+        this.details = <any>res;
+        console.log(this.details);
+      });
+  }
+
   generatePDF() {
-    const columns2 = { title: 'All Purchase List' };
+    const pdfElement = document.getElementById('pdf-content');
 
-    const columns = [
-      { title: '#', dataKey: '#' },
-      { title: 'Invoice No', dataKey: 'invoice_no' },
-      { title: 'Title', dataKey: 'title' },
-      { title: 'Account Name', dataKey: 'account_name' },
-      { title: 'Warehouse', dataKey: 'warehouse' },
-      { title: 'Transaction_ID', dataKey: 'transaction' },
-      { title: 'Quantity', dataKey: 'quantity' },
-      { title: 'Amount', dataKey: 'amount' },
-      { title: 'date', dataKey: 'date' },
-    ];
+    if (pdfElement) {
+      const options = {
+        scale: 5, // Increase scale factor for higher resolution
+        dpi: 300, // Increase DPI for better quality
+        useCORS: true, // Enable CORS to prevent tainted canvas error
+      };
 
-    const data = this.AllPurchaseData.map((item:any, index:any) => ({
-      sn: index + 1,
-      id: item.id,
-      ivoiceNo: item.invoice_no,
-      title: item.title,
-      accountName: item.account_name,
-      warehouse: item.warehouse_name,
-      transaction: item.transaction,
-      quantity: item.quantity,
-      amount: item.amount,
-      date: item.date,
-    }));
+      html2canvas(pdfElement, options).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    const doc = new jsPDF();
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('Stock Purchase Invoice.pdf');
+      });
+    }
+  }
 
-    doc.text(columns2.title, 86, 8);
-    doc.setFontSize(22);
-    // doc.setTextColor('red');
-    doc.setFontSize(16);
-
-    (doc as any).autoTable({
-      columns: columns,
-      body: data,
-    });
-    doc.save('All-Purshase.pdf');
+  open(invoice: any) {
+    this.modalService.open(invoice, { size: 'lg' });
   }
 }

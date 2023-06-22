@@ -164,7 +164,18 @@ export class SupplierComponent {
       this.addCount(this.suppliers);
     });
   }
-
+  search() {
+    this.searchSale(this.searchTerm);
+  }
+  public searchurl = this.api.localhost + '/inventory/Suppliers/';
+searchTerm:any;
+  searchSale(searchTerm: any) {
+    const searchUrl = this.searchurl + '?search=' + searchTerm;
+    this.http.get(searchUrl).subscribe((res: any) => {
+      this.suppliers = res;
+      this.addCount(this.suppliers);
+    });
+  }
   addCount(data: any) {
     let pageSize = 10;
     let pages = Math.ceil(data['count'] / pageSize);

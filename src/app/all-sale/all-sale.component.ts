@@ -181,6 +181,23 @@ export class AllSaleComponent {
       this.isLoading = false;
     });
   }
+    // <================================== code for search input field ===========================================>
+
+    search() {
+      this.searchSale(this.searchTerm);
+    }
+    public url = this.api.localhost + '/inventory/sales/';
+  searchTerm:any;
+    searchSale(searchTerm: any) {
+      const searchUrl = this.url + '?search=' + searchTerm;
+      this.http.get(searchUrl).subscribe((res: any) => {
+        this.AllPurchaseData = res;
+        this.addCount(this.AllPurchaseData);
+      });
+    }
+
+    // <================================== code for pagination ===========================================>
+
   addCount(data: any) {
     let pageSize = 10;
     let pages = Math.ceil(data['count'] / pageSize);
@@ -822,7 +839,6 @@ export class AllSaleComponent {
       .get(this.api.localhost + `/inventory/sales/${item}/sale_details/`)
       .subscribe((res) => {
         this.details = <any>res;
-        // this.generatePDF(item);
         console.log(this.details);
       });
   }

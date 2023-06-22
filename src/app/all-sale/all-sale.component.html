@@ -10,14 +10,13 @@
 <div class="add-categories">
   <div class="input-group mb-3">
     <input
-      type="text"
-      class="form-control w-25"
-      placeholder="Search All Sale"
-      name="remarks"
-      [(ngModel)]="remarks"
-      (ngModelChange)="Search()"
+    type="text"
+    class="form-control"
+    placeholder="Search All Sale"
+    [(ngModel)]="searchTerm"
+    (keydown)="search()"
     />
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" (click)="(search)">
       <i class="bi bi-search"></i>
     </button>
     <button

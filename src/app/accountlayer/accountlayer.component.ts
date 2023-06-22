@@ -83,6 +83,7 @@ export class AccountlayerComponent implements OnInit {
     contact: '',
     email: '',
   };
+
   account_type: any;
   account: Account = {
     id: 0,
@@ -109,8 +110,6 @@ export class AccountlayerComponent implements OnInit {
     this.getAccountsData();
   }
 
-  // <________________________________ code for displaying data in Main layer ____________________________________>
-
   mainLayerId: any;
 
   someValue: any;
@@ -118,14 +117,6 @@ export class AccountlayerComponent implements OnInit {
   selectedMainLayerAccounts: any = [];
   selectedMainLayerAccount: any;
 
-  // onLayer1Change(selectedLayer1: any) {
-  //   this.accountLayerservice
-  //     .getLayer2(this.selectedLayer1)
-  //     .subscribe((data) => {
-  //       this.layer2 = data;
-  //       console.log(this.selectedLayer1);
-  //     });
-  // }
   onLayer1Change(selectedLayer1: any) {
     this.selectedLayer1 = selectedLayer1;
     this.accountLayerservice.getLayer2(this.selectedLayer1).subscribe(
@@ -141,6 +132,7 @@ export class AccountlayerComponent implements OnInit {
       }
     );
   }
+
   onLayer2Change(selectedLayer2: any) {
     this.selectedLayer2 = selectedLayer2;
     this.accountLayerservice.getLayer2(this.selectedLayer2).subscribe(
@@ -187,7 +179,7 @@ export class AccountlayerComponent implements OnInit {
     );
   }
 
-  // <_______________________________________code for getting Account Data________________________________________>
+  // <________________________________ code for displaying data in Main layer ____________________________________>
 
   onMainLayerChange(event: any) {
     this.selectedMainLayer = event.target.value;
@@ -217,6 +209,8 @@ export class AccountlayerComponent implements OnInit {
     }
   }
 
+  // <________________________________ code for getting all accounts____________________________________>
+
   getAccountsData() {
     this.accountLayerservice
       .getAccounts(
@@ -235,6 +229,23 @@ export class AccountlayerComponent implements OnInit {
         }
       );
   }
+
+  // <________________________________ code for searching all accounts____________________________________>
+
+  search() {
+    this.searchAccount(this.searchTerm);
+  }
+  public searchurl = this.api.localhost + '/inventory/accounts';
+  searchTerm: any;
+  searchAccount(searchTerm: any) {
+    const searchUrl = this.searchurl + '?search=' + searchTerm;
+    this.http.get(searchUrl).subscribe((res: any) => {
+      this.accountData = res;
+      this.addCount(this.accountData);
+    });
+  }
+
+  // <________________________________ code for pagination ____________________________________>
 
   errorMessage: any;
   addCount(data: any) {
@@ -758,7 +769,6 @@ export class AccountlayerComponent implements OnInit {
           this.getAccountsData();
           // Clear any other relevant form controls or variables
         }
-       
       })
       .catch((error) => {
         console.error(error);
@@ -769,7 +779,6 @@ export class AccountlayerComponent implements OnInit {
         Swal.fire('Error', errorMessage, 'error');
       });
   }
-
 
   title: any;
   Search() {
