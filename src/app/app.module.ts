@@ -58,6 +58,7 @@ import { PermissionComponent } from './permission/permission.component';
 import { PaginationComponent } from './pagination/pagination.component';
 import { TransferComponent } from './transfer/transfer.component';
 import { NgxPrintModule } from 'ngx-print';
+import { ProfitlossComponent } from './profitloss/profitloss.component';
 // import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 // import { AuthQuardGuard } from './auth-quard.guard';
 
@@ -84,6 +85,7 @@ import { NgxPrintModule } from 'ngx-print';
     PermissionComponent,
     PaginationComponent,
     TransferComponent,
+    ProfitlossComponent,
   ],
   imports: [
     NgChartsModule,

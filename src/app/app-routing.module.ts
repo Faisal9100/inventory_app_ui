@@ -19,6 +19,7 @@ import { PasswordChangeComponent } from './password-change/password-change.compo
 import { StaffComponent } from './staff/staff.component';
 import { PermissionComponent } from './permission/permission.component';
 import { TransferComponent } from './transfer/transfer.component';
+import { ProfitlossComponent } from './profitloss/profitloss.component';
 
 const routes: Routes = [
   {
@@ -100,6 +101,11 @@ const routes: Routes = [
   {
     path: 'transfer',
     component: TransferComponent,
+    canActivate: [AuthguardGuard],
+  },
+  {
+    path: 'profitloss',
+    component: ProfitlossComponent,
     canActivate: [AuthguardGuard],
   },
   // {
