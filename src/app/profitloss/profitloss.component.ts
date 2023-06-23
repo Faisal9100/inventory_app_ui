@@ -41,7 +41,7 @@ export class ProfitlossComponent {
         const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
         pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save('Sale Invoice.pdf');
+        pdf.save('Profit & Loss Invoice.pdf');
       });
     }
   }

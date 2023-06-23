@@ -59,6 +59,8 @@ import { PaginationComponent } from './pagination/pagination.component';
 import { TransferComponent } from './transfer/transfer.component';
 import { NgxPrintModule } from 'ngx-print';
 import { ProfitlossComponent } from './profitloss/profitloss.component';
+import { StockreportComponent } from './stockreport/stockreport.component';
+import { BalancesheetComponent } from './balancesheet/balancesheet.component';
 // import { AuthInterceptorInterceptor } from './auth-interceptor.interceptor';
 // import { AuthQuardGuard } from './auth-quard.guard';
 
@@ -86,6 +88,8 @@ import { ProfitlossComponent } from './profitloss/profitloss.component';
     PaginationComponent,
     TransferComponent,
     ProfitlossComponent,
+    StockreportComponent,
+    BalancesheetComponent,
   ],
   imports: [
     NgChartsModule,

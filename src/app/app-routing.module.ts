@@ -20,6 +20,8 @@ import { StaffComponent } from './staff/staff.component';
 import { PermissionComponent } from './permission/permission.component';
 import { TransferComponent } from './transfer/transfer.component';
 import { ProfitlossComponent } from './profitloss/profitloss.component';
+import { StockreportComponent } from './stockreport/stockreport.component';
+import { BalancesheetComponent } from './balancesheet/balancesheet.component';
 
 const routes: Routes = [
   {
@@ -106,6 +108,16 @@ const routes: Routes = [
   {
     path: 'profitloss',
     component: ProfitlossComponent,
+    canActivate: [AuthguardGuard],
+  },
+  {
+    path: 'stockreport',
+    component: StockreportComponent,
+    canActivate: [AuthguardGuard],
+  },
+  {
+    path: 'balancesheet',
+    component: BalancesheetComponent,
     canActivate: [AuthguardGuard],
   },
   // {

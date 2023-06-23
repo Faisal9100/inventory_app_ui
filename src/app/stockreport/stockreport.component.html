@@ -1,0 +1,99 @@
+<div id="pdf-content">
+  <!-- <div class="d-flex mt-5">
+    <img src="assets/images/iva2.png" width="80px" height="70px" alt="" />
+    <h1 class="mx-3">Iva Mobiles</h1>
+  </div> -->
+  <h1 class="fs-3 mt-5">Stock Report</h1>
+  <div class="d-flex">
+    <div class="col-4 mx-1">
+      <label for="">Filter By</label>
+      <ng-select [(ngModel)]="selectedFilter">
+        <ng-option value="product">Product</ng-option>
+        <ng-option value="warehouse">Warehouse</ng-option>
+      </ng-select>
+    </div>
+
+    <div class="col-4 mx-1" *ngIf="selectedFilter === 'product'">
+      <label for="">Product</label>
+      <ng-select
+        class="form-ng-select"
+        id="selectedProduct"
+        [(ngModel)]="selectedProductId"
+        (change)="getStockReport()"
+      >
+        <ng-option
+          class="ng-option"
+          *ngFor="let value of products?.results"
+          [value]="value.id"
+          >{{ value.name }}</ng-option
+        >
+      </ng-select>
+    </div>
+
+    <div class="col-4" *ngIf="selectedFilter === 'warehouse'">
+      <label for="">Warehouse</label>
+      <ng-select
+        class="form-ng-select"
+        id="selectedWarehouse"
+        [(ngModel)]="selectedWarehouseId"
+        (change)="getStockWarehouseReport()"
+      >
+        <ng-option
+          class="ng-option"
+          *ngFor="let value of warehouses?.results"
+          [value]="value.id"
+          >{{ value.title }}</ng-option
+        >
+      </ng-select>
+    </div>
+    <button class="btn btn-outline-danger classBtn" (click)="generatePDF()">
+      PDF
+    </button>
+  </div>
+
+  <br /><br />
+  <table
+    class="table table-striped text-center table-bordered table-hover"
+    *ngIf="selectedFilter === 'product'"
+  >
+    <thead class="table-head">
+      <tr>
+        <th>#</th>
+        <th>Warehouse Name</th>
+        <th>Total Quantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let stock of Stocks; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ stock.warehouse_name }}</td>
+        <td>{{ stock.total_quantity }} {{ stock.unit }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <table
+    class="table table-striped text-center table-bordered table-hover"
+    *ngIf="selectedFilter === 'warehouse'"
+  >
+    <thead class="table-head">
+      <tr>
+        <th>#</th>
+        <th>Product Name</th>
+        <th>Category</th>
+        <th>Brand</th>
+        <th>Unit</th>
+        <th>Total Quantity</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let stock of Stocks2; let i = index">
+        <td>{{ i + 1 }}</td>
+        <td>{{ stock.product_name }}</td>
+        <td>{{ stock.category }}</td>
+        <td>{{ stock.brand }}</td>
+        <td>{{ stock.unit }}</td>
+        <td>{{ stock.total_quantity }}</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
