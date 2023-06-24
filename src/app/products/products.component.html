@@ -38,41 +38,50 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let product of productData1?.results">
-        <td *ngIf="product.image != null">
-          <img width="50px" height="50px" src="{{ product.image }}" alt="" />
-        </td>
-        <td *ngIf="product.image == null">
-          <img
-            width="50px"
-            height="50px"
-            src="assets/images/no_image.png"
-            alt=""
-          />
-        </td>
-        <td>{{ product.name }}</td>
-        <td>{{ product.category_name }}</td>
+      <ng-container
+        *ngIf="productData1?.results.length > 0; else noRecordsTemplate"
+      >
+        <tr *ngFor="let product of productData1?.results">
+          <td *ngIf="product.image != null">
+            <img width="50px" height="50px" src="{{ product.image }}" alt="" />
+          </td>
+          <td *ngIf="product.image == null">
+            <img
+              width="50px"
+              height="50px"
+              src="assets/images/no_image.png"
+              alt=""
+            />
+          </td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.category_name }}</td>
 
-        <td>{{ product.note }}</td>
-        <td>{{ product.unit_name }}</td>
-        <td>{{ product.brand_name }}</td>
-        <td>
-          <button
-            class="btn btn-outline-primary mx-2"
-            (click)="open(content3)"
-            (click)="update_product(product)"
-          >
-            <i class="bi bi-pencil-square"></i>
-          </button>
-          <button
-            class="btn btn-outline-danger"
-            (click)="deleteProduct(product.id)"
-          >
-            <i class="bi bi-trash3-fill"></i>
-          </button>
-        </td>
-      </tr>
+          <td>{{ product.note }}</td>
+          <td>{{ product.unit_name }}</td>
+          <td>{{ product.brand_name }}</td>
+          <td>
+            <button
+              class="btn btn-outline-primary mx-2"
+              (click)="open(content3)"
+              (click)="update_product(product)"
+            >
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button
+              class="btn btn-outline-danger"
+              (click)="deleteProduct(product.id)"
+            >
+              <i class="bi bi-trash3-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
     </tbody>
+    <ng-template #noRecordsTemplate>
+      <tr>
+        <td colspan="12">No records found</td>
+      </tr>
+    </ng-template>
   </table>
   <app-pagination [data]="productData1"></app-pagination>
 </div>

@@ -18,7 +18,6 @@ export class StockreportComponent {
     public warehouse: WarehouseService,
     public product: ProductService
   ) {
-    // this.getStockReport();
     this.getWarehouse();
     this.getProducts();
   }
@@ -33,6 +32,8 @@ export class StockreportComponent {
 
   Stocks: any[] = [];
   Stocks2: any[] = [];
+
+  // <======================================= CODE FOR GETTING STOCK REPORT ===================================>
 
   getStockReport() {
     this.Stocks = [];
@@ -53,6 +54,9 @@ export class StockreportComponent {
     this.selectedWarehouseId = null;
     this.selectedProductId = null;
   }
+
+  // <==================================== CODE FOR GETTING WAREHOUSE REPORT ===================================>
+
   getStockWarehouseReport() {
     if (!this.selectedWarehouseId) {
       return;
@@ -73,19 +77,26 @@ export class StockreportComponent {
     this.selectedProductId = null;
   }
 
+  // <======================================= CODE FOR GETTING PRODUCTS ===================================>
+
   products: any = {};
   getProducts() {
     this.http.get(this.url4).subscribe((data) => {
       this.products = data as any[];
     });
   }
+
+  // <======================================= CODE FOR GETTING WAREHOUSE ===================================>
+
   warehouses: any = {};
   getWarehouse() {
     this.http.get(this.url3).subscribe((data) => {
       this.warehouses = data as any[];
-      console.log(this.warehouses);
     });
   }
+
+  // <============================================== CODE FOR PDF ===============================================>
+
   generatePDF() {
     const pdfElement = document.getElementById('pdf-content');
 

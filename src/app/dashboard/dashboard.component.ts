@@ -23,6 +23,10 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.get_Yearly_sale();
   }
+
+// <======================================= CODE FOR GETTING DAILY SALE ===================================>
+
+
   daily_Sale_amount: number = 0;
   getDailySale() {
     this.http
@@ -31,6 +35,8 @@ export class DashboardComponent implements OnInit {
         this.daily_Sale_amount = res.amount;
       });
   }
+
+// <======================================= CODE FOR GETTING MONTHLY SALE ===================================>
 
   monthly_sale_amount: number = 0;
   getMonthlySale() {
@@ -41,6 +47,8 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+// <======================================= CODE FOR GETTING CASH IN HAND ===================================>
+
   yearly_Sale_amount: number = 0;
   get_Cash_In_Hand() {
     this.http
@@ -49,6 +57,8 @@ export class DashboardComponent implements OnInit {
         this.yearly_Sale_amount = res.amount;
       });
   }
+
+// <======================================= CODE FOR GETTING DAILY PURCHASE ===================================>
 
   daily_Purchase_amount: number = 0;
   getDailyPurchase() {
@@ -59,6 +69,8 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+// <======================================= CODE FOR GETTING MONTHLY PURCHASE ===================================>
+
   monthly_Purchase_amount: number = 0;
   getmonthlyPurchase() {
     this.http
@@ -67,6 +79,9 @@ export class DashboardComponent implements OnInit {
         this.monthly_Purchase_amount = res.amount;
       });
   }
+
+// <======================================= CODE FOR GETTING ALL CUSTOMERS ===================================>
+
   all_Customer: number = 0;
   get_All_Customer() {
     this.http
@@ -75,6 +90,9 @@ export class DashboardComponent implements OnInit {
         this.all_Customer = res.count;
       });
   }
+
+// <======================================= CODE FOR GETTING TOTAL EXPENSE ===================================>
+
   total_Expense: { [month: string]: number } = {};
   get_Total_Expense() {
     this.http
@@ -88,6 +106,8 @@ export class DashboardComponent implements OnInit {
         );
       });
   }
+
+  // <======================================= CODE FOR GETTING YEARLY PURCHASE ===================================>
 
   yearly_Purchase: { [month: string]: number } = {};
   get_Yearly_Purchase() {
@@ -103,6 +123,8 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+  // <======================================= CODE FOR GETTING YEARLY SALE ===================================>
+
   yearly_Sale: { [month: string]: number } = {};
   get_Yearly_sale() {
     this.http
@@ -117,6 +139,8 @@ export class DashboardComponent implements OnInit {
       });
   }
 
+  // <==================================== CODE FOR SHOWING CHART IN DASHBOARD ===============================>
+ 
   addCharts(
     purchaseData: { [month: string]: number },
     saleData: { [month: string]: number },

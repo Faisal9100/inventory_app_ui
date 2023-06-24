@@ -97,11 +97,11 @@
   <div class="mt-4 top-sellling">
     <div class="input-group mb-3">
       <input
-      type="text"
-      class="form-control"
-      placeholder="Search Accounts"
-      [(ngModel)]="searchTerm"
-      (keydown)="search()"
+        type="text"
+        class="form-control"
+        placeholder="Search Accounts"
+        [(ngModel)]="searchTerm"
+        (keydown)="search()"
       />
       <button class="btn btn-primary">
         <i class="bi bi-search"></i>
@@ -165,45 +165,54 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let account of accountData?.results">
-            <td>{{ account.id }}</td>
-            <td>{{ account.title }}</td>
-            <td>{{ account.contact }}</td>
+          <ng-container
+            *ngIf="accountData?.results.length > 0; else noRecordsTemplate"
+          >
+            <tr *ngFor="let account of accountData?.results">
+              <td>{{ account.id }}</td>
+              <td>{{ account.title }}</td>
+              <td>{{ account.contact }}</td>
 
-            <td>
-              <button
-                class="btn btn-outline-success"
-                *ngIf="account.status === true"
-              >
-                Active
-              </button>
-              <button
-                class="btn btn-outline-warning"
-                *ngIf="account.status === false"
-              >
-                Inactive
-              </button>
-            </td>
-            <td>{{ account.balance }}</td>
-            <td>{{ account.email }}</td>
-            <td>{{ account.address }}</td>
-            <td>{{ account.account_type }}</td>
-            <td>
-              <button
-                class="btn btn-outline-primary mx-2"
-                (click)="updateAccount(account)"
-              >
-                <i class="bi bi-pencil-square"></i>
-              </button>
-              <button
-                class="btn btn-outline-danger"
-                (click)="deleteAccount(account.id)"
-              >
-                <i class="bi bi-trash3-fill"></i>
-              </button>
-            </td>
-          </tr>
+              <td>
+                <button
+                  class="btn btn-outline-success"
+                  *ngIf="account.status === true"
+                >
+                  Active
+                </button>
+                <button
+                  class="btn btn-outline-warning"
+                  *ngIf="account.status === false"
+                >
+                  Inactive
+                </button>
+              </td>
+              <td>{{ account.balance }}</td>
+              <td>{{ account.email }}</td>
+              <td>{{ account.address }}</td>
+              <td>{{ account.account_type }}</td>
+              <td>
+                <button
+                  class="btn btn-outline-primary mx-2"
+                  (click)="updateAccount(account)"
+                >
+                  <i class="bi bi-pencil-square"></i>
+                </button>
+                <button
+                  class="btn btn-outline-danger"
+                  (click)="deleteAccount(account.id)"
+                >
+                  <i class="bi bi-trash3-fill"></i>
+                </button>
+              </td>
+            </tr>
+          </ng-container>
         </tbody>
+        <ng-template #noRecordsTemplate>
+          <tr>
+            <td colspan="12">No records found</td>
+          </tr>
+        </ng-template>
       </table>
       <app-pagination [data]="accountData"></app-pagination>
     </div>

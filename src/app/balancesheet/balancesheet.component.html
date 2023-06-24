@@ -1,16 +1,122 @@
-<div class="mt-5 d-flex justify-content-center">
-  <img src="assets/images/iva2.png" width="80px" height="70px" alt="" />
-  <h1 class="my-4 mx-2">Iva Mobiles</h1>
-</div>
-
-<h1 class="fs-3 mt-5 justify-content-center m-auto text-center">
-  Balance Sheet
-</h1>
-<div class="d-flex justify-content-center my-4">
-  <div class="left col-5 mx-2">
-    <h1 class="bg-primary text-white text-center">Assets</h1>
+<button class="btn btn-outline-danger float-end mt-5" (click)="generatePDF()">
+  PDF
+</button>
+<br /><br /><br />
+<div id="pdf-content">
+  <div class="mt-5 d-flex justify-content-center">
+    <img src="assets/images/iva2.png" width="80px" height="70px" alt="" />
+    <h1 class="my-4 mx-2">Iva Mobiles</h1>
   </div>
-  <div class="right col-5 float-end">
-    <h1 class="bg-primary text-white text-center">Liability</h1>
+
+  <h1 class="fs-3 mt-5 justify-content-center m-auto text-center">
+    Balance Sheet
+  </h1>
+
+  <div class="d-flex justify-content-center my-4">
+    <div class="left col-5 mx-2">
+      <h1 class="bg-primary text-white text-center">Assets</h1>
+      <h1 class="text-center">{{ balanceSheet[0]?.[1]?.name }}</h1>
+
+      <table class="table table-striped text-center table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let entry of balanceSheet">
+            <ng-container *ngIf="entry?.[1]?.main_layer === 'Assets'">
+              <tr *ngFor="let account of entry?.[1]?.accounts">
+                <td>{{ account.title }}</td>
+                <td>{{ account.balance }}</td>
+              </tr>
+            </ng-container>
+          </ng-container>
+          <tr *ngIf="balanceSheet.length === 0">
+            <td colspan="2">No data available</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="text-center total">
+        Sub Total: {{ balanceSheet[0]?.[1]?.balance }}
+      </div>
+      <br />
+
+      <br /><br />
+    </div>
+
+    <div class="right col-5 mx-3 float-end">
+      <h1 class="bg-primary text-white text-center">Liability</h1>
+      <h1 class="text-center">{{ balanceSheet[1]?.[1]?.name }}</h1>
+      <table class="table table-striped text-center table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let account of balanceSheet[1]?.[1]?.accounts">
+            <td>{{ account?.title }}</td>
+            <td>{{ account?.balance }}</td>
+          </tr>
+          <tr *ngIf="balanceSheet.length === 0">
+            <td colspan="4">No data available</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-center total">
+        Sub Total: {{ balanceSheet[1][1]?.balance }}
+      </div>
+
+      <br /><br />
+
+      <h1 class="bg-primary text-white text-center">Equity</h1>
+      <h1 class="text-center">{{ balanceSheet[2]?.[1]?.name }}</h1>
+      <table class="table table-striped text-center table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Account Name</th>
+            <th>Balance</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let account of balanceSheet[2]?.[1]?.accounts">
+            <td>{{ account?.title }}</td>
+            <td>{{ account?.balance }}</td>
+          </tr>
+          <tr *ngIf="balanceSheet.length === 0">
+            <td colspan="4">No data available</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-center total">
+        Sub Total: {{ balanceSheet[2]?.[1]?.balance }}
+      </div>
+      <!-- <div class="text-center total">Total Balance: {{ totalrightbalance }}</div> -->
+
+      <br /><br />
+      <div>
+        <p class="profit">Profit: {{ profit?.net_income }}</p>
+      </div>
+      <br />
+
+      <!-- <div class="text-center total">Total Balance: {{ totalrightbalance }}</div> -->
+    </div>
+  </div>
+  <div>
+    <!-- <p>Total Right Balance: {{ getTotalRightBalance() }}</p> -->
+    <div class="d-flex justify-content-center my-4 results">
+      <div class="left">
+        <span class="name">Total</span>
+        <span class="value">{{ totalLeftBalance | number }}</span>
+      </div>
+      <div class="right mx-3">
+        <span class="name">Total</span>
+        <span class="value"> {{ totalrightbalance | number }}</span>
+      </div>
+    </div>
   </div>
 </div>

@@ -216,7 +216,7 @@ searchTerm:any;
           .subscribe(
             () => {
               this.getStockList(purchasedId);
-              this.addPurchase();
+              
               Swal.fire(
                 'Deleted!',
                 'Your product has been deleted.',

@@ -1,3 +1,17 @@
-.classBtn {
+/* .classBtn {
     margin-top: 15px;
-}
+} */
+.fs-3 {
+    font-size: 1.75rem;
+  }
+  
+  .mt-5 {
+    margin-top: 3rem;
+  }
+  
+  .d-flex {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+   
+  }  

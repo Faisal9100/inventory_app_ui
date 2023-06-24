@@ -33,27 +33,36 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let category of categories?.results">
-        <td>{{ category.id }}</td>
-        <td>{{ category.name }}</td>
-        <!-- <td>{{ productData?.[i]?.quantity ?? 0 }}</td> -->
+      <ng-container
+        *ngIf="categories.results.length > 0; else noRecordsTemplate"
+      >
+        <tr *ngFor="let category of categories?.results">
+          <td>{{ category.id }}</td>
+          <td>{{ category.name }}</td>
+          <!-- <td>{{ productData?.[i]?.quantity ?? 0 }}</td> -->
 
-        <td>
-          <button
-            class="btn btn-outline-primary mx-2"
-            (click)="openUpdateModal(category)"
-          >
-            <i class="bi bi-pencil-square"></i>
-          </button>
-          <button
-            class="btn btn-outline-danger"
-            (click)="deleteCategory(category.id)"
-          >
-            <i class="bi bi-trash3-fill"></i>
-          </button>
-        </td>
-      </tr>
+          <td>
+            <button
+              class="btn btn-outline-primary mx-2"
+              (click)="openUpdateModal(category)"
+            >
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button
+              class="btn btn-outline-danger"
+              (click)="deleteCategory(category.id)"
+            >
+              <i class="bi bi-trash3-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
     </tbody>
+    <ng-template #noRecordsTemplate>
+      <tr>
+        <td colspan="12">No records found</td>
+      </tr>
+    </ng-template>
   </table>
   <app-pagination [data]="categories"></app-pagination>
 </div>

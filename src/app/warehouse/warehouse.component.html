@@ -3,11 +3,11 @@
 <div class="add-categories">
   <div class="input-group mb-3">
     <input
-    type="text"
-    class="form-control"
-    placeholder="Search Warehouse"
-    [(ngModel)]="searchTerm"
-    (keydown)="search()"
+      type="text"
+      class="form-control"
+      placeholder="Search Warehouse"
+      [(ngModel)]="searchTerm"
+      (keydown)="search()"
     />
     <button class="btn btn-primary" (click)="(search)">
       <i class="bi bi-search"></i>
@@ -38,48 +38,51 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="
-          let product of products?.results
-            
-        "
+      <ng-container
+        *ngIf="products?.results.length > 0; else noRecordsTemplate"
       >
-        <td style="width: 25%">{{ product.id }}</td>
-        <td>{{ product.title }}</td>
-        <td>{{ product.contact }}</td>
-        <td>{{ product.email }}</td>
-        <td>
-          <button
-            class="btn btn-outline-success"
-            *ngIf="product.status === true"
-          >
-            Enabled
-          </button>
-          <button
-            class="btn btn-outline-warning"
-            *ngIf="product.status === false"
-          >
-            Disabled
-          </button>
-        </td>
+        <tr *ngFor="let product of products?.results">
+          <td style="width: 25%">{{ product.id }}</td>
+          <td>{{ product.title }}</td>
+          <td>{{ product.contact }}</td>
+          <td>{{ product.email }}</td>
+          <td>
+            <button
+              class="btn btn-outline-success"
+              *ngIf="product.status === true"
+            >
+              Enabled
+            </button>
+            <button
+              class="btn btn-outline-warning"
+              *ngIf="product.status === false"
+            >
+              Disabled
+            </button>
+          </td>
 
-        <td style="width: 25%">
-          <button
-            class="btn btn-outline-primary mx-2 my-1"
-            (click)="openUpdateModal(product)"
-          >
-            <i class="bi bi-pencil-square"></i>
-          </button>
-          <button
-            class="btn btn-outline-danger"
-            (click)="deleteProduct(product.id)"
-          >
-            <i class="bi bi-trash3-fill"></i>
-          </button>
-        </td>
-      </tr>
+          <td style="width: 25%">
+            <button
+              class="btn btn-outline-primary mx-2 my-1"
+              (click)="openUpdateModal(product)"
+            >
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button
+              class="btn btn-outline-danger"
+              (click)="deleteProduct(product.id)"
+            >
+              <i class="bi bi-trash3-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
     </tbody>
-    
+    <ng-template #noRecordsTemplate>
+      <tr>
+        <td colspan="12">No records found</td>
+      </tr>
+    </ng-template>
   </table>
   <app-pagination [data]="products"></app-pagination>
 </div>

@@ -3,11 +3,11 @@
 <div class="add-categories">
   <div class="input-group mb-3">
     <input
-    type="text"
-    class="form-control"
-    placeholder="Search Unit"
-    [(ngModel)]="searchTerm"
-    (keydown)="search()"
+      type="text"
+      class="form-control"
+      placeholder="Search Unit"
+      [(ngModel)]="searchTerm"
+      (keydown)="search()"
     />
     <button class="btn btn-primary" (click)="search()">
       <i class="bi bi-search"></i>
@@ -36,27 +36,33 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="
-          let unit of Units?.results
-        "
-      >
-        <td style="width: 25%">{{ unit.id }}</td>
-        <td>{{ unit.name }}</td>
-        <!-- <td>{{ productData?.[i]?.quantity ?? 0 }}</td> -->
-        <td>
-          <button
-            class="btn btn-outline-primary mx-2"
-            (click)="openUpdateModal(unit)"
-          >
-            <i class="bi bi-pencil-square"></i>
-          </button>
-          <button class="btn btn-outline-danger" (click)="deleteUnit(unit.id)">
-            <i class="bi bi-trash3-fill"></i>
-          </button>
-        </td>
-      </tr>
+      <ng-container *ngIf="Units?.results.length > 0; else noRecordsTemplate">
+        <tr *ngFor="let unit of Units?.results">
+          <td style="width: 25%">{{ unit.id }}</td>
+          <td>{{ unit.name }}</td>
+          <!-- <td>{{ productData?.[i]?.quantity ?? 0 }}</td> -->
+          <td>
+            <button
+              class="btn btn-outline-primary mx-2"
+              (click)="openUpdateModal(unit)"
+            >
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button
+              class="btn btn-outline-danger"
+              (click)="deleteUnit(unit.id)"
+            >
+              <i class="bi bi-trash3-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
     </tbody>
+    <ng-template #noRecordsTemplate>
+      <tr>
+        <td colspan="12">No records found</td>
+      </tr>
+    </ng-template>
   </table>
   <app-pagination [data]="Units"></app-pagination>
 </div>
@@ -113,7 +119,7 @@
         <td style="width: 25%">{{ unit.id }}</td>
         <td>{{ unit.name }}</td>
          <td>{{ productData?.[i]?.quantity ?? 0 }}</td> -->
-        <!-- <td>
+<!-- <td>
           <button
             class="btn btn-outline-primary mx-2"
             (click)="openUpdateModal(unit)"

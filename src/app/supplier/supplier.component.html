@@ -1,16 +1,14 @@
 <h1 class="fs-3 mt-5">All Suppliers</h1>
 
-
-
 <br />
 <div class="add-categories">
   <div class="input-group mb-3">
     <input
-    type="text"
-    class="form-control"
-    placeholder="Search Supplier"
-    [(ngModel)]="searchTerm"
-    (keydown)="search()"
+      type="text"
+      class="form-control"
+      placeholder="Search Supplier"
+      [(ngModel)]="searchTerm"
+      (keydown)="search()"
     />
     <button class="btn btn-primary" (click)="(search)">
       <i class="bi bi-search"></i>
@@ -43,48 +41,52 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="
-          let supplier of suppliers?.results
-        "
+      <ng-container
+        *ngIf="suppliers?.results.length > 0; else noRecordsTemplate"
       >
-        <td>{{ supplier.id }}</td>
-        <td>{{ supplier.title }}</td>
-        <td>{{ supplier.address }}</td>
-        <td>{{ supplier.balance }}</td>
-        <td>
-          <button
-            class="btn btn-outline-success"
-            *ngIf="supplier.status === true"
-          >
-            Enabled
-          </button>
-          <button
-            class="btn btn-outline-warning"
-            *ngIf="supplier.status === false"
-          >
-            Disabled
-          </button>
-        </td>
-        <td>{{ supplier.email }}</td>
-        <td>{{ supplier.contact }}</td>
-        <td>
-          <button
-            class="btn btn-outline-primary mx-2 my-1"
-            (click)="openUpdateModal(supplier)"
-          >
-            <i class="bi bi-pencil-square"></i>
-          </button>
-          <button
-            class="btn btn-outline-danger"
-            (click)="deleteSupplier(supplier.id)"
-          >
-            <i class="bi bi-trash3-fill"></i>
-          </button>
-        </td>
-      </tr>
+        <tr *ngFor="let supplier of suppliers?.results">
+          <td>{{ supplier.id }}</td>
+          <td>{{ supplier.title }}</td>
+          <td>{{ supplier.address }}</td>
+          <td>{{ supplier.balance }}</td>
+          <td>
+            <button
+              class="btn btn-outline-success"
+              *ngIf="supplier.status === true"
+            >
+              Enabled
+            </button>
+            <button
+              class="btn btn-outline-warning"
+              *ngIf="supplier.status === false"
+            >
+              Disabled
+            </button>
+          </td>
+          <td>{{ supplier.email }}</td>
+          <td>{{ supplier.contact }}</td>
+          <td>
+            <button
+              class="btn btn-outline-primary mx-2 my-1"
+              (click)="openUpdateModal(supplier)"
+            >
+              <i class="bi bi-pencil-square"></i>
+            </button>
+            <button
+              class="btn btn-outline-danger"
+              (click)="deleteSupplier(supplier.id)"
+            >
+              <i class="bi bi-trash3-fill"></i>
+            </button>
+          </td>
+        </tr>
+      </ng-container>
     </tbody>
-   
+    <ng-template #noRecordsTemplate>
+      <tr>
+        <td colspan="12">No records found</td>
+      </tr>
+    </ng-template>
   </table>
   <app-pagination [data]="suppliers"></app-pagination>
 </div>

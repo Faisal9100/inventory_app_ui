@@ -15,14 +15,20 @@ export class ProfitlossComponent {
     this.getProfitLoss();
   }
 
-  profit: any[] = [];
 
+// <========================================= CODE FOR GETTING PROFIT & LOSS ===============================>
+
+  profit: any[] = [];
   getProfitLoss() {
     this.http.get(this.url).subscribe((res: any) => {
       this.profit = Object.entries(res);
       console.log(this.profit);
     });
   }
+
+
+// <============================================== CODE FOR PDF ===============================================>
+  
   generatePDF() {
     const pdfElement = document.getElementById('pdf-content');
 

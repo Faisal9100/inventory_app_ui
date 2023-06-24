@@ -66,12 +66,20 @@ export class CategoriesComponent {
     this.searchCategory(this.searchTerm);
   }
   searchTerm: any;
+  showNoRecordsFound: boolean = false;
   searchCategory(searchTerm: any) {
     const searchUrl = this.url + '?search=' + searchTerm;
-    this.http.get(searchUrl).subscribe((res: any) => {
-      this.categories = res;
-      this.addCount(this.categories);
-    });
+    this.http.get(searchUrl).subscribe(
+      (res: any) => {
+        this.categories = res;
+        this.addCount(this.categories);
+        this.showNoRecordsFound = this.categories.length === 0;
+      },
+      (error) => {
+        console.error(error);
+        this.showNoRecordsFound = true;
+      }
+    );
   }
 
   addCount(data: any) {

@@ -181,22 +181,22 @@ export class AllSaleComponent {
       this.isLoading = false;
     });
   }
-    // <================================== code for search input field ===========================================>
+  // <================================== code for search input field ===========================================>
 
-    search() {
-      this.searchSale(this.searchTerm);
-    }
-    public url = this.api.localhost + '/inventory/sales/';
-  searchTerm:any;
-    searchSale(searchTerm: any) {
-      const searchUrl = this.url + '?search=' + searchTerm;
-      this.http.get(searchUrl).subscribe((res: any) => {
-        this.AllPurchaseData = res;
-        this.addCount(this.AllPurchaseData);
-      });
-    }
+  search() {
+    this.searchSale(this.searchTerm);
+  }
+  public url = this.api.localhost + '/inventory/sales/';
+  searchTerm: any;
+  searchSale(searchTerm: any) {
+    const searchUrl = this.url + '?search=' + searchTerm;
+    this.http.get(searchUrl).subscribe((res: any) => {
+      this.AllPurchaseData = res;
+      this.addCount(this.AllPurchaseData);
+    });
+  }
 
-    // <================================== code for pagination ===========================================>
+  // <================================== code for pagination ===========================================>
 
   addCount(data: any) {
     let pageSize = 10;
@@ -489,7 +489,6 @@ export class AllSaleComponent {
                 'success'
               );
               this.getAllPurchase(); // Refresh the stock list
-              this.addSale();
             },
             () => {
               Swal.fire(
@@ -583,6 +582,8 @@ export class AllSaleComponent {
                 'Your product has been deleted.',
                 'success'
               );
+              this.getAllPurchase();
+              this.getStockList(this.id);
             },
             () => {
               Swal.fire(
@@ -699,11 +700,15 @@ export class AllSaleComponent {
         },
         (error) => {
           console.error(error);
+          let errorMessage = 'Failed to add the product.';
+          if (error && error.error && error.error.message) {
+            errorMessage = error.error.message;
+          }
           // Handle the error here, show an error message, etc.
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Failed to add the product.',
+            text: errorMessage,
           });
         }
       );
