@@ -34,7 +34,7 @@
     </thead>
     <tbody>
       <ng-container
-        *ngIf="categories.results.length > 0; else noRecordsTemplate"
+        *ngIf="categories?.results?.length > 0; else noRecordsTemplate"
       >
         <tr *ngFor="let category of categories?.results">
           <td>{{ category.id }}</td>

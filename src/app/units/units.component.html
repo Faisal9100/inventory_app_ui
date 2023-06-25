@@ -36,7 +36,7 @@
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngIf="Units?.results.length > 0; else noRecordsTemplate">
+      <ng-container *ngIf="Units?.results?.length > 0; else noRecordsTemplate">
         <tr *ngFor="let unit of Units?.results">
           <td style="width: 25%">{{ unit.id }}</td>
           <td>{{ unit.name }}</td>

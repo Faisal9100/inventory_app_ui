@@ -42,7 +42,7 @@
     </thead>
     <tbody>
       <ng-container
-        *ngIf="suppliers?.results.length > 0; else noRecordsTemplate"
+        *ngIf="suppliers?.results?.length > 0; else noRecordsTemplate"
       >
         <tr *ngFor="let supplier of suppliers?.results">
           <td>{{ supplier.id }}</td>

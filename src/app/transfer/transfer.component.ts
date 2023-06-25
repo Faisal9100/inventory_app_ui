@@ -257,7 +257,7 @@ export class TransferComponent {
     );
     if (selectedWarehouse) {
       this.warehouseId = selectedWarehouse.id;
-      console.log(this.warehouseId);
+      // console.log(this.warehouseId);
       this.getProductById(warehouseId);
     }
   }

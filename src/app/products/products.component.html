@@ -39,7 +39,7 @@
     </thead>
     <tbody>
       <ng-container
-        *ngIf="productData1?.results.length > 0; else noRecordsTemplate"
+        *ngIf="productData1?.results?.length > 0; else noRecordsTemplate"
       >
         <tr *ngFor="let product of productData1?.results">
           <td *ngIf="product.image != null">

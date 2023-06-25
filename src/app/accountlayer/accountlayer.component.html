@@ -131,7 +131,7 @@
         </thead>
         <tbody>
           <ng-container
-            *ngIf="accountData?.results.length > 0; else noRecordsTemplate"
+            *ngIf="accountData?.results?.length > 0; else noRecordsTemplate"
           >
             <tr *ngFor="let account of accountData?.results">
               <td>{{ account.id }}</td>

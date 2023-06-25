@@ -32,7 +32,7 @@
       </tr>
     </thead>
     <tbody>
-      <ng-container *ngIf="brands?.results.length > 0; else noRecordsTemplate">
+      <ng-container *ngIf="brands?.results?.length > 0; else noRecordsTemplate">
         <tr *ngFor="let brand of brands?.results">
           <td style="width: 25%">{{ brand.id }}</td>
           <td>{{ brand.name }}</td>

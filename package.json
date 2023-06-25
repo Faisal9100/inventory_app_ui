@@ -30,7 +30,7 @@
     "html2canvas": "^1.4.1",
     "jquery": "^3.6.4",
     "jspdf": "^2.5.1",
-    "jspdf-autotable": "^3.5.28",
+    "jspdf-autotable": "^3.5.29",
     "ng2-charts": "^4.1.1",
     "ng2-search-filter": "^0.5.1",
     "ngx-pagination": "^6.0.3",
