@@ -17,11 +17,8 @@ export class BalancesheetComponent {
   public url = this.api.localhost + '/inventory/balancesheet/';
   public url2 = this.api.localhost + '/inventory/profitloss/';
 
-
-
-  
   // <========================================== CODE FOR BALANCE SHEET =======================================>
-  
+
   balanceSheet: any = {};
   getBalanceSheet() {
     this.http.get(this.url).subscribe((res) => {
@@ -31,10 +28,9 @@ export class BalancesheetComponent {
     });
   }
 
-// <====================================== CODE FOR GETTING PROFIT & LOSS ======================================>
+  // <====================================== CODE FOR GETTING PROFIT & LOSS ======================================>
 
-
-profit: any = {};
+  profit: any = {};
   getProfitLoss() {
     this.http.get(this.url2).subscribe((res: any) => {
       this.profit = res;
@@ -43,10 +39,10 @@ profit: any = {};
     });
   }
 
-// <===================================== CODE FOR CALCULATING ACCOUNTS BALANCE =================================>
+  // <===================================== CODE FOR CALCULATING ACCOUNTS BALANCE =================================>
 
-totalLeftBalance: number = 0;
-totalRightBalance: number = 0;
+  totalLeftBalance: number = 0;
+  totalRightBalance: number = 0;
   totalrightbalance: any;
   calculateBalances() {
     this.totalLeftBalance = 0;
@@ -57,7 +53,7 @@ totalRightBalance: number = 0;
       if (value.main_layer === 'Assets') {
         this.totalLeftBalance += value.balance;
       }
-      if (value.main_layer === 'Liability' || value.main_layer === 'Equity') {
+      if (value.main_layer === 'laibility' || value.main_layer === 'Equity') {
         this.totalRightBalance += value.balance;
       }
     }
@@ -65,10 +61,9 @@ totalRightBalance: number = 0;
     const netIncome = this.profit?.['net_income'] || 0;
     this.totalrightbalance = this.totalRightBalance + netIncome;
   }
-// <============================================== CODE FOR PDF ===============================================>
-  
+  // <============================================== CODE FOR PDF ===============================================>
 
-generatePDF() {
+  generatePDF() {
     const pdfElement = document.getElementById('pdf-content');
 
     if (pdfElement) {

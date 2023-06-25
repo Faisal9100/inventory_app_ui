@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 import 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import { LocalhostApiService } from '../localhost-api.service';
+import html2canvas from 'html2canvas';
 export interface Product {
   id: number;
   name: string;
@@ -91,9 +92,9 @@ export class WarehouseComponent {
         } else {
           const newProduct = {
             title: productName,
-            email: productEmail,
-            contact: productContact,
-            status: productStatus,
+            // email: productEmail,
+            // contact: productContact,
+            // status: productStatus,
           };
           this.http.post<Product>(this.url, newProduct).subscribe(() => {
             this.newProduct = { title: '', contact: '', email: '', status: '' };
@@ -231,34 +232,36 @@ export class WarehouseComponent {
     });
   }
   generatePDF() {
-    const columns2 = { title: 'All Warehouse List' };
-    // const columns2 = { title: 'All Warehouse List' };
-    const columns = [
-      { title: 'S.N', dataKey: 'sn' },
-      { title: 'Name', dataKey: 'name' },
-      { title: 'Address', dataKey: 'address' },
-      { title: 'Status', dataKey: 'status' },
-    ];
+    const pdfElement = document.getElementById('pdf-content');
 
-    const data = this.products.map((product: any, index: any) => ({
-      sn: index + 1,
-      name: product.name,
-      address: product.address,
-      status: product.status === '1' ? 'Enabled' : 'Disabled',
-    }));
+    if (pdfElement) {
+      pdfElement.style.marginTop = '20px';
+      const options = {
+        scale: 5,
+        dpi: 300,
+        useCORS: true,
+      };
 
-    const doc = new jsPDF();
-    doc.text(columns2.title, 86, 8);
-    doc.setFontSize(22);
-    doc.text('All Warehouses', 14, 22);
+      html2canvas(pdfElement, options).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    (doc as any).autoTable({
-      columns: columns,
-      body: data,
-    });
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
 
-    doc.save('all_warehouses.pdf');
+        // Add extra text or heading
+        pdf.setFontSize(14);
+        pdf.setTextColor(0, 0, 0);
+        // pdf.text('Additional Text', 1, 5);
+
+        pdf.save('All Warehouses.pdf');
+        pdfElement.style.marginTop = '0';
+      });
+    }
   }
+
   p: any;
   name: any;
   Search() {

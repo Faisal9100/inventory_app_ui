@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import jsPDF from 'jspdf';
 import { LocalhostApiService } from '../localhost-api.service';
 import { catchError, of } from 'rxjs';
+import html2canvas from 'html2canvas';
 
 export interface Account {
   id: number;
@@ -499,47 +500,71 @@ export class AccountlayerComponent implements OnInit {
   }
 
   // <------------------------------------ code for print account Details ---------------------------------------->
+  // generatePDF() {
+  //   const columns2 = { title: 'All Accounts list' };
+
+  //   const columns = [
+  //     { title: 'S.N', dataKey: 'sn' },
+  //     { title: 'Account Title', dataKey: 'title' },
+  //     { title: 'Contact', dataKey: 'contact' },
+  //     { title: 'status', dataKey: 'status' },
+  //     { title: 'Balance', dataKey: 'balance' },
+  //     { title: 'Email', dataKey: 'email' },
+  //     { title: 'Address', dataKey: 'address' },
+  //   ];
+
+  //   const data = this.accountData.map((account: any, index: any) => ({
+  //     sn: index + 1,
+  //     title: account.title,
+  //     contact: account.contact,
+  //     status: account.status,
+  //     balance: account.balance,
+  //     email: account.email,
+  //     address: account.address,
+  //   }));
+
+  //   const doc = new jsPDF();
+  //   doc.text(columns2.title, 86, 8);
+
+  //   doc.setFontSize(22);
+  //   doc.setTextColor(0, 0, 0);
+  //   doc.setFontSize(16);
+
+  //   (doc as any).autoTable({
+  //     columns: columns,
+  //     body: data,
+  //   });
+  //   doc.save('all_this.accounts.pdf');
+  // }
 
   generatePDF() {
-    const columns2 = { title: 'All Accounts list' };
+    const pdfElement = document.getElementById('pdf-content');
 
-    const columns = [
-      { title: 'S.N', dataKey: 'sn' },
-      { title: 'Account Title', dataKey: 'title' },
-      { title: 'Contact', dataKey: 'contact' },
-      { title: 'status', dataKey: 'status' },
-      { title: 'Balance', dataKey: 'balance' },
-      { title: 'Email', dataKey: 'email' },
-      { title: 'Address', dataKey: 'address' },
-    ];
+    if (pdfElement) {
+      const options = {
+        scale: 5, // Increase scale factor for higher resolution
+        dpi: 300, // Increase DPI for better quality
+        useCORS: true, // Enable CORS to prevent tainted canvas error
+      };
 
-    const data = this.accountData.map((account: any, index: any) => ({
-      sn: index + 1,
-      title: account.title,
-      contact: account.contact,
-      status: account.status,
-      balance: account.balance,
-      email: account.email,
-      address: account.address,
-    }));
+      html2canvas(pdfElement, options).then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    const doc = new jsPDF();
-    doc.text(columns2.title, 86, 8);
-
-    doc.setFontSize(22);
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(16);
-
-    (doc as any).autoTable({
-      columns: columns,
-      body: data,
-    });
-    doc.save('all_this.accounts.pdf');
+        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save('All Accounts.pdf');
+      });
+    }
   }
+
 
   newLayerAccount = {
     name: '',
   };
+
 
   //  <------------------------ CODE FOR ADDING LAYER ONE ACCOUNT  ------------------------>
 
@@ -589,53 +614,10 @@ export class AccountlayerComponent implements OnInit {
     });
   }
 
-  // updateLayer_one_new_account(account: any) {
-  //   Swal.fire({
-  //     title: 'Add Account',
-  //     html: `
-  //     <div class="form-group">
-  //     <label class="float-start my-2">title:</label>
-  //     <input type="text" id="accountTitle" class="form-control" placeholder="Account Title" value="${
-  //       account.title
-  //     }">
-  //    </div>
-
-  //           `,
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Add',
-  //     preConfirm: () => {
-  //       const accountName = (<HTMLInputElement>(
-  //         document.getElementById('accountTitle')
-  //       )).value;
-  //       if (!accountName) {
-  //         Swal.showValidationMessage('Account Name is required');
-  //       } else {
-  //         const newLayeraccount = {
-  //           account: accountName,
-  //         };
-  //         this.http
-  //           // `${this.url_layer1}?main_layer=${selectedMainLayer}`
-  //           .put<Account>(
-  //
-  //               this.api.localhost +
-  //               `/inventory/layer1s/?main_layer=${this.selectedMainLayer}`,
-  //             newLayeraccount
-  //           )
-  //           .subscribe(() => {
-  //             this.newLayerAccount = {
-  //               name: '',
-  //             };
-  //             this.getAccountsData();
-
-  //             Swal.fire('Added!', 'Your Account has been added.', 'success');
-  //             this.accountLayerservice.accountAdded.emit(this.account);
-  //           });
-  //       }
-  //     },
-  //   });
-  // }
+ 
 
   //  <------------------------ CODE FOR DELETING LAYER ONE ACCOUNT ------------------------>
+
   DeleteLayer_one_new_account(selectedMainLayer: any, selectedLayer1: number) {
     Swal.fire({
       title: 'Delete Account',
@@ -655,7 +637,8 @@ export class AccountlayerComponent implements OnInit {
           )
           .toPromise()
           .then(() => {
-            this.getAccountsData();
+            // this.getAccountsData();
+
             this.getLayer1();
             Swal.fire('Deleted!', 'Your Account has been deleted.', 'success');
             this.accountLayerservice.accountAdded.emit(this.account);
@@ -763,10 +746,11 @@ export class AccountlayerComponent implements OnInit {
           Swal.fire('Deleted!', 'Your Account has been deleted.', 'success');
           this.accountLayerservice.accountAdded.emit(this.account);
           // Clear the input fields here
+          this.getLayer2(this.selectedLayer2);
           this.selectedLayer2 = null;
           this.selectedLayer1 = null;
           this.selectedMainLayer = null;
-          this.getAccountsData();
+          // this.getAccountsData();
           // Clear any other relevant form controls or variables
         }
       })
@@ -796,10 +780,5 @@ export class AccountlayerComponent implements OnInit {
     window.location.reload();
   }
 }
-function getAccounts(
-  selectedMainLayer: string | undefined,
-  selectedLayer1: any,
-  selectedLayer2: any
-): any {
-  throw new Error('Function not implemented.');
-}
+
+

@@ -15,6 +15,7 @@ import jsPDF from 'jspdf';
 import { LocalhostApiService } from '../localhost-api.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import html2canvas from 'html2canvas';
+import { ThisReceiver } from '@angular/compiler';
 
 export interface PurchaseData {
   id: number;
@@ -153,14 +154,14 @@ export class AllPurchaseComponent implements OnInit {
       this.isLoading = false;
     });
   }
-  
+
   // <================================== code for search input field ===========================================>
 
   search() {
     this.searchBrand(this.searchTerm);
   }
-  public url =  this.api.localhost + '/inventory/stocks_purchase';
-searchTerm:any;
+  public url = this.api.localhost + '/inventory/stocks_purchase';
+  searchTerm: any;
   searchBrand(searchTerm: any) {
     const searchUrl = this.url + '?search=' + searchTerm;
     this.http.get(searchUrl).subscribe((res: any) => {
@@ -169,9 +170,7 @@ searchTerm:any;
     });
   }
 
-
   // <========================== code for  ==============================>
-
 
   addCount(data: any) {
     let pageSize = 10;
@@ -216,7 +215,8 @@ searchTerm:any;
           .subscribe(
             () => {
               this.getStockList(purchasedId);
-              
+              this.getAllPurchaseData();
+
               Swal.fire(
                 'Deleted!',
                 'Your product has been deleted.',
@@ -396,8 +396,7 @@ searchTerm:any;
     if (
       !this.purchaseDate ||
       !this.selectedSupplier ||
-      !this.selectedWarehouse ||
-      !this.selectedRemark
+      !this.selectedWarehouse
     ) {
       Swal.fire({
         icon: 'error',
@@ -534,6 +533,8 @@ searchTerm:any;
               text: 'Stock added successfully.',
             });
             this.purchaseForm.reset();
+            this.getAllPurchaseData();
+            this.modalService.dismissAll();
           },
           (error) => {
             console.error(error);
@@ -554,7 +555,6 @@ searchTerm:any;
   tableSize: number = 10;
   tableSizes: any = [5, 10, 25, 100];
   title: any;
-
 
   // <=========== code for getting stock data for a particular product in a particular purchase id =============>
 

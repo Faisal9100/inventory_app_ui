@@ -50,7 +50,7 @@ export class TransactionsComponent {
         (response: any) => {
           if (response && response.results) {
             this.transactions = response.results;
-            console.log(this.transactions);
+            // console.log(this.transactions);
 
             // Check if no transactions found
             if (this.transactions.length === 0) {
@@ -94,7 +94,7 @@ export class TransactionsComponent {
         this.transaction_data = transactions;
         this.stocks = stocks;
 
-        console.log(resp);
+        // console.log(resp);
       });
   }
 

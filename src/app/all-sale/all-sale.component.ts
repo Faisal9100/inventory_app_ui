@@ -583,7 +583,7 @@ export class AllSaleComponent {
                 'success'
               );
               this.getAllPurchase();
-              this.getStockList(this.id);
+              this.getStockList(saleId);;
             },
             () => {
               Swal.fire(
@@ -690,6 +690,7 @@ export class AllSaleComponent {
         (response) => {
           // Reset the form
           this.updateSaleForm.reset();
+          this.getAllPurchase();
           this.modalService.dismissAll();
           Swal.fire({
             icon: 'success',
@@ -812,6 +813,9 @@ export class AllSaleComponent {
     this.totalproductPrice = q.price;
     console.log(this.totalproductPrice);
   }
+
+  //  <------------------------ CODE FOR GETTING purchase id  ----------------------------->
+
   getPurchase_id(event: any) {
     let i: any = this.productSale.find(
       (item) => item.product_id == event.target.value
@@ -825,20 +829,26 @@ export class AllSaleComponent {
   selectedProductPrice: number = 0;
   q: any;
 
-  isQuantityInvalid = false;
+  //  <------------------------ CODE FOR CHECKING TOTAL QUANTITY OF PRODUCT ---------------------------------->
 
+  isQuantityInvalid = false;
   checkQuantity() {
     const inputQuantity = this.updateSaleForm.get('quantity')?.value;
     this.isQuantityInvalid = inputQuantity > this.totalproductQuantity;
   }
-  isPriceInvalid = false;
 
+  //  <------------------------ CODE FOR CHECKING TOTAL DEFAULT PRICE  OF PRODUCT---------------------------------->
+
+  isPriceInvalid = false;
   checkPrice() {
     const inputPrice = this.updateSaleForm.get('price')?.value;
     this.isPriceInvalid = inputPrice < this.totalproductPrice;
   }
   details: any[] = [];
   sale_ID: any;
+
+  //  <------------------------ CODE FOR GETTING DETAILS OF SALE ITEMS ---------------------------------->
+
   getDetails(item: string) {
     this.http
       .get(this.api.localhost + `/inventory/sales/${item}/sale_details/`)
@@ -848,22 +858,8 @@ export class AllSaleComponent {
       });
   }
 
-  // generatePDF() {
-  //   const pdfElement = document.getElementById('pdf-content');
+  //  <------------------------ CODE FOR CREATING PRINT RECIEPT FOR SALE  ---------------------------------->
 
-  //   if (pdfElement) {
-  //     html2canvas(pdfElement).then((canvas) => {
-  //       const imgData = canvas.toDataURL('images/png');
-  //       const pdf = new jsPDF();
-  //       const imgProps = pdf.getImageProperties(imgData);
-  //       const pdfWidth = pdf.internal.pageSize.getWidth();
-  //       const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-
-  //       pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-  //       pdf.save('Sale Invoice.pdf');
-  //     });
-  //   }
-  // }
   generatePDF() {
     const pdfElement = document.getElementById('pdf-content');
 
