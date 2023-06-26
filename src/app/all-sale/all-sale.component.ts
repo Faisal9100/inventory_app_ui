@@ -583,7 +583,7 @@ export class AllSaleComponent {
                 'success'
               );
               this.getAllPurchase();
-              this.getStockList(saleId);;
+              this.getStockList(this.id);
             },
             () => {
               Swal.fire(

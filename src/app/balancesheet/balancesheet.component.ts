@@ -23,7 +23,7 @@ export class BalancesheetComponent {
   getBalanceSheet() {
     this.http.get(this.url).subscribe((res) => {
       this.balanceSheet = Object.entries(res);
-      // console.log(this.balanceSheet);
+      console.log(this.balanceSheet);
       this.calculateBalances();
     });
   }
@@ -53,7 +53,7 @@ export class BalancesheetComponent {
       if (value.main_layer === 'Assets') {
         this.totalLeftBalance += value.balance;
       }
-      if (value.main_layer === 'laibility' || value.main_layer === 'Equity') {
+      if (value.main_layer === 'Liability' || value.main_layer === 'Equity') {
         this.totalRightBalance += value.balance;
       }
     }

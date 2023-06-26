@@ -7,12 +7,13 @@ import 'jspdf-autotable';
 import jsPDF from 'jspdf';
 import { LocalhostApiService } from '../localhost-api.service';
 import html2canvas from 'html2canvas';
-export interface Product {
+export interface Warehouse {
   id: number;
-  name: string;
+  title: string;
   contact: number;
   email: string;
   status: string;
+  address: string;
 }
 
 @Component({
@@ -27,7 +28,14 @@ export class WarehouseComponent {
   totalPages = 0;
   pages: number[] = [];
   products: any = {};
-  product: Product = { id: 0, name: '', contact: 0, email: '', status: '' };
+  product: Warehouse = {
+    id: 0,
+    title: '',
+    address: '',
+    contact: 0,
+    email: '',
+    status: '',
+  };
   closeResult: any;
 
   public url = this.api.localhost + '/inventory/warehouses/';
@@ -45,7 +53,7 @@ export class WarehouseComponent {
     this.getwarehouse();
   }
 
-  newProduct = { title: '', contact: '', email: '', status: '' };
+  newProduct = { title: '', contact: '', address: '', email: '', status: '' };
   addProduct() {
     Swal.fire({
       title: 'Add Warehouse',
@@ -57,6 +65,10 @@ export class WarehouseComponent {
       <div class="form-group">
       <label for="supplierTitle" class="float-start my-2"> Contact:</label>
       <input type="number"  id="productContact" class="form-control" class="form-control" placeholder="Warehouse Contact" >
+    </div><br>
+      <div class="form-group">
+      <label for="supplierAddress" class="float-start my-2"> Address:</label>
+      <input type="text"  id="productAddress" class="form-control" class="form-control" placeholder="Warehouse Address" >
     </div><br>
       <div class="form-group">
       <label for="supplierTitle" class="float-start my-2"> Email:</label>
@@ -80,6 +92,9 @@ export class WarehouseComponent {
         const productContact = (<HTMLInputElement>(
           document.getElementById('productContact')
         )).value;
+        const productAddress = (<HTMLInputElement>(
+          document.getElementById('productAddress')
+        )).value;
         const productEmail = (<HTMLInputElement>(
           document.getElementById('productEmail')
         )).value;
@@ -87,17 +102,24 @@ export class WarehouseComponent {
           document.getElementById('productStatus')
         )).value;
 
-        if (!productName) {
-          Swal.showValidationMessage('Warehouse Name is required');
+        if (!productName || !productAddress || !productEmail) {
+          Swal.showValidationMessage('Title, Address and Email are required ');
         } else {
           const newProduct = {
             title: productName,
-            // email: productEmail,
-            // contact: productContact,
-            // status: productStatus,
+            email: productEmail,
+            contact: productContact,
+            status: productStatus,
+            address: productAddress,
           };
-          this.http.post<Product>(this.url, newProduct).subscribe(() => {
-            this.newProduct = { title: '', contact: '', email: '', status: '' };
+          this.http.post<Warehouse>(this.url, newProduct).subscribe(() => {
+            this.newProduct = {
+              title: '',
+              contact: '',
+              address: '',
+              email: '',
+              status: '',
+            };
             this.getwarehouse();
             Swal.fire('Added!', 'Your Warehouse has been added.', 'success');
           });
@@ -138,7 +160,7 @@ export class WarehouseComponent {
   deleteProduct(id: number) {
     Swal.fire({
       title: 'Are you sure?',
-      text: 'You will not be able to recover this product!',
+      text: 'You will not be able to recover this warehouse!',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
@@ -147,12 +169,12 @@ export class WarehouseComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         this.http.delete(`${this.url}${id}`).subscribe(() => {
-          console.log(`Product with ID ${id} deleted successfully!`);
+          console.log(`Warehouse with ID ${id} deleted successfully!`);
           this.getwarehouse();
-          Swal.fire('Deleted!', 'Your product has been deleted.', 'success');
+          Swal.fire('Deleted!', 'Your warehouse has been deleted.', 'success');
         });
       } else if (result.isDenied) {
-        Swal.fire('Cancelled', 'Your product is safe :)', 'info');
+        Swal.fire('Cancelled', 'Your warehouse is safe :)', 'info');
       }
     });
   }
@@ -160,42 +182,50 @@ export class WarehouseComponent {
     this.modalService.open(allcontent);
     this.taskToEdit = newProduct;
   }
-  openUpdateModal(product: Product) {
+  openUpdateModal(warehouse: Warehouse) {
     Swal.fire({
       title: 'Update Warehouse',
       html: `
-      <div class="form-group">
-      <label class="float-start my-2">Name:</label>
-      <input type="text" id="productName" class="form-control swal1" placeholder="Name"  value="${
-        product.name
-      }">
-      </div>
-      <div class="form-group">
-      <br><label class="float-start my-2">Address:</label>
-      <input type="text" id="productEmail" class="form-control swal2" placeholder="Address"  value="${
-        product.email
-      }">
-      </div>
-      <br>
-      <div class="form-group">
-      <br><label class="float-start my-2">Address:</label>
-      <input type="text" id="productContact" class="form-control swal3" placeholder="Address"  value="${
-        product.contact
-      }">
-      </div>
-      <br>
-      <div class="form-group">
-      <label class="float-start my-2">Status:</label>
-      <select id="productStatus" class="form-select">
-        <option value="1" ${
-          product.status == '1' ? 'selected' : ''
-        }>Enabled</option>
-        <option value="0" ${
-          product.status == '0' ? 'selected' : ''
-        }>Disabled</option>
-      </select>
-      </div>
-    `,
+        <div class="form-group">
+          <label class="float-start my-2">Name:</label>
+          <input type="text" id="productName" class="form-control swal1" placeholder="Name" value="${
+            warehouse.title
+          }">
+        </div>
+        
+        <div class="form-group">
+          <br><label class="float-start my-2">Email:</label>
+          <input type="text" id="warehouseEmail" class="form-control swal2" placeholder="Email" value="${
+            warehouse.email || ''
+          }">
+        </div>
+        
+        <div class="form-group">
+          <br><label class="float-start my-2">Address:</label>
+          <input type="text" class="form-control swal3" placeholder="Address" value="${
+            warehouse.address || ''
+          }">
+        </div>
+   
+        <div class="form-group">
+          <br><label class="float-start my-2">Contact:</label>
+          <input type="text" class="form-control swal4" placeholder="Contact" value="${
+            warehouse.contact || ''
+          }">
+        </div>
+     
+        <div class="form-group">
+          <label class="float-start my-2">Status:</label>
+          <select id="warehouseStatus" class="form-select">
+            <option value="1" ${
+              warehouse.status == '1' ? 'selected' : ''
+            }>Enabled</option>
+            <option value="0" ${
+              warehouse.status == '0' ? 'selected' : ''
+            }>Disabled</option>
+          </select>
+        </div>
+      `,
       showCancelButton: true,
       confirmButtonText: 'Update',
       cancelButtonText: 'Cancel',
@@ -203,24 +233,38 @@ export class WarehouseComponent {
       if (result.isConfirmed) {
         const updatedName = (<HTMLInputElement>document.querySelector('.swal1'))
           .value;
-        const productEmail = (<HTMLInputElement>(
+        const warehouseEmail = (<HTMLInputElement>(
           document.querySelector('.swal2')
         )).value;
         const updatedContact = (<HTMLInputElement>(
+          document.querySelector('.swal4')
+        )).value;
+        const updatedAddress = (<HTMLInputElement>(
           document.querySelector('.swal3')
         )).value;
         const updatedStatus = (<HTMLInputElement>(
           document.querySelector('.form-select')
         )).value;
+        if (!warehouseEmail) {
+          Swal.fire('Error', 'Email field must not be blank.', 'error');
+          return;
+        }
+        if (!updatedAddress) {
+          Swal.fire('Error', 'Address field must not be blank.', 'error');
+          return;
+        }
         this.http
-          .put(`${this.url}${product.id}/`, {
-            name: updatedName,
-            email: productEmail,
+          .put(`${this.url}${warehouse.id}/`, {
+            title: updatedName,
+            email: warehouseEmail,
+            address: updatedAddress,
             contact: updatedContact,
             status: updatedStatus,
           })
           .subscribe(() => {
-            console.log(`Product with ID ${product.id} updated successfully!`);
+            console.log(
+              `warehouse with ID ${warehouse.id} updated successfully!`
+            );
             this.getwarehouse();
             Swal.fire(
               'Updated!',
@@ -231,6 +275,7 @@ export class WarehouseComponent {
       }
     });
   }
+
   generatePDF() {
     const pdfElement = document.getElementById('pdf-content');
 

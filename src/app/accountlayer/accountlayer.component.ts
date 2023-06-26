@@ -348,8 +348,14 @@ export class AccountlayerComponent implements OnInit {
           document.getElementById('accountEmail')
         )).value;
 
-        if (!accountTitle) {
-          Swal.showValidationMessage('Account title is required');
+        if (
+          !accountTitle ||
+          !accountAddress ||
+          !accountStatus ||
+          !accountContact ||
+          !accountEmail
+        ) {
+          Swal.showValidationMessage('All Fields are Required');
         } else {
           const newaccount = {
             title: accountTitle,
@@ -560,11 +566,9 @@ export class AccountlayerComponent implements OnInit {
     }
   }
 
-
   newLayerAccount = {
     name: '',
   };
-
 
   //  <------------------------ CODE FOR ADDING LAYER ONE ACCOUNT  ------------------------>
 
@@ -613,8 +617,6 @@ export class AccountlayerComponent implements OnInit {
       },
     });
   }
-
- 
 
   //  <------------------------ CODE FOR DELETING LAYER ONE ACCOUNT ------------------------>
 
@@ -737,7 +739,9 @@ export class AccountlayerComponent implements OnInit {
             new Error('Layer Two and Layer One must be selected.')
           );
         }
-        const url = `${this.api.localhost}inventory/layer1s/${selectedLayer2}/layer2s/${selectedLayer1}`;
+        const url =
+          this.api.localhost +
+          `/inventory/layer1s/${selectedLayer2}/layer2s/${selectedLayer1}`;
         return this.http.delete(url).toPromise();
       },
     })
@@ -780,5 +784,3 @@ export class AccountlayerComponent implements OnInit {
     window.location.reload();
   }
 }
-
-

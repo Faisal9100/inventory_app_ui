@@ -243,7 +243,8 @@
                 *ngIf="row.amount <= row.product.price"
                 class="invalid-feedback"
               >
-                Price must not be equal or less than Default Purchase Price.
+                Price must not be equal to or less than the Default Purchase
+                Price.
               </div>
             </td>
 
@@ -266,7 +267,7 @@
         </tbody>
       </table>
       <div class="form-group col-sm">
-        <label class="py-2"> Remarks: </label>
+        <!-- <label class="py-2"> Remarks: </label>
         <div>
           <textarea
             class="form-control"
@@ -277,7 +278,7 @@
             id="title"
             [(ngModel)]="remarks"
           ></textarea>
-        </div>
+        </div> -->
         <div class="col-sm float-end">
           <div class="col-sm">
             <label class="my-1">Total price</label>

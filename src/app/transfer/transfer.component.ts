@@ -262,7 +262,7 @@ export class TransferComponent {
     }
   }
   warehouses: any[] = [];
-  warehouseId: number= 6;
+  warehouseId: number = 6;
   productSale: any[] = [];
 
   // <-------------------------- code for getting product according to warehouse ID ---------------------->
@@ -469,7 +469,7 @@ export class TransferComponent {
                 'success'
               );
               this.getAllPurchase(); // Refresh the stock list
-              this.addSale();
+              // this.addSale();
             },
             () => {
               Swal.fire(
@@ -551,6 +551,7 @@ export class TransferComponent {
                 'Your product has been deleted.',
                 'success'
               );
+              this.getStockList(this.id);
             },
             () => {
               Swal.fire(
@@ -561,7 +562,7 @@ export class TransferComponent {
             }
           );
       }
-      this.addStock(this.id);
+      // this.addStock(this.id);
     });
   }
 
@@ -663,7 +664,8 @@ export class TransferComponent {
             title: 'Success',
             text: 'Product added successfully.',
           });
-          this.addProduct();
+          // this.addProduct();
+          this.getAllPurchase();
         },
         (error) => {
           console.error(error);

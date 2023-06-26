@@ -169,6 +169,7 @@
       <div class="col-sm">
         <label for="selectedProduct" class="py-2">Products*:</label>
         <ng-select class="form-ng-select" #prd [(ngModel)]="selectedProduct">
+          <ng-option></ng-option>
           <ng-option
             class="ng-option"
             *ngFor="let product of productSale"
@@ -243,7 +244,8 @@
                 *ngIf="row.amount <= row.product.price"
                 class="invalid-feedback"
               >
-                Price must not be equal or less than Default Purchase Price.
+                Price must not be equal to or less than the Default Purchase
+                Price.
               </div>
             </td>
 
